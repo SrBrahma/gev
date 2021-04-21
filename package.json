@@ -1,0 +1,33 @@
+{
+  "name": "@srbrahma/ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SrBrahma/ts-init.git"
+  },
+  "author": "Henrique Bruno aka SrBrahma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SrBrahma/ts-init/issues"
+  },
+  "homepage": "https://github.com/SrBrahma/ts-init#readme",
+  "dependencies": {
+    "edit-json-file": "1.6.0",
+    "execa": "5.0.0",
+    "yargs": "16.2.0"
+  },
+  "devDependencies": {
+    "@types/edit-json-file": "1.4.0",
+    "@types/node": "14.14.41",
+    "@types/yargs": "16.0.1",
+    "@typescript-eslint/eslint-plugin": "4.22.0",
+    "@typescript-eslint/parser": "4.22.0",
+    "eslint": "7.24.0",
+    "typescript": "4.2.4"
+  }
+}
