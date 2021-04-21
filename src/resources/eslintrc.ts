@@ -8,7 +8,7 @@ export function eslintrcJsData() {
     "node": true
   },
   "extends": [
-    "@srbrahma/eslint-config
+    "@srbrahma/eslint-config",
     "plugin:@typescript-eslint/recommended-requiring-type-checking" // https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md#getting-started---linting-with-type-information
   ],
   "parser": "@typescript-eslint/parser",

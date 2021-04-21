@@ -19,7 +19,17 @@ import { makeChangesOnPackageJsonFile } from './resources/packagejson';
 // Maybe an argument for interactive setup to add stuff like that.
 // ^ Having an option to repopulate info badges is good, as dev may change repo name etc.
 
-// TODO license to README? MIT as default?
+// TODO license to README? (also change it in package.json) MIT as default?
+
+// TODO path as command
+
+// TODO add silent argument
+
+// TODO way to check package name availability? Also must check the lower-case of the package name, as those online
+// name checkers won't validate it.
+
+// TODO add ~`Project started at $DATE` to the CHANGELOG.md
+
 
 
 async function main() {
@@ -63,17 +73,25 @@ async function main() {
     'eslint@latest', '@typescript-eslint/parser@latest', '@typescript-eslint/eslint-plugin@latest',
     'rimraf'
   ]
+
+  // Create dir if received package name
+  if (receivedPackageName) {
+    fs.mkdirSync(pkgPath); // Will already throw an (ugly) error if dir exists.
+  }
+
   // npm init
-  await execa('npm', ['init',  '-y'],); //.toString();
+  await execa('npm', ['init',  '-y'], {cwd: pkgPath}); //.toString();
 
   // Install packages. Using @latest in eslint as eslint --init outputs.
-  await execa('npm', ['i', '-D', ...devPackages])
+  console.log('Installing packages...')
+  await execa('npm', ['i', '-D', ...devPackages], {cwd: pkgPath})
 
+  console.log('Generating files...')
   // Make some changes to the package.json
   makeChangesOnPackageJsonFile({pkgPath})
 
   // Generate the latest tsconfig.json file
-  await execa('tsc', ['--init'])
+  await execa('tsc', ['--init'], {cwd: pkgPath})
 
 
   // Create README.md
@@ -92,7 +110,10 @@ async function main() {
   fs.writeFileSync(getPath('.eslintrc.js'), eslintrcJsData())
 
   // Create src/index.ts
+  fs.mkdirSync(getPath('src'))
   fs.writeFileSync(getPath('src', 'index.ts'), srcIndexData())
+
+  console.log(`Package ${packageName} created!`)
 
 
 }

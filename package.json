@@ -1,7 +1,7 @@
 {
   "name": "@srbrahma/ts",
   "version": "1.0.0",
-  "description": "",
+  "description": "Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,6 +28,12 @@
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.22.0",
     "eslint": "7.24.0",
+    "rimraf": "3.0.2",
     "typescript": "4.2.4"
-  }
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "keywords": []
 }

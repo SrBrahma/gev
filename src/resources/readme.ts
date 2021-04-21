@@ -1,6 +1,8 @@
 // Add github stars badge to encourage people to give a star!
 // research later https://github.com/matiassingers/awesome-readme
 
+// "Give it a star!" ?
+
 export function getReadmeData(packageName: string) {
   return (
 `
@@ -39,5 +41,3 @@ yarn add ${packageName}
 
 // [![npm](https://img.shields.io/npm/v/react-native-shadow-2)](https://www.npmjs.com/package/react-native-shadow-2)
 // [![npm](https://img.shields.io/npm/dt/react-native-shadow-2)](https://www.npmjs.com/package/react-native-shadow-2)
-
-console.log(getReadmeData('that-nice-pkg'))
