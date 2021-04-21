@@ -1,6 +1,6 @@
 {
   "name": "@srbrahma/ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.",
   "main": "lib/index.js",
   "scripts": {
