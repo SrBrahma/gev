@@ -47,7 +47,15 @@ You may want to read each file in [src/resources](./src/resources), or just init
 
 * typedoc support, with markdown output. I hate writing READMEs!
 
+* jest integration
+
 * Allow custom setups. It could be something like `npx gev -u githubUsername`. This could really be a good way for people to have their own environment setup without too much work.
+
+* Use `npm get` and `set` for local configs. Could store Github username, donation link and custom gev scripts to be used as default.
+
+* `npx gev` would open an interactive menu to choose the desired initializer or change user options.
+
+* `npx gev ts coolPackage` would start a TS package without going through the menu above.
 
 # [Changelog](CHANGELOG.md)
 
