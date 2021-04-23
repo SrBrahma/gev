@@ -125,6 +125,7 @@ async function main() {
     createdAnyFile = true;
   }
 
+
   // npm init
   await execa('npm', ['init',  '-y'], { cwd: pkgPath }); //.toString();
   createdAnyFile = true;

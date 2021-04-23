@@ -10,11 +10,11 @@ Made it for me and my projects, but can also work really well for you. It's fast
 
 # Usage:
 
-`npx genera` to use the current directory as destination and package name (directory emptiness will be checked).
+`npx genera` to use the current directory as destination and package name. Directory emptiness will be checked.
 
 or
 
-`npx genera <packageName>` to create a new directory and use it as the package name.
+`npx genera <packageName>` to create a new directory and use it as the package name. Will check if a directory with same name already exists.
 
 As it accepts scoped package names like `npx genera @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
 
