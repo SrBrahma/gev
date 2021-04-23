@@ -1,8 +1,8 @@
-export function eslintrcJsData() {
+export function get_eslintrc(): string {
   // https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md
   // could add jest?
   return (
-`module.exports = {
+    `module.exports = {
   "env": {
     "es2021": true,
     "node": true
@@ -15,12 +15,12 @@ export function eslintrcJsData() {
   "parserOptions": {
     "ecmaVersion": 12,
     "sourceType": "module",
-    "tsconfigRootDir": "__dirname",
+    "tsconfigRootDir": __dirname,
     "project": ['./tsconfig.json'],
   },
   "rules": {
   }
 };
 
-`)
+`);
 }

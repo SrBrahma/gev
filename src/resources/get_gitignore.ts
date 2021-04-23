@@ -1,4 +1,4 @@
-export function getGitIgnore() {
+export function get_gitignore(): string {
   return (
     'node_modules/' // Any node_modules dir
   + '\n/dist/' // Only top level dist dir.
@@ -6,5 +6,5 @@ export function getGitIgnore() {
   + '\n.env'
   + '\n.log'
   + '\ncoverage' // jest
-  )
+  );
 }

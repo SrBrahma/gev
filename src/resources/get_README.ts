@@ -3,9 +3,9 @@
 
 // "Give it a star!" ?
 
-export function getReadmeData(packageName: string) {
+export function get_readme(packageName: string): string {
   return (
-`
+    `
 <h1 align="center">
   <!-- <img src=".logo.png" alt=${packageName}/><br/> -->
   ${packageName}
@@ -36,7 +36,7 @@ yarn add ${packageName}
 # Usage
 
 # [Changelog](CHANGELOG.md)`
-  )
+  );
 }
 
 // [![npm](https://img.shields.io/npm/v/react-native-shadow-2)](https://www.npmjs.com/package/react-native-shadow-2)
