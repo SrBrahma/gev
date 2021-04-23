@@ -1,5 +1,5 @@
-export function srcIndexData() {
+export function srcIndexData(): string {
   return (
-`console.log('Howdy World!');`
-  )
+    `console.log('Howdy World!');`
+  );
 }
