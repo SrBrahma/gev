@@ -10,13 +10,13 @@ Made it for me and my projects, but can also work really well for you. It's fast
 
 # Usage:
 
-`npx gev` to use the current directory as destination and package name. Directory emptiness will be checked.
+```bash
+npx gev # To use the current directory as destination and package name. Directory emptiness will be checked.
 
-or
+# or
 
-`npx gev <packageName>` to create a new directory and use it as the package name. Will check if a directory with same name already exists.
-
-As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
+npx gev <packageName> # To create a new directory and use it as the package name. Directory existence will be checked.
+```
 
 # It will
 
@@ -51,7 +51,7 @@ You may want to read each file in [src/resources](./src/resources), or just init
 
 * Allow custom setups. It could be something like `npx gev -u githubUsername`. This could really be a good way for people to have their own environment setup without too much work.
 
-* Use `npm get` and `set` for local configs. Could store Github username, donation link and custom gev scripts to be used as default.
+* Use `npm get` and `set` for local configs. Could store Github username, donation link, some **package.json** defaults and custom gev scripts to be used as default.
 
 * `npx gev` would open an interactive menu to choose the desired initializer or change user options.
 
@@ -61,3 +61,5 @@ You may want to read each file in [src/resources](./src/resources), or just init
 
 # Etc
 It could use the [npm initializer](https://docs.npmjs.com/cli/v7/commands/npm-init), like `npm init gev`. But for now I will stick to the `npx gev`. Shorter!
+
+As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.

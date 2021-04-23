@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+// About above: https://docs.npmjs.com/cli/v7/configuring-npm/package-json#bin
+
 import fs from 'fs';
 import Path from 'path';
 import yargs from 'yargs/yargs';
