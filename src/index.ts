@@ -55,7 +55,6 @@ let createdAnyFile: boolean = false;
 let pkgPath: string;
 
 async function main() {
-
   const cwd = process.cwd();
 
   // const flavor: null | 'react' | 'react-native' = null;
@@ -188,8 +187,8 @@ main().catch(err => {
     debugLog('Erasing created files...');
     if (createdDir) // Ran at child dir
       rimrafSync(pkgPath);
-    else // ran at same dir
-      rimrafSync('./*');
-    // rimraf.sync('', {})
+    else // Ran at same dir
+      // https://github.com/isaacs/rimraf/issues/167#issuecomment-371288470
+      rimrafSync('./{*,.*}', {});
   }
 });

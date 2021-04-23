@@ -16,21 +16,15 @@ If the change is related to the gev internal workings and files (not the project
 -->
 
 
-## 1.2.2 (2021-04-23)
-
-### Fixed
-
-* [gev] `rimraf` as dep instead of devDep
-* [gev] Added the `gev` to `"bin"` in **package.json**
-* [gev] Added `#!/usr/bin/env node` to the index start
-
-
-
-## 1.2.1 (2021-04-23)
+## 1.2.1~3 (2021-04-23)
 
 ### Fixed
 
 * [gev] Changed **genera** to **gev** in package.json name. Whoops!
+* [gev] **rimraf** as dep instead of devDep
+* [gev] Added the `gev` to `"bin"` in **package.json**
+* [gev] Added `#!/usr/bin/env node` to the index start
+* [gev] Fixed **rimraf** for current folder on errors, if files were created.
 
 
 
