@@ -10,10 +10,20 @@
 ### Fixed
 *
 -->
+## 1.2.0 (2021-04-23)
+
+### Added
+
+* `major`, `minor` and `patch` scripts.
+* `"noUncheckedIndexedAccess": true` to tsconfig
+### Changed
+
+* Renamed package name from **genera** to **gev**. Found it was available by trial and error. Shorter!
+
+### Fixed
+
+* **gev** version output on error.
+
 ## 1.1.0 (2021-04-23)
 
 * General changes, working version
-
-## 1.0.0 (2021-04-21)
-
-* Project started

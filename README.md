@@ -1,4 +1,4 @@
-# genera
+# gev
 
 Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.
 
@@ -10,13 +10,13 @@ Made it for me and my projects, but can also work really well for you. It's fast
 
 # Usage:
 
-`npx genera` to use the current directory as destination and package name. Directory emptiness will be checked.
+`npx gev` to use the current directory as destination and package name. Directory emptiness will be checked.
 
 or
 
-`npx genera <packageName>` to create a new directory and use it as the package name. Will check if a directory with same name already exists.
+`npx gev <packageName>` to create a new directory and use it as the package name. Will check if a directory with same name already exists.
 
-As it accepts scoped package names like `npx genera @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
+As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
 
 # It will
 
@@ -47,9 +47,9 @@ You may want to read each file in [src/resources](./src/resources), or just init
 
 * typedoc support, with markdown output. I hate writing READMEs!
 
-* Allow custom setups. It could be something like `npx genera -u githubUsername`. This could really be a good way for people to have their own environment setup without too much work.
+* Allow custom setups. It could be something like `npx gev -u githubUsername`. This could really be a good way for people to have their own environment setup without too much work.
 
 # [Changelog](CHANGELOG.md)
 
 # Etc
-It could use the [npm initializer](https://docs.npmjs.com/cli/v7/commands/npm-init), like `npm init genera`. But for now I will stick to the `npx genera`. Shorter!
+It could use the [npm initializer](https://docs.npmjs.com/cli/v7/commands/npm-init), like `npm init gev`. But for now I will stick to the `npx gev`. Shorter!

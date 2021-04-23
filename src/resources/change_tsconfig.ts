@@ -39,6 +39,7 @@ export function change_tsconfig({ pkgPath }: {pkgPath: string, isNpmPackage?: bo
   changeCompilerOptions('types', ['node']); // Removes the need to import node types.
   changeCompilerOptions('incremental', true);
   changeCompilerOptions('resolveJsonModule', true);
+  changeCompilerOptions('noUncheckedIndexedAccess', true);
 
 
 

@@ -13,11 +13,12 @@ import execa from 'execa';
 
 import { changePackageJson } from './resources/change_package-json';
 import validatePackageName from 'validate-npm-package-name';
-import { version } from '../package.json';
 import { sync as rimrafSync } from 'rimraf';
 
 
+const VERSION = (require('../package.json') as Record<string, unknown>).version as string;
 
+// const VERSION = import('../package.json')
 
 // TODO add support for react & react-native flavors (args like --react or --native)
 // This isn't a template for react and react-native projects (at most templates for packages for them).
@@ -178,7 +179,7 @@ async function main() {
 
 main().catch(err => {
   // const msg = err.message;
-  console.error(`An error happened! - [genera v${version }]`);
+  console.error(`An error happened! - [gev v${VERSION}]`);
   console.error(err); // TODO add package version
   if (createdAnyFile) {
     debugLog('Erasing created files...');
