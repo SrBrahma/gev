@@ -1,6 +1,6 @@
 {
-  "name": "genera",
-  "version": "1.2.0",
+  "name": "gev",
+  "version": "1.2.1",
   "description": "Sets the basic environment I usually have in my projects",
   "main": "dist/index.js",
   "scripts": {

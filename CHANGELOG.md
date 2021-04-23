@@ -10,6 +10,13 @@
 ### Fixed
 *
 -->
+
+## 1.2.1 (2021-04-23)
+
+### Fixed
+
+* Changed **genera** to **gev** in package.json name. Whoops!
+
 ## 1.2.0 (2021-04-23)
 
 ### Added
