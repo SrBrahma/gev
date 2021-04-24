@@ -148,7 +148,7 @@ async function main() {
   changePackageJson({ pkgPath });
 
   // Generate the latest tsconfig.json file
-  await execa('tsc', ['--init'], { cwd: pkgPath });
+  await execa('npx', ['tsc', '--init'], { cwd: pkgPath });
   change_tsconfig({ pkgPath });
 
 

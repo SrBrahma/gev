@@ -15,7 +15,7 @@ npx gev # To use the current directory as destination and package name. Director
 
 # or
 
-npx gev <packageName> # To create a new directory and use it as the package name. Directory existence will be checked.
+npx gev <newPackageName> # To create a new directory and use it as the package name. Directory existence will be checked.
 ```
 
 # It will

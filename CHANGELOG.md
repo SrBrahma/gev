@@ -16,6 +16,15 @@ If the change is related to the gev internal workings and files (not the project
 -->
 
 
+
+## 1.2.4 (2021-04-23)
+
+### Changed
+
+* [gev] **typescript** as dep instead of devDep. Will now use `npx tsc --init` instead of `tsc --init`, to allow it to work on machines without TS globally installed.
+
+
+
 ## 1.2.1~3 (2021-04-23)
 
 ### Fixed
