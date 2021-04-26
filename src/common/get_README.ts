@@ -1,14 +1,15 @@
 // Add github stars badge to encourage people to give a star!
 // research later https://github.com/matiassingers/awesome-readme
-
 // "Give it a star!" ?
 
-export function get_readme(packageName: string): string {
+import type { Core } from '../core';
+
+export function get_README(core: Core): string {
   return (
     `
 <h1 align="center">
-  <!-- <img src=".logo.png" alt=${packageName}/><br/> -->
-  ${packageName}
+  <!-- <img src=".logo.png" alt=${core.consts.projectName}/><br/> -->
+  ${core.consts.projectName}
 </h1>
 
 <div align="center">
@@ -28,9 +29,9 @@ export function get_readme(packageName: string): string {
 
 # Installation
 \`\`\`c
-npm install ${packageName}
+npm install ${core.consts.projectName}
 # or
-yarn add ${packageName}
+yarn add ${core.consts.projectName}
 \`\`\`
 
 # Usage

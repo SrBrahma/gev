@@ -1,0 +1,1 @@
+Those are no longer used, possibly were too complex to mantain of for others to have their own configs.  Leaving here for future references on how to do similar stuff.

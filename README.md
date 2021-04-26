@@ -1,24 +1,36 @@
 # gev
 
+An lightly opinionated central way to fastly create new projects with a single command.
+
 Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.
 
 Also, having to manage the **eslint** of each project and not knowing which one I've updated last, also causes some anxiety.
 
-This `npx` package saves me some good hours of life, so I can watch more videos of cute dogs before I die.
+Made it mainly for me, but it's walking towards being a tool to be widely used.
 
-Made it for me and my projects, but can also work really well for you. It's fast, simple and good.
+## Currently supports creating:
+
+### **Typescript packages**
+
+### **Expo projects** - I started to use react-native-web for faster and simpler development, and Expo is a nice wrapper.
 
 # Usage:
 
 ```bash
-npx gev # To use the current directory as destination and package name. Directory emptiness will be checked.
+npx gev@latest <flavor> # To use the current directory as destination and package name. Directory emptiness will be checked.
 
 # or
 
-npx gev <newPackageName> # To create a new directory and use it as the package name. Directory existence will be checked.
+npx gev@latest <flavor> <newPackageName> # To create a new directory and use it as the package name. Directory existence will be checked.
 ```
 
+Current available flavors are: **`ts`**, **`expo`**
+
+This @latest is to ensure you aren't running a old cached version, as I am updating it with some frequency and npm won't always use latest packages on npx. I already have some ideas to avoid writing this @latest.
+
 # It will
+
+<details><summary><b>Typescript</b></summary>
 
 * Check if the package name [is valid](https://www.npmjs.com/package/validate-npm-package-name)
 * `npm init -y` and do some changes on package.json:
@@ -35,7 +47,9 @@ npx gev <newPackageName> # To create a new directory and use it as the package n
 * README.md and CHANGELOG.md with template and some initial infos
 * Create src/index.ts
 
-You may want to read each file in [src/resources](./src/resources), or just initialize a project to see the final files.
+</details>
+
+<br/>
 
 # Future
 
@@ -60,6 +74,12 @@ You may want to read each file in [src/resources](./src/resources), or just init
 # [Changelog](CHANGELOG.md)
 
 # Etc
-It could use the [npm initializer](https://docs.npmjs.com/cli/v7/commands/npm-init), like `npm init gev`. But for now I will stick to the `npx gev`. Shorter!
+* It could use the [npm initializer](https://docs.npmjs.com/cli/v7/commands/npm-init), like `npm init gev`. But for now I will stick to the `npx gev`. Shorter!
 
-As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
+* It doesn't currently use templates due to a initial decision. I may change my mind. By programatically creating and changing files, I don't really need to keep the changes up-to-date. If `tsc --init` or the **blank typescript** template of **expo** add something good new to their defaults, I don't have to add them to a template and update it.
+
+  To see how the project files, see examples dir. Well, they are actually templates.
+
+* As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
+
+* On errors or process exit during the project generation, it will remove any written file.

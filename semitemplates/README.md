@@ -1,0 +1,3 @@
+Those are just some files that will be added to the final boilerplate. Each flavor also adds some other stuff programatically. Also, the files may even be changed by the code, like adding other dependecies or at packages at different versions.
+
+They are here so we can include them in the [gev] package.json in files property, so they are present in the npx you run, and the files may be copied from there to your project directory.

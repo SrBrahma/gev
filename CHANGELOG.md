@@ -16,6 +16,20 @@ If the change is related to the gev internal workings and files (not the project
 -->
 
 
+## 2.0.0 (2021-04-25)
+
+### Added
+
+* **`expo`** flavor added
+
+### Changed
+
+* The command has changed from `npx gev [projectName]` to `npx gev <flavor> [projectName]`
+* [gev] Now creates the boilerplates differently. Instead of creating everything programatically, some files will just be copied. Faster, simpler.
+* [gev] The shared eslint-config is now `eslint-config-gev`, instead my previous personal `@srbrahma/eslint-config`.
+* [gev] Code structure had major improvements and changes.
+* [gev] Lots of minor changes
+
 
 ## 1.2.4 (2021-04-23)
 
