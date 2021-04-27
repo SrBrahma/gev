@@ -1,9 +1,5 @@
 # Changelog
 
-
-If the change is related to the gev internal workings and files (not the project template), it will have a [gev] preceding the change, to avoid misunderstandings.
-
-
 <!-- # for major version, ## for minor and patch -->
 <!--
 ## 1.0.1 (YYYY-MM-DD)
@@ -16,7 +12,25 @@ If the change is related to the gev internal workings and files (not the project
 -->
 
 
-## 2.0.0~1 (2021-04-25)
+## 2.1.0 (2021-04-27)
+
+### Added
+
+* **templates** directory, so you can see the generated boilerplate for each flavor. They are programatically updated for each relevant **gev** version. It isn't added in the package.
+
+* [expo] Added `.env` to **.gitignore**
+
+### Changed
+
+* Faster check of installed global packages (currently for **expo-cli** package, for **expo** flavor)
+
+### Fixed
+
+* `--no-install` option fixed.
+
+
+
+# 2.0.0~1 (2021-04-25)
 
 ### Added
 
@@ -25,17 +39,17 @@ If the change is related to the gev internal workings and files (not the project
 ### Changed
 
 * The command has changed from `npx gev [projectName]` to `npx gev <flavor> [projectName]`
-* [gev] Now creates the boilerplates differently. Instead of creating everything programatically, some files will just be copied. Faster, simpler.
-* [gev] The shared eslint-config is now `eslint-config-gev`, instead my previous personal `@srbrahma/eslint-config`.
-* [gev] Code structure had major improvements and changes.
-* [gev] Lots of minor changes
+* Now creates the boilerplates differently. Instead of creating everything programatically, some files will just be copied. Faster, simpler.
+* The shared eslint-config is now `eslint-config-gev`, instead my previous personal `@srbrahma/eslint-config`.
+* Code structure had major improvements and changes.
+* Lots of minor changes
 
 
 ## 1.2.4 (2021-04-23)
 
 ### Changed
 
-* [gev] **typescript** as dep instead of devDep. Will now use `npx tsc --init` instead of `tsc --init`, to allow it to work on machines without TS globally installed.
+* **typescript** as dep instead of devDep. Will now use `npx tsc --init` instead of `tsc --init`, to allow it to work on machines without TS globally installed.
 
 
 
@@ -43,11 +57,11 @@ If the change is related to the gev internal workings and files (not the project
 
 ### Fixed
 
-* [gev] Changed **genera** to **gev** in package.json name. Whoops!
-* [gev] **rimraf** as dep instead of devDep
-* [gev] Added the `gev` to `"bin"` in **package.json**
-* [gev] Added `#!/usr/bin/env node` to the index start
-* [gev] Fixed **rimraf** for current folder on errors, if files were created.
+* Changed **genera** to **gev** in package.json name. Whoops!
+* **rimraf** as dep instead of devDep
+* Added the `gev` to `"bin"` in **package.json**
+* Added `#!/usr/bin/env node` to the index start
+* Fixed **rimraf** for current folder on errors, if files were created.
 
 
 
@@ -59,11 +73,11 @@ If the change is related to the gev internal workings and files (not the project
 * `"noUncheckedIndexedAccess": true` to tsconfig
 ### Changed
 
-* [gev] Renamed package name from **genera** to **gev**. Found it was available by trial and error. Shorter!
+* Renamed package name from **genera** to **gev**. Found it was available by trial and error. Shorter!
 
 ### Fixed
 
-* [gev] **gev** version output on error.
+* **gev** version output on error.
 
 
 

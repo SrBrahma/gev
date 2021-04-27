@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Sets the basic environment I usually have in my projects",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -11,7 +11,9 @@
     "deploy": "npm run test && npm run build && npm publish",
     "major": "npm version major --no-git-tag-version",
     "minor": "npm version minor --no-git-tag-version",
-    "patch": "npm version patch --no-git-tag-version"
+    "patch": "npm version patch --no-git-tag-version",
+    "templates": "ts-node ./scripts/generateTemplates",
+    "templatesAndDeploy": "npm run templates && npm publish"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
   },
   "homepage": "https://github.com/SrBrahma/gev#readme",
   "dependencies": {
+    "add-dependencies": "1.1.0",
     "commander": "7.2.0",
     "edit-json-file": "1.6.0",
     "execa": "5.0.0",
@@ -48,7 +51,8 @@
     "eslint-config-gev": "2.0.0",
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
-    "eslint-plugin-react-native": "3.10.0"
+    "eslint-plugin-react-native": "3.10.0",
+    "ts-node": "9.1.1"
   },
   "directories": {
     "lib": "lib",

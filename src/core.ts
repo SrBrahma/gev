@@ -10,6 +10,8 @@ import { flavorExpo } from './flavors/expo/expo';
 import { flavorTypescript } from './flavors/ts/ts';
 import onExit from 'signal-exit';
 
+
+
 const flavorExecuters: Record<Flavor, FlavorFunction> = {
   ts: flavorTypescript,
   expo: flavorExpo,
@@ -79,7 +81,7 @@ export class Core {
       projectDirName,
       projectPath,
       parentDirPath: Path.dirname(projectPath),
-      installPackages: installPackages,
+      installPackages,
     };
   }
 
@@ -136,19 +138,34 @@ export class Core {
       }
     },
 
-    /** `npm i`. Will print that they are being installed. You may pass additional dependencies. */
-    installPackages: async ({ deps = [], devDeps = [] }: {
+    /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
+     *
+     * Will only install if this.consts.installPackages is true
+    */
+    addPackages: async ({ deps = [], devDeps = [] }: {
       devDeps?: string[],
-      deps?: string[]
+      deps?: string[],
     } = {}): Promise<void> => {
-      console.log('Installing packages...');
+      if (!this.consts.installPackages) {
+        console.log('Adding dependencies without installing them...');
+        await Promise.all([
+          [deps.length && await execa('npx', ['add-dependencies',
+            ...deps.map(d => d.replace('@latest', ''))],
+          { cwd: this.consts.projectPath })],
+          [devDeps.length && await execa('npx', ['add-dependencies',
+            ...devDeps.map(d => d.replace('@latest', '')), '-D'],
+          { cwd: this.consts.projectPath })],
+        ]);
+      } else {
+        console.log('Installing dependencies...');
 
-      if (devDeps.length)
-        await execa('npm', ['i', '-D', ...devDeps], { cwd: this.consts.projectPath });
+        if (devDeps.length)
+          await execa('npm', ['i', '-D', ...devDeps], { cwd: this.consts.projectPath });
 
-      // If hasn't executed the above, will execute this. Will also execute if there are deps to install.
-      if (!devDeps.length || deps.length)
-        await execa('npm', ['i', ...deps], { cwd: this.consts.projectPath });
+        // If hasn't executed the above, will execute this. Will also execute if there are deps to install.
+        if (!devDeps.length || deps.length)
+          await execa('npm', ['i', ...deps], { cwd: this.consts.projectPath });
+      }
     },
 
     /** Creates the project directory, if not using the cwd as the path.

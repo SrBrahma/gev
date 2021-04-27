@@ -35,7 +35,7 @@ export const flavorExpo: FlavorFunction = async (core) => {
 
   // Change App.tsx location: https://stackoverflow.com/a/54887872/10247962
 
-  await core.actions.installPackages({
+  await core.actions.addPackages({
     devDeps: [
       'typescript@latest', // Expo template is currently using v4.0.0 instead of v4.2.4 >:(
       'eslint@latest',

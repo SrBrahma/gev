@@ -8,24 +8,30 @@ export async function checkPackageUpdate(packageName: string, { install }: {
    * @default false */
   install: boolean,
 } = { install: false }): Promise<'notInstalled' | 'outdated' | 'updated'> {
-  let state: 'notChecked' | 'notInstalled' | 'installed' | 'outdated' | 'updated' = 'notChecked';
+  let state: 'notChecked' | 'notInstalled' | 'outdated' | 'updated' = 'notChecked';
 
   console.log(`Checking if "${packageName}" is globally installed and updated...`);
 
-  // TODO npm list and npm outdated could be run in parallel. Aint sure how to do it now. Will save ~4s.
-  try {
-    await execa('npm', ['list', '-g', packageName]);
-    state = 'installed';
-  } catch {
+  // TODO unknown behavior on errors other than package not installed.
+
+  const [installed, updatedOrNotInstalled] = await Promise.all([
+    (async () => {
+      try {
+        await execa('npm', ['list', '-g', packageName]);
+        return true;
+      } catch { return false; }
+    })(),
+    (async () => {
+      const result = await execa('npm', ['outdated', '-g', packageName]);
+      const updatedOrNotInstalled = result.stdout === '';
+      return updatedOrNotInstalled;
+    })(),
+  ]);
+
+  if (!installed)
     state = 'notInstalled';
-  }
-
-  if (state === 'installed') {
-    // Check for updates
-    const result = await execa('npm', ['outdated', '-g', packageName]);
-    const updated = result.stdout === '';
-
-    state = updated ? 'updated' : 'outdated';
+  else {
+    state = updatedOrNotInstalled ? 'updated' : 'outdated';
   }
 
   if (!install)

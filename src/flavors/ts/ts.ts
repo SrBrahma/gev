@@ -22,7 +22,7 @@ export const flavorTypescript: FlavorFunction = async (core) => {
 
 
   // To install the latest. The semitemplate deps don't matter too much,
-  await core.actions.installPackages({
+  await core.actions.addPackages({
     devDeps: [
       'typescript@latest',
 
