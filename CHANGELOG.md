@@ -12,13 +12,13 @@
 -->
 
 
-## 2.1.0 (2021-04-27)
+## 2.1.0~1 (2021-04-27)
 
 ### Added
 
 * **templates** directory, so you can see the generated boilerplate for each flavor. They are programatically updated for each relevant **gev** version. It isn't added in the package.
 
-* [expo] Added `.env` to **.gitignore**
+* [expo] Added `*.env` to **.gitignore**
 
 ### Changed
 
@@ -27,6 +27,8 @@
 ### Fixed
 
 * `--no-install` option fixed.
+
+* [ts] Fixed `.env` and `.log` in **.gitignore**. `*` was missing.
 
 
 
