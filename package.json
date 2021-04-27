@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Sets the basic environment I usually have in my projects",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -13,7 +13,7 @@
     "minor": "npm version minor --no-git-tag-version",
     "patch": "npm version patch --no-git-tag-version",
     "templates": "ts-node ./scripts/generateTemplates",
-    "templatesAndDeploy": "npm run templates && npm publish"
+    "templatesDeploy": "npm run templates && npm publish"
   },
   "repository": {
     "type": "git",

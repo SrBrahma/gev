@@ -5,7 +5,7 @@ module.exports = {
     "react-native/react-native": true // *2
   },
   "extends": [
-    "@srbrahma/eslint-config/react-native", // https://github.com/SrBrahma/eslint-config
+    "eslint-config-gev/react-native", // https://github.com/SrBrahma/eslint-config
     "plugin:@typescript-eslint/recommended-requiring-type-checking" // *1
   ],
   "parser": "@typescript-eslint/parser",
