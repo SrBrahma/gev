@@ -11,7 +11,7 @@ export async function generateTemplates(): Promise<void> {
 
   const distPath = Path.join(__dirname, '..', 'dist');
   const templatesPath = Path.join(__dirname, '..', 'templates');
-  const templatesReadmePath = Path.join(__dirname, '..', 'templates', 'README.md');
+  const templatesReadmePath = Path.join(templatesPath, 'README.md');
 
   // Build
   await fs.emptyDir(distPath);
@@ -37,6 +37,9 @@ export async function generateTemplates(): Promise<void> {
   for (const flavor of flavorsArray) {
     console.log(`Generating template "${flavor}"...`);
     await execa('node', ['..', flavor, flavor, '--no-install'], { cwd: templatesPath });
+    // Remove possible ".git" in the generated template. It would mess pushing it to git and GitHub.
+    const gitPath = Path.join(templatesPath, flavor, '.git')
+    await fs.remove(gitPath)
   }
 }
 
