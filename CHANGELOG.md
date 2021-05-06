@@ -11,6 +11,21 @@
 *
 -->
 
+## 2.1.5 (2021-05-05)
+
+### Fixed
+
+* **.gitignore** wasn't being included in the generated templates. (Really fixed this time!)
+* [expo, ts] Await to the now async `applyTemplate`.
+* [ts] Added **lint** script. It will `eslint --fix src/**`. It is now run at `deploy` script.
+
+## 2.1.4 (2021-05-05)
+
+### Fixed
+
+* **.gitignore** wasn't being included in the generated templates. (Really fixed this time!)
+
+
 ## 2.1.3 (2021-05-05)
 
 ### Added

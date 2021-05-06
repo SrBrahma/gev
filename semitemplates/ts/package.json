@@ -5,13 +5,15 @@
   "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"No test specified.\"",
+    "lint": "eslint --fix \"src/**\"",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "major": "npm version major --no-git-tag-version",
     "minor": "npm version minor --no-git-tag-version",
     "patch": "npm version patch --no-git-tag-version",
     "testAndBuild": "npm run test && npm run build",
-    "deploy": "npm run test && npm publish"
+
+    "deploy": "npm run lint && npm run test && npm publish"
   },
   "keywords": [],
   "author": "",

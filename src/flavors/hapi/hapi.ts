@@ -13,7 +13,7 @@ export const flavorHapi: FlavorFunction = async (core) => {
 
   core.actions.setProjectDirectory();
 
-  core.actions.applyTemplate();
+  await core.actions.applyTemplate();
 
   core.add.changelog();
   core.add.readme();

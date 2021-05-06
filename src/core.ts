@@ -188,10 +188,15 @@ export class Core {
     /** Copies files from the template to the project path.
      *
      * Should only be called after setProjectDirectory(), so it may set the creation vars. */
-    applyTemplate: (): void => {
-      // copySync copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537
-      fs.copySync(getFlavorSemitemplatePath(this.consts.flavor), this.consts.projectPath);
+    applyTemplate: async (): Promise<void> => {
+      // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
+      // `copy` copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537
+      await fs.copy(getFlavorSemitemplatePath(this.consts.flavor), this.consts.projectPath);
+
+      // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
+      if (await fs.pathExists(this.getPath('gitignore')))
+        await fs.rename(this.getPath('gitignore'), this.getPath('.gitignore'));
     },
   }
 

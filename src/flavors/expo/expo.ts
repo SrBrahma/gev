@@ -28,7 +28,7 @@ export const flavorExpo: FlavorFunction = async (core) => {
   fs.unlinkSync(core.getPath('App.tsx'));
 
 
-  core.actions.applyTemplate();
+  await core.actions.applyTemplate();
 
   core.add.changelog();
   core.add.readme();
