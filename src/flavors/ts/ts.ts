@@ -27,6 +27,8 @@ export const flavorTypescript: FlavorFunction = async (core) => {
   await core.actions.addPackages({
     devDeps: [
       'typescript@latest',
+      'ts-node-dev@latest',
+      // 'ts-node@latest', // Add it for `once` script or wait https://github.com/wclr/ts-node-dev/issues/263
 
       'eslint@latest',
       'eslint-config-gev@latest',

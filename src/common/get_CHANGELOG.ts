@@ -7,7 +7,7 @@ export function get_CHANGELOG(): string {
   const offset = date.getTimezoneOffset();
   date = new Date(date.getTime() - (offset*60*1000));
   /** YYYY-MM-DD format */
-  const formattedDate = date.toISOString().split('T')[0];
+  const formattedDate: string = date.toISOString().split('T')[0]!;
 
 
   return (
