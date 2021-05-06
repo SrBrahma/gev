@@ -38,6 +38,7 @@ const VERSION = (require('../package.json') as Record<string, unknown>).version 
 const program = new Command();
 
 
+// TODO add -v as alias to -V/--version.
 program
   .name('gev') // So it appears in the usage help
   .version(VERSION)
@@ -48,7 +49,6 @@ program
     projectName: 'The name of the new project. A new directory will be created and used only if it doesn\'t exists. If ommited or ".", will use the current directory and its name, if empty.',
   })
   .action(async () => {
-
     // Commander transforms --no-install into install, with default value of true to install.
     // https://github.com/tj/commander.js#other-option-types-negatable-boolean-and-booleanvalue
     const { install: installPackages } = program.opts() as {

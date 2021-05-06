@@ -14,7 +14,7 @@
     "testAndBuild": "npm run test && npm run build",
 
     "deploy": "npm run lint && npm run test && npm publish",
-    "watch": "ts-node-dev \"./src/index.ts\"",
+    "watch": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "npm run watch"
   },
   "keywords": [],

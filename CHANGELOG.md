@@ -11,6 +11,13 @@
 *
 -->
 
+## 2.1.7 (2021-05-06)
+
+### Changed
+
+* [ts] Added `--respawn --transpile-only` to the **ts-node-dev** in **watch** script.
+
+
 ## 2.1.6 (2021-05-05)
 
 ### Added
