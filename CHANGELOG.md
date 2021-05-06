@@ -11,6 +11,13 @@
 *
 -->
 
+## 2.1.8
+
+### Fixed
+
+* [expo, ts] Moved **eslint-config-gev** down, for higher priority in **eslint extends** field.
+
+
 ## 2.1.7 (2021-05-06)
 
 ### Changed
