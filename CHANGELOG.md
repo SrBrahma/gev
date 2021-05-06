@@ -11,6 +11,22 @@
 *
 -->
 
+## 2.1.3 (2021-05-05)
+
+### Added
+
+* [ts] Added the package name validation. I forgot to add it when changed the code in **2.0.0**
+
+### Changed
+
+* [ts] Changed the order of the **devDependencies** and added an empty **dependencies** to the **package.json**. The addition of the **dependencies** is for when the user calls a `npm i`, it isn't added to the end of the package.json.
+
+### Fixed
+
+* **.gitignore** wasn't being included in the generated templates.
+
+
+
 ## 2.1.2 (2021-04-27)
 
 ### Fixed

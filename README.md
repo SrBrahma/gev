@@ -28,7 +28,12 @@ Current available flavors are: **`ts`**, **`expo`**
 
 This @latest is to ensure you aren't running a old cached version, as I am updating it with some frequency and npm won't always use latest packages on npx. I already have some ideas to avoid writing this @latest.
 
+To supress the npm@7 npx confirmation message, you can use `npx -y gev@latest`.
+
+
 # It will
+
+## Check [templates directory](./templates) to see what is done for each flavor.
 
 <details><summary><b>Typescript</b></summary>
 
@@ -39,7 +44,7 @@ This @latest is to ensure you aren't running a old cached version, as I am updat
   * Add common `scripts`
   * [Whitelist publish files](https://medium.com/@jdxcode/for-the-love-of-god-dont-use-npmignore-f93c08909d8d) with `"files": ["/dist"]`
 * `npm i -D typescript [...eslint packages] rimraf`
-* Set the **.eslintrc** and use my [`@srbrahma/elint-config`](https://github.com/SrBrahma/eslint-config) I've been configuring through some years
+* Set the **.eslintrc** and use my [`elint-config-gev`](https://github.com/SrBrahma/eslint-config-gev) I've been configuring through some years
 * `rimraf` as dev dep for cross-platform erasing the `dist` dir, in `clean` npm script. Common practice.
 * `tsc --init` for the latest options
 * Change some tsconfigs (source map, declaration files, outDir=dist, resolveJsonModule etc)

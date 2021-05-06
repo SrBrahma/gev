@@ -1,13 +1,15 @@
 import type { FlavorFunction } from '../../typesAndConsts';
 import editJsonFile from 'edit-json-file';
 
-export const flavorTypescript: FlavorFunction = async (core) => {
 
-  core.verifications.projectNameMustBeNpmValid();
+// Add Heroku
+
+
+export const flavorHapi: FlavorFunction = async (core) => {
 
   core.verifications.projectDirMustBeValid();
 
-  console.log(`Generating the Typescript package "${core.consts.projectName}" at "${core.consts.projectPath}"...`);
+  console.log(`Generating the hapi project "${core.consts.projectName}" at "${core.consts.projectPath}"...`);
 
   core.actions.setProjectDirectory();
 
@@ -33,8 +35,13 @@ export const flavorTypescript: FlavorFunction = async (core) => {
       'eslint-plugin-react@latest',
       '@typescript-eslint/eslint-plugin@latest',
       '@typescript-eslint/parser@latest',
+
+      '@types/hapi__hapi',
+    ],
+    deps: [
+      '@hapi/hapi@latest',
     ],
   });
 
-  console.log(`Package "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
+  console.log(`hapi project "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
 };

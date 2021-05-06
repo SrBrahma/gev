@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Sets the basic environment I usually have in my projects",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
