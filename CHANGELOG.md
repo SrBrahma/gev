@@ -11,6 +11,16 @@
 *
 -->
 
+
+
+## 2.1.10 (2021-05-13)
+
+### Changed
+
+* [ts] Commented / = changed to false the `incremental` property in tsconfig.json. There is a strange bug that it may not compile the project if removing the `dist` directory. Looks like removing the generated **tsconfig.tsbuildinfo** would fix it [(maybe it's even an intended behaviour)](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html), but would require the **gev** users to know about it.
+
+
+
 ## 2.1.8~9 (2021-05-06)
 
 ### Fixed
