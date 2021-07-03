@@ -12,7 +12,7 @@
 -->
 
 
-## 2.2.0~1 (2021-06-30)
+## 2.2.0~2 (2021-06-30)
 
 ### Added
 * Added `"ignorePatterns": [".eslintrc.js"]` in all `.eslintrc.js`.

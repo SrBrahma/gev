@@ -1,9 +1,13 @@
 {
   "name": "gev",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Generates boilerplates",
   "main": "./lib/index.js",
   "bin": "./lib/index.js",
+  "files": [
+    "/lib",
+    "/semitemplates"
+  ],
   "scripts": {
     "clean": "rimraf lib",
     "test": "echo \"Error: no test specified\"",
@@ -81,9 +85,5 @@
     "typescript",
     "script",
     "boilerplate"
-  ],
-  "files": [
-    "/dist",
-    "/semitemplates"
   ]
 }
