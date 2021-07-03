@@ -5,8 +5,8 @@ module.exports = {
     "react-native/react-native": true // *2
   },
   "extends": [
-    "eslint-config-gev/react-native", // https://github.com/SrBrahma/eslint-config
-    "plugin:@typescript-eslint/recommended-requiring-type-checking" // *1
+    "plugin:@typescript-eslint/recommended-requiring-type-checking", // *1
+    "eslint-config-gev/react-native" // https://github.com/SrBrahma/eslint-config-gev
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -18,6 +18,7 @@ module.exports = {
       "jsx": true
     }
   },
+  "ignorePatterns": [".eslintrc.js"],
   "rules": {
   }
 };

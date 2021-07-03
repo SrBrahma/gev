@@ -4,8 +4,8 @@ module.exports = {
     "node": true
   },
   "extends": [
-    "@srbrahma/eslint-config", // https://github.com/SrBrahma/eslint-config
-    "plugin:@typescript-eslint/recommended-requiring-type-checking" // *1
+    "plugin:@typescript-eslint/recommended-requiring-type-checking", // *1
+    "eslint-config-gev", // https://github.com/SrBrahma/eslint-config-gev
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

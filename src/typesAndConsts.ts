@@ -2,10 +2,10 @@ import { Core } from './core';
 import Path from 'path';
 
 
-export type Flavor = 'ts' | 'expo'
-export const flavorsArray = ['ts', 'expo'] as const;
+export const flavorsArray = ['ts', 'expo', 'expo-pkg'] as const;
 
 
+export type Flavor = (typeof flavorsArray)[number]
 
 export function getFlavorWritePath(flavor: Flavor): string {
   return Path.join(__dirname, '..', 'semitemplates', flavor);

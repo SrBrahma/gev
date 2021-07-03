@@ -1,7 +1,8 @@
 import execa from 'execa';
+import ora from 'ora';
 
 // TODO add cwd to execa for non global executions
-export async function checkPackageUpdate(packageName: string, { install }: {
+export async function checkGlobalPackageUpdate(packageName: string, { install }: {
   /** If should omit the print of the checking process and of the ins ... */
   // silent = false,
   /** If should automatically install the package if not installed or is outdated
@@ -10,7 +11,7 @@ export async function checkPackageUpdate(packageName: string, { install }: {
 } = { install: false }): Promise<'notInstalled' | 'outdated' | 'updated'> {
   let state: 'notChecked' | 'notInstalled' | 'outdated' | 'updated' = 'notChecked';
 
-  console.log(`Checking if "${packageName}" is globally installed and updated...`);
+  const spinner = ora().start(`Checking if "${packageName}" is globally installed and updated`);
 
   // TODO unknown behavior on errors other than package not installed.
 
@@ -34,18 +35,22 @@ export async function checkPackageUpdate(packageName: string, { install }: {
     state = updatedOrNotInstalled ? 'updated' : 'outdated';
   }
 
-  if (!install)
+  if (!install) {
+    // TODO add spinner handling.
     return state;
+  }
 
-  if (state === 'notInstalled')
-    console.log(`"${packageName}" is not globally installed. Installing it...`);
+  if (state !== 'updated') {
+    if (state === 'notInstalled')
+      spinner.info(`"${packageName}" is not globally installed. Installing it`);
 
-  if (state === 'outdated')
-    // TODO add current version and target version.
-    console.log(`"${packageName}" is not updated. Updating it...`);
+    if (state === 'outdated')
+      // TODO add current version and target version.
+      console.info(`"${packageName}" is not updated. Updating it`);
 
-  if (state !== 'updated')
     await execa('npm', ['i', '-g', packageName]);
+  }
 
+  spinner.succeed();
   return 'updated';
 }

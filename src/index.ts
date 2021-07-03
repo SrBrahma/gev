@@ -1,38 +1,31 @@
 #!/usr/bin/env node
 // About above: https://docs.npmjs.com/cli/v7/configuring-npm/package-json#bin
 
-// TODO add support for react & react-native flavors (args like --react or --native)
-//   This isn't a template for react and react-native projects (at most templates for packages for them).
-//   For react/native real project templates, will require another project, that may/will include this one.
 // TODO add --jest arg to include jest testing
 // TODO add ts-node-dev pkg?
 // TODO add tools, for eg add badges to README.
 //   Maybe an argument for interactive setup to add stuff like that.
 //   ^ Having an option to repopulate info badges is good, as dev may change repo name etc.
+// TODO way to check package name availability?
 // TODO license to README? (also change it in package.json) MIT as default?
-// TODO add silent argument
-// TODO way to check package name availability? Also must check the lower-case of the package name, as those online
-//   name checkers won't validate it.
 // TODO arg to just do a step, to fix/create a new file (like add eslint to existing project). Maybe git integration to tag it?
-// TODO add -d --debug arg for more logs.
-// TODO allow usage of specific version (npx prob allow this. see how and write on readme)
-// TODO support "." as packageName, to use current dir instead of leaving it blank.
 // TODO Github integration
-// TODO https://www.npmjs.com/package/update-notifier
-// TODO: CLI coloring https://www.npmjs.com/package/chalk
 // TODO prettier tasks https://www.npmjs.com/package/listr
+// TODO add -d --debug arg for more logs.
+// TODO add silent argument
 // TODO Maybe rename flavor to something else? Flavor could be like, I will have a Expo project,
 //   with mobx flavor. It could have multiple flavors, like `npx gev expo [mobx] newProj`
-// TODO npx flavor = TS, commander, chalk, listr
 // TODO add time that took to generate
 // TODO npm gev gev - Boilerplate so others can create their flavors etc. They would need to import Core.
 
-
-
-import { Command } from 'commander';
-import { flavorsArray, Flavor, currentDirectoryRegex } from './typesAndConsts';
+import { Argument, Command } from 'commander';
+import { flavorsArray, currentDirectoryRegex, Flavor } from './typesAndConsts';
 import { Core } from './core';
-
+import latestVersion from 'latest-version';
+import execa from 'execa';
+import chalk from 'chalk';
+import ora from 'ora';
+import compareSemver from 'semver-compare';
 
 const VERSION = (require('../package.json') as Record<string, unknown>).version as string;
 const program = new Command();
@@ -41,54 +34,69 @@ const program = new Command();
 // TODO add -v as alias to -V/--version.
 program
   .name('gev') // So it appears in the usage help
-  .version(VERSION)
+  .version(VERSION, '-v, -V, --version', 'Output the version number') // Just capitalize the first letter of description.
+  .helpOption('-h, --help', 'Display help for command') // Just capitalize the first letter of description.
   .option('-n, --no-install', 'Don\'t install the npm packages after setting the template.')
-  .arguments('<flavor> [projectName]')
-  .description('Effortlessly creates slightly opionated projects boilerplates within a single command', {
-    flavor: `What kind of project it should be. Accepted: ${flavorsArray.join(', ')}`,
-    projectName: 'The name of the new project. A new directory will be created and used only if it doesn\'t exists. If ommited or ".", will use the current directory and its name, if empty.',
-  })
+  .option('-c, --no-check-latest', 'Won\'t check if is using the latest version of gev.')
+  .option('-C, --no-clean-on-error', 'Won\'t clean the project being generated if an error happened.')
+  // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
+  .addArgument(new Argument('<flavor>', `What kind of project it should be. Accepted: ${flavorsArray.map(f => chalk.bold(f)).join(', ')}`)
+    .choices(flavorsArray as any as string[]))
+  .argument('[projectName]', 'The name of the new project. A new directory will be created and used only if it doesn\'t exists. If ommited or ".", will use the current directory and its name, if empty.')
+  .description('Effortlessly creates slightly opionated projects boilerplates within a single command')
+  .showHelpAfterError()
   .action(async () => {
     // Commander transforms --no-install into install, with default value of true to install.
     // https://github.com/tj/commander.js#other-option-types-negatable-boolean-and-booleanvalue
-    const { install: installPackages } = program.opts() as {
-      install: boolean
-    };
-    // Commander says all items of args are strings, but they may be undefined if ommited.
-    const [flavorArg, projectNameArg = '.'] = program.args;
+    const {
+      install: installPackages,
+      checkLatest, cleanOnError,
+    } = program.opts<{
+      install: boolean; checkLatest: boolean; cleanOnError: boolean
+    }>();
+    const [flavor, projectNameArg = '.'] = program.args as [Flavor, string | undefined];
 
+    if (checkLatest) {
+      // Ensure latest version
+      const spinner = ora().start('Ensuring latest version');
+      const latestVer = await latestVersion('gev');
+      if (compareSemver(VERSION, latestVer) === -1) {
+        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest available version [${chalk.yellow(latestVer)}]. Recalling gev with @latest...`);
 
-    if (!flavorsArray.includes(flavorArg as any)) { // as any because ts sucks with constArrays functions.
-      throw (`Invalid flavor. Must be one of the following: ${flavorsArray.join(', ')}`);
+        const rawProgramArgs = process.argv.slice(2);
+        await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], { env: {
+          // https://github.com/npm/cli/issues/2226#issuecomment-732475247
+          npm_config_yes: 'true', // maybe not needed? maybe for second runs it won't request it?
+        } });
+        return;
+      } else { // Same version. We are running the latest one!
+        spinner.succeed();
+      }
     }
-    const flavor = flavorArg as Flavor;
 
     // Converts '.' or './' to undefined. Undefined means to use the cwd as project name.
     const receivedProjectName: string | undefined =
       currentDirectoryRegex.test(projectNameArg) ? undefined : projectNameArg;
 
-
     const core = new Core({
-      cwd: process.cwd(),
       flavor,
       receivedProjectName,
       installPackages,
-
+      cleanOnError,
     });
 
-    await core.main.run();
-
-  });
-
-
-// Commander don't print the usage automatically if too few args
-// https://stackoverflow.com/a/44419466/10247962
-if (process.argv.length < 3)
-  program.help();
+    await core.run();
+  })
+;
 
 
 program.parseAsync().catch(err => {
-  // const msg = err.message;
-  console.error(`An error happened! - [gev v${VERSION}]\n`);
-  console.error(err); // TODO add package version
+  let msg;
+  if (typeof err === 'object' && err !== null)
+    msg = err.message;
+  else
+    msg = err;
+  console.error(`\n${chalk.redBright('An error happened!')} ${chalk.white('-')} ${chalk.yellow(`[gev v${VERSION}]`)}\n`);
+  console.error(msg);
+  process.exit(1); // Good for external tools.
 });

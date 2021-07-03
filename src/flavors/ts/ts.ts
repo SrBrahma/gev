@@ -1,15 +1,16 @@
 import type { FlavorFunction } from '../../typesAndConsts';
 import editJsonFile from 'edit-json-file';
+import ora from 'ora';
 
 export const flavorTypescript: FlavorFunction = async (core) => {
 
   core.verifications.projectNameMustBeNpmValid();
 
-  core.verifications.projectDirMustBeValid();
+  await core.verifications.projectPathMustBeValid();
 
-  console.log(`Generating the Typescript package "${core.consts.projectName}" at "${core.consts.projectPath}"...`);
+  ora().info(`Generating the Typescript package "${core.consts.projectName}" at "${core.consts.projectPath}"...`);
 
-  core.actions.setProjectDirectory();
+  await core.actions.setProjectDirectory();
 
   await core.actions.applyTemplate();
 
@@ -18,7 +19,7 @@ export const flavorTypescript: FlavorFunction = async (core) => {
 
 
   // Edit package.json
-  const packageJson = editJsonFile(core.getPath('package.json'));
+  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
   packageJson.set('name', core.consts.projectName);
   packageJson.save();
 
@@ -28,15 +29,13 @@ export const flavorTypescript: FlavorFunction = async (core) => {
     devDeps: [
       'typescript@latest',
       'ts-node-dev@latest',
-      // 'ts-node@latest', // Add it for `once` script or wait https://github.com/wclr/ts-node-dev/issues/263
-
       'eslint@latest',
       'eslint-config-gev@latest',
-      'eslint-plugin-react@latest',
       '@typescript-eslint/eslint-plugin@latest',
       '@typescript-eslint/parser@latest',
+      // 'ts-node@latest', // Add it for `once` script or wait https://github.com/wclr/ts-node-dev/issues/263
     ],
   });
 
-  console.log(`Package "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
+  ora().succeed(`Package "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
 };

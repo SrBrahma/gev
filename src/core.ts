@@ -1,20 +1,22 @@
 import Path from 'path';
-import fs from 'fs-extra';
+import fse from 'fs-extra';
 import { Flavor, FlavorFunction, getFlavorWritePath as getFlavorSemitemplatePath } from './typesAndConsts';
 import validatePackageName from 'validate-npm-package-name';
 import execa from 'execa';
-import { sync as rimrafSync } from 'rimraf';
 import { get_README } from './common/get_README';
 import { get_CHANGELOG } from './common/get_CHANGELOG';
+import onExit from 'signal-exit';
 import { flavorExpo } from './flavors/expo/expo';
 import { flavorTypescript } from './flavors/ts/ts';
-import onExit from 'signal-exit';
+import { flavorExpoPkg } from './flavors/expo-pkg/expo-pkg';
+import ora from 'ora';
 
 
 
 const flavorExecuters: Record<Flavor, FlavorFunction> = {
   ts: flavorTypescript,
   expo: flavorExpo,
+  'expo-pkg': flavorExpoPkg,
 };
 
 
@@ -24,9 +26,9 @@ export class Core {
     /** If should `npm i` */
     installPackages: boolean;
     flavor: Flavor;
+    /** Where we are running the command. */
     cwd: string;
     receivedProjectName: string | undefined;
-
     /** The last segment of the cwd. */
     currentDirName: string;
     /** If the current directory should be used to store the project files.
@@ -43,24 +45,29 @@ export class Core {
     parentDirPath: string;
     /** The name of the directory containing the project. */
     projectDirName: string;
+    /** If will clean on errors. */
+    cleanOnError: boolean;
   }
 
   vars = {
-    /** If we had created a dir for the project. */
-    createdDir: false,
-
     /** If we had manually created anything that we should remove if we had an error. */
     shouldCleanOnError: false,
-
+    /** So we can just remove the dir contents instead of removing it if it already existed. */
+    createdDir: false,
     state: 'notStarted' as 'notStarted' | 'running' | 'finished',
   }
 
-
-  constructor({ cwd, flavor, receivedProjectName, installPackages }: {
+  constructor({
+    cwd = process.cwd(),
+    flavor, receivedProjectName, installPackages, cleanOnError,
+  }: {
     flavor: Flavor;
-    cwd: string;
-    receivedProjectName: string | undefined;
+    /** Where the user is running the gev command.
+     * @default process.cwd() */
+    cwd?: string;
+    receivedProjectName?: string | undefined;
     installPackages: boolean;
+    cleanOnError: boolean
   }) {
 
     const currentDirectoryIsTarget = (receivedProjectName === undefined || receivedProjectName === '.');
@@ -71,8 +78,8 @@ export class Core {
     const projectPath = currentDirectoryIsTarget ? cwd : Path.join(cwd, projectDirName);
 
     this.consts = {
-      flavor: flavor,
-      cwd: cwd,
+      flavor,
+      cwd,
       receivedProjectName: receivedProjectName,
       currentDirectoryIsTarget,
       childDirectoryIsTarget: !currentDirectoryIsTarget,
@@ -82,136 +89,137 @@ export class Core {
       projectPath,
       parentDirPath: Path.dirname(projectPath),
       installPackages,
+      cleanOnError,
     };
   }
 
   /** Adds segments to the project path. */
-  getPath(...filename: string[]): string {
+  getPathInProjectDir(...filename: string[]): string {
     return Path.join(this.consts.projectPath, ...filename);
   }
 
   add = {
-    readme: (): void => fs.writeFileSync(this.getPath('README.md'), get_README(this)),
-    changelog: (): void => fs.writeFileSync(this.getPath('CHANGELOG.md'),  get_CHANGELOG()),
+    readme: (): void => fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this)),
+    changelog: (): void => fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'),  get_CHANGELOG()),
   }
 
 
-
-  main = {
-    /** Run the flavor.
+  /** Run the flavor.
      *
      * May throw errors. Will clean the files on errors or process premature exit. */
-    run: async (): Promise<void> => {
+  async run(): Promise<void> {
+    if (this.vars.state === 'notStarted') {
       try {
+        this.vars.state = 'running';
         // When adding custom flavors, will need to change this.
-        const fun = flavorExecuters[this.consts.flavor];
-
-        // Should use alwaysLast option?
-        if (this.vars.state === 'notStarted') {
-          const remove = onExit(() => {
-            this.actions.errorHappenedEraseIfNeeded();
-          });
-          this.vars.state = 'running';
-          await fun(this);
-          remove();
-          this.vars.state = 'finished';
-        }
+        const fun = flavorExecuters[this.consts.flavor]!;
+        const cancelOnExit = onExit(async () => {
+          await this.actions.errorHappenedCleanIfNeeded();
+        });
+        await fun(this);
+        cancelOnExit();
+        this.vars.state = 'finished';
       } catch (err) {
-        this.actions.errorHappenedEraseIfNeeded();
+        await this.actions.errorHappenedCleanIfNeeded();
         throw err; // Rethrow
       }
-    },
+    }
   }
-
 
 
   actions = {
 
-    errorHappenedEraseIfNeeded: (): void => {
+    errorHappenedCleanIfNeeded: async (): Promise<void> => {
       // Only if the flavor doesn't delete the files by itself
-      if (this.vars.shouldCleanOnError) {
+      if (this.consts.cleanOnError && this.vars.shouldCleanOnError) {
         // debugLog('Erasing created files...');
         if (this.vars.createdDir) // Ran at child dir
-          rimrafSync(this.consts.projectPath);
-        else // Ran at same dir
-          rimrafSync('./{*,.*}', {}); // https://github.com/isaacs/rimraf/issues/167#issuecomment-371288470
+          await fse.remove(this.consts.projectPath); // [*1]
+        else // Run at same dir
+          await fse.emptyDir(this.consts.projectPath);
       }
     },
 
+    // TODO support for specific versions. Check if contains @, if so, won't include the @latest. Can just use regex in the replace.
     /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
      *
      * Will only install if this.consts.installPackages is true
     */
-    addPackages: async ({ deps = [], devDeps = [] }: {
-      devDeps?: string[],
+    addPackages: async ({ deps = [], devDeps = [], cwd = this.consts.projectPath, install = this.consts.installPackages }: {
       deps?: string[],
+      devDeps?: string[],
+      /** @default this.consts.projectPath */
+      cwd?: string;
+      /** @default this.consts.installPackages */
+      install?: boolean;
+      // peerDeps?: string[],
     } = {}): Promise<void> => {
-      if (!this.consts.installPackages) {
-        console.log('Adding dependencies without installing them...');
-        await Promise.all([
-          [deps.length && await execa('npx', ['add-dependencies',
-            ...deps.map(d => d.replace('@latest', ''))],
-          { cwd: this.consts.projectPath })],
-          [devDeps.length && await execa('npx', ['add-dependencies',
-            ...devDeps.map(d => d.replace('@latest', '')), '-D'],
-          { cwd: this.consts.projectPath })],
-        ]);
+      if (install) {
+        await ora.promise(async () => {
+          if (devDeps.length)
+            await execa('npm', ['i', '-D', ...devDeps], { cwd });
+
+          // If hasn't executed the above, will execute this. Will also execute if there are deps to install.
+          if (!devDeps.length || deps.length)
+            await execa('npm', ['i', ...deps], { cwd });
+        }, 'Installing dependencies');
+
       } else {
-        console.log('Installing dependencies...');
-
-        if (devDeps.length)
-          await execa('npm', ['i', '-D', ...devDeps], { cwd: this.consts.projectPath });
-
-        // If hasn't executed the above, will execute this. Will also execute if there are deps to install.
-        if (!devDeps.length || deps.length)
-          await execa('npm', ['i', ...deps], { cwd: this.consts.projectPath });
+        await ora.promise(async () => {
+          await Promise.all([
+            deps.length && await execa('npx', ['add-dependencies',
+              ...deps.map(d => d.replace('@latest', ''))],
+            { cwd }),
+            devDeps.length && await execa('npx', ['add-dependencies',
+              ...devDeps.map(d => d.replace('@latest', '')), '-D'],
+            { cwd }),
+          ]); }, 'Adding dependencies without installing them');
       }
-    },
+    }, // End of addPackages
 
     /** Creates the project directory, if not using the cwd as the path.
      *
      * As it uses createProjectDir action, createdDir and shouldCleanOnError may be set.
      * You should run projectDirMustBeValid before. */
-    setProjectDirectory: (): void => {
-      if (this.consts.childDirectoryIsTarget)
-        this.actions.createProjectDir();
-    },
-
-    /** Creates a new directory named ${this.projectDirName}. */
-    createProjectDir: (): void => {
-    // Already checked the dir existence above.
-      fs.mkdirSync(this.consts.projectDirName);
-      this.vars.createdDir = true;
-      this.vars.shouldCleanOnError = true;
+    setProjectDirectory: async (): Promise<void> => {
+      // TODO [*1] get the higher level dir created to remove it.
+      const dirExists = await fse.pathExists(this.consts.projectPath);
+      if (!dirExists) {
+        await fse.ensureDir(this.consts.projectPath);
+        this.vars.shouldCleanOnError = true;
+        this.vars.createdDir = true;
+      }
     },
 
     /** Copies files from the template to the project path.
+     *
+     * It will automatically use the flavor.
      *
      * Should only be called after setProjectDirectory(), so it may set the creation vars. */
     applyTemplate: async (): Promise<void> => {
       // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
       // `copy` copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537
-      await fs.copy(getFlavorSemitemplatePath(this.consts.flavor), this.consts.projectPath);
+      await fse.copy(getFlavorSemitemplatePath(this.consts.flavor), this.consts.projectPath);
 
       // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
-      if (await fs.pathExists(this.getPath('gitignore')))
-        await fs.rename(this.getPath('gitignore'), this.getPath('.gitignore'));
+      if (await fse.pathExists(this.getPathInProjectDir('gitignore')))
+        await fse.rename(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
     },
-  }
+  } // End of actions
 
 
   /** */
   verifications = {
 
-    /** If will use the current directory as the project root, will check if it's empty.
-     *
-     * If creating a new one, will check if it doesn't already exists. */
-    projectDirMustBeValid: (): void => {
-      if (this.consts.currentDirectoryIsTarget) {
-        this.verifications.currentDirectoryMustBeEmpty();
-      } else {
-        this.verifications.noFileNamedAsProject();
+    /** The project path must be empty or don't exist. Else, will throw an error. */
+    projectPathMustBeValid: async (): Promise<void> => {
+      if (await fse.pathExists(this.consts.projectPath)) {
+        const cwdIsEmpty = (await fse. readdir(this.consts.projectPath)).length === 0; // https://stackoverflow.com/a/60676464/10247962
+        if (!cwdIsEmpty) {
+          // improve error message.
+          throw (`The project path '${this.consts.projectPath}' already exists and it isn't empty!`);
+        }
       }
     },
 
@@ -230,21 +238,5 @@ export class Core {
       }
     },
 
-    /** Check if there is no file/dir with the project name in the current directory. If it does, throws error. */
-    noFileNamedAsProject: (): void => {
-      if (fs.existsSync(this.consts.projectPath))
-        throw (`There is already a directory or file named "${this.consts.projectDirName}" at "${this.consts.parentDirPath}"`);
-    },
-
-    /** Check if current dir is empty to use it as root for the project. If it does, throws error. */
-    currentDirectoryMustBeEmpty: (): void => {
-      const cwdIsEmpty = fs.readdirSync('./').length === 0; // https://stackoverflow.com/a/60676464/10247962
-      if (!cwdIsEmpty) {
-      // improve error message
-        throw ('As no package name was passed, it was attempted to use the current working directory. However, the cwd is not empty!\n\n'
-        + 'cwd=' + this.consts.cwd);
-      }
-    },
-  }
+  } // End of verifications
 }
-

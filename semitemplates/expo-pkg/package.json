@@ -11,10 +11,7 @@
     "major": "npm version major --no-git-tag-version",
     "minor": "npm version minor --no-git-tag-version",
     "patch": "npm version patch --no-git-tag-version",
-    "testAndBuild": "npm run test && npm run build",
-
     "deploy": "npm run lint && npm run test && npm publish",
-    "watch": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "npm run watch"
   },
   "keywords": [],
@@ -27,11 +24,9 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
-    "eslint": "^7.25.0",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.2.4",
-    "ts-node-dev": "^1.1.6"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
   }
 }

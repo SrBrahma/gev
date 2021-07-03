@@ -43,8 +43,14 @@ export async function generateTemplates(): Promise<void> {
   }
 }
 
+
 generateTemplates().catch(err => {
+  let msg;
+  if (typeof err === 'object' && err !== null)
+    msg = err.message;
+  else
+    msg = err;
   console.error('Error generating templates:');
-  console.error(err);
+  console.error(msg);
   process.exit(1);
 });

@@ -4,8 +4,8 @@ module.exports = {
     "node": true
   },
   "extends": [
-    "eslint-config-gev",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking" // https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md#getting-started---linting-with-type-information
+    "plugin:@typescript-eslint/recommended-requiring-type-checking", // https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md#getting-started---linting-with-type-information
+    "eslint-config-gev", // https://github.com/SrBrahma/eslint-config-gev
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -14,6 +14,7 @@ module.exports = {
     "tsconfigRootDir": __dirname,
     "project": ['./tsconfig.json'],
   },
+  "ignorePatterns": [".eslintrc.js"],
   "rules": {
   }
 };

@@ -1,7 +1,8 @@
 import execa from 'execa';
 import { FlavorFunction } from '../../typesAndConsts';
-import { checkPackageUpdate } from '../../utils';
-import fs from 'fs';
+import { checkGlobalPackageUpdate } from '../../utils';
+import fse from 'fs-extra';
+import ora from 'ora';
 
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
@@ -11,21 +12,22 @@ import fs from 'fs';
 
 export const flavorExpo: FlavorFunction = async (core) => {
 
+  await core.verifications.projectPathMustBeValid();
+
   // Ensure expo-cli is installed at latest version. Will print some stuff.
-  await checkPackageUpdate('expo-cli', { install: true });
+  await checkGlobalPackageUpdate('expo-cli', { install: true });
 
-  core.verifications.projectDirMustBeValid();
-
-  console.log(`Generating the expo project "${core.consts.projectName}" at "${core.consts.projectPath}"...`);
+  ora().info(`Generating the expo project "${core.consts.projectName}" at "${core.consts.projectPath}"`);
 
   const target = core.consts.currentDirectoryIsTarget ? '.' : core.consts.projectName;
 
-  // --no-install Don't install yet!
+  // --no-install Don't install yet! We will install all later.
   // -t expo-template-blank-typescript, got the right name from here https://github.com/expo/expo-cli/blob/master/packages/expo-cli/src/commands/init.ts
-  await execa('expo', ['init', target, '--npm', '--no-install', '-t', 'expo-template-blank-typescript']);
+  await execa('expo', ['init', target, '--npm', '--no-install', '-t', 'expo-template-blank-typescript'], {
+    cwd: core.consts.cwd });
 
   // Remove the default App.tsx. We will create another one in src/App.tsx.
-  fs.unlinkSync(core.getPath('App.tsx'));
+  await fse.remove(core.getPathInProjectDir('App.tsx'));
 
 
   await core.actions.applyTemplate();
@@ -48,14 +50,12 @@ export const flavorExpo: FlavorFunction = async (core) => {
     ],
   });
 
-  // const packageJson = editJsonFile(core.getPath('package.json'));
-
 
   // Done!
-  console.log(`Expo project "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
+  ora().succeed(`Expo project "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
 
   // Copy/paste from what Expo prints at the end, without the cd to the new project.
-  console.log(`To run your project, navigate to the directory and run one of the following npm commands:
+  console.log(`\nTo run your project, navigate to the directory and run one of the following npm commands:
   - npm start # you can open iOS, Android, or web from here, or run them directly with the commands below.
   - npm run android
   - npm run ios # requires an iOS device or macOS for access to an iOS simulator

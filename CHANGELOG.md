@@ -12,6 +12,17 @@
 -->
 
 
+## 2.2 (2021-06-30)
+
+### Added
+* Added `"ignorePatterns": [".eslintrc.js"]` in all `.eslintrc.js`.
+
+### Changed
+* Changed `"outDir": "dist"` to `"outDir": "lib"` in tsconfig.json.
+
+### Fixed
+* [ts] Removed `'eslint-plugin-react@latest'`.
+
 
 ## 2.1.10 (2021-05-13)
 
