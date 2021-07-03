@@ -12,10 +12,12 @@
 -->
 
 
-## 2.2 (2021-06-30)
+## 2.2.0~1 (2021-06-30)
 
 ### Added
 * Added `"ignorePatterns": [".eslintrc.js"]` in all `.eslintrc.js`.
+* Added expo-pkg
+* CLI is prettier (added `ora`)
 
 ### Changed
 * Changed `"outDir": "dist"` to `"outDir": "lib"` in tsconfig.json.

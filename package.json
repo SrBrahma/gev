@@ -1,7 +1,7 @@
 {
   "name": "gev",
-  "version": "2.2.0",
-  "description": "Sets the basic environment I usually have in my projects",
+  "version": "2.2.1",
+  "description": "Generates boilerplates",
   "main": "./lib/index.js",
   "bin": "./lib/index.js",
   "scripts": {
