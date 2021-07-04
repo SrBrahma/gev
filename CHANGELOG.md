@@ -11,6 +11,12 @@
 *
 -->
 
+
+## 2.2.6 (2021-07-03)
+### Fixed
+* [expo-pkg] Added `@types/react-native`
+* [expo-pkg] Added `/sandbox/` to `.gitignore`
+
 ## 2.2.5 (2021-07-03)
 ### Fixed
 * Fixed output not showing if cache version < latest one.

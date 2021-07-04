@@ -27,6 +27,7 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
     devDeps: [
       'react-native@latest',
       'react', // Without latest, let npm decide it.
+      '@types/react-native', // Includes @types/react
       'typescript@latest',
       'eslint@latest',
       'eslint-config-gev@latest',

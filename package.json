@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "Generates boilerplates",
   "main": "./lib/index.js",
   "bin": "./lib/index.js",
