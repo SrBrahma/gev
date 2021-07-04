@@ -64,9 +64,11 @@ program
         spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest available version [${chalk.yellow(latestVer)}]. Recalling gev with @latest...`);
 
         const rawProgramArgs = process.argv.slice(2);
-        await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], { env: {
-          npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
-        } });
+        await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], {
+          stdio: 'inherit',
+          env: {
+            npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
+          } });
         return;
       } else { // Same version. We are running the latest one!
         spinner.succeed();

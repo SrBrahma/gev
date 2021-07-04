@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.2.5 (2021-07-03)
+### Fixed
+* Fixed output not showing if cache version < latest one.
 
 ## 2.2.3~4 (2021-07-03)
 ### Changed
