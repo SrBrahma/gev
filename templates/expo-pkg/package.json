@@ -8,10 +8,8 @@
     "lint": "eslint --fix \"src/**\"",
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
-    "major": "npm version major --no-git-tag-version",
-    "minor": "npm version minor --no-git-tag-version",
-    "patch": "npm version patch --no-git-tag-version",
-    "deploy": "npm run lint && npm run test && npm publish",
+    "prepublishOnly": "npm run lint && npm run test",
+    "prepare": "npm run build",
     "start": "npm run watch"
   },
   "keywords": [],
@@ -23,11 +21,16 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "@types/react-native": "^0.64.10",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "eslint": "^7.30.0",
     "eslint-config-gev": "^2.1.6",
     "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-native": "^3.11.0",
+    "react": "^17.0.2",
+    "react-native": "^0.64.2",
     "typescript": "^4.3.5"
   },
   "peerDependencies": {

@@ -11,6 +11,13 @@
 *
 -->
 
+## 2.3.1 (2021-07-04)
+### ts, expo-pkg
+* Added badges: **npm version** and **weekly downloads**
+
+### gev
+* Added control over the badges that will be added to each flavor.
+
 ## 2.3.0 (2021-07-04)
 * [ts, expo-pkg] Removed `major, minor, patch, deploy` scripts from package.json, added `prepare, prepublishOnly`.
 ### expo-pkg

@@ -3,12 +3,12 @@ import fse from 'fs-extra';
 import { Flavor, FlavorFunction, getFlavorWritePath as getFlavorSemitemplatePath } from './typesAndConsts';
 import validatePackageName from 'validate-npm-package-name';
 import execa from 'execa';
-import { get_README } from './common/get_README';
+import { get_README, get_README_Options } from './common/get_README';
 import { get_CHANGELOG } from './common/get_CHANGELOG';
 import onExit from 'signal-exit';
-import { flavorExpo } from './flavors/expo/expo';
-import { flavorTypescript } from './flavors/ts/ts';
-import { flavorExpoPkg } from './flavors/expo-pkg/expo-pkg';
+import { flavorExpo } from './flavors/expo';
+import { flavorTypescript } from './flavors/ts';
+import { flavorExpoPkg } from './flavors/expo-pkg';
 import ora from 'ora';
 
 
@@ -99,7 +99,7 @@ export class Core {
   }
 
   add = {
-    readme: (): void => fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this)),
+    readme: (options?: get_README_Options): void => fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this, options)),
     changelog: (): void => fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'),  get_CHANGELOG()),
   }
 

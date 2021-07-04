@@ -6,9 +6,7 @@
 
 <div align="center">
 
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-  [![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)
-
+[![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)
 </div>
 
 <br/>

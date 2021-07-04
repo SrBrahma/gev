@@ -1,4 +1,4 @@
-import type { FlavorFunction } from '../../typesAndConsts';
+import type { FlavorFunction } from '../typesAndConsts';
 import editJsonFile from 'edit-json-file';
 import ora from 'ora';
 
@@ -15,7 +15,13 @@ export const flavorTypescript: FlavorFunction = async (core) => {
   await core.actions.applyTemplate();
 
   core.add.changelog();
-  core.add.readme();
+  core.add.readme({
+    badges: {
+      npm: true,
+      prWelcome: true,
+      typescript: true,
+    },
+  });
 
 
   // Edit package.json

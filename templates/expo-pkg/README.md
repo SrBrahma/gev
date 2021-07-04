@@ -6,9 +6,10 @@
 
 <div align="center">
 
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-  [![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)
-
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)
+[![npm](https://img.shields.io/npm/v/expo-pkg)](https://www.npmjs.com/package/expo-pkg)
+[![npm](https://img.shields.io/npm/dw/expo-pkg)](https://www.npmjs.com/package/expo-pkg)
 </div>
 
 <br/>

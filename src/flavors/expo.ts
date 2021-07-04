@@ -1,6 +1,6 @@
 import execa from 'execa';
-import { FlavorFunction } from '../../typesAndConsts';
-import { checkGlobalPackageUpdate } from '../../utils';
+import { FlavorFunction } from '../typesAndConsts';
+import { checkGlobalPackageUpdate } from '../utils';
 import fse from 'fs-extra';
 import ora from 'ora';
 
@@ -33,7 +33,11 @@ export const flavorExpo: FlavorFunction = async (core) => {
   await core.actions.applyTemplate();
 
   core.add.changelog();
-  core.add.readme();
+  core.add.readme({
+    badges: {
+      typescript: true,
+    },
+  });
 
   // Change App.tsx location: https://stackoverflow.com/a/54887872/10247962
 

@@ -8,11 +8,8 @@
     "lint": "eslint --fix \"src/**\"",
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
-    "major": "npm version major --no-git-tag-version",
-    "minor": "npm version minor --no-git-tag-version",
-    "patch": "npm version patch --no-git-tag-version",
-    "testAndBuild": "npm run test && npm run build",
-    "deploy": "npm run lint && npm run test && npm publish",
+    "prepublishOnly": "npm run lint && npm run test",
+    "prepare": "npm run build",
     "watch": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "npm run watch"
   },

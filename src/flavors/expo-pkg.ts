@@ -1,6 +1,6 @@
-import type { FlavorFunction } from '../../typesAndConsts';
+import type { FlavorFunction } from '../typesAndConsts';
 import editJsonFile from 'edit-json-file';
-import { Core } from '../../core';
+import { Core } from '../core';
 import ora from 'ora';
 import fse from 'fs-extra';
 
@@ -15,7 +15,13 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
   await core.actions.applyTemplate();
 
   core.add.changelog();
-  core.add.readme();
+  core.add.readme({
+    badges: {
+      npm: true,
+      prWelcome: true,
+      typescript: true,
+    },
+  });
 
   // Edit package.json
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
