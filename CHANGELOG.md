@@ -11,8 +11,11 @@
 *
 -->
 
+## 2.2.7 (2021-07-04)
+### Fixed
+* [expo-pkg] Added `"jsx": "react-jsx"` to `tsconfig.json`
 
-## 2.2.6 (2021-07-03)
+## 2.2.6 (2021-07-04)
 ### Fixed
 * [expo-pkg] Added `@types/react-native`
 * [expo-pkg] Added `/sandbox/` to `.gitignore`
