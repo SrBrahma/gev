@@ -34,14 +34,14 @@ const program = new Command();
 // TODO add -v as alias to -V/--version.
 program
   .name('gev') // So it appears in the usage help
-  .version(VERSION, '-v, -V, --version', 'Output the version number') // Just capitalize the first letter of description.
+  .version(VERSION, '-v, --version', 'Output the version number') // Just capitalize the first letter of description.
   .helpOption('-h, --help', 'Display help for command') // Just capitalize the first letter of description.
   .option('-n, --no-install', 'Don\'t install the npm packages after setting the template.')
   .option('-c, --no-check-latest', 'Won\'t check if is using the latest version of gev.')
   .option('-C, --no-clean-on-error', 'Won\'t clean the project being generated if an error happened.')
   // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
-  .addArgument(new Argument('<flavor>', `What kind of project it should be. Accepted: ${flavorsArray.map(f => chalk.bold(f)).join(', ')}`)
-    .choices(flavorsArray as any as string[]))
+  .addArgument(new Argument('<flavor>', `What kind of project it should be.`)
+    .choices(flavorsArray as any as string[])) // Will also print in the usage the possible options
   .argument('[projectName]', 'The name of the new project. A new directory will be created and used only if it doesn\'t exists. If ommited or ".", will use the current directory and its name, if empty.')
   .description('Effortlessly creates slightly opionated projects boilerplates within a single command')
   .showHelpAfterError()
@@ -65,8 +65,7 @@ program
 
         const rawProgramArgs = process.argv.slice(2);
         await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], { env: {
-          // https://github.com/npm/cli/issues/2226#issuecomment-732475247
-          npm_config_yes: 'true', // maybe not needed? maybe for second runs it won't request it?
+          npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
         } });
         return;
       } else { // Same version. We are running the latest one!

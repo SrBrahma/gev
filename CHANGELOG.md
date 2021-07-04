@@ -12,7 +12,14 @@
 -->
 
 
-## 2.2.0~2 (2021-06-30)
+## 2.2.3 (2021-07-3)
+### Changed
+* Removed for now the `-V` version option (now only -v and --version are available)
+### Fixed
+* [expo-pkg] - Added `react` and `react-native` to devDeps.
+
+
+## 2.2.0~2 (2021-07-3)
 
 ### Added
 * Added `"ignorePatterns": [".eslintrc.js"]` in all `.eslintrc.js`.

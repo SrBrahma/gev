@@ -6,18 +6,15 @@ import ora from 'ora';
 export const flavorExpoPkg: FlavorFunction = async (core) => {
 
   core.verifications.projectNameMustBeNpmValid();
-
   await core.verifications.projectPathMustBeValid();
 
   ora().info(`Generating the Expo Library package "${core.consts.projectName}" at "${core.consts.projectPath}"`);
 
   await core.actions.setProjectDirectory();
-
   await core.actions.applyTemplate();
 
   core.add.changelog();
   core.add.readme();
-
 
   // Edit package.json
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
@@ -28,6 +25,8 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
     devDeps: [
+      'react@latest',
+      'react-native@latest',
       'typescript@latest',
       'eslint@latest',
       'eslint-config-gev@latest',
