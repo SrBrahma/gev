@@ -11,6 +11,13 @@
 *
 -->
 
+## 2.3.0 (2021-07-04)
+* [ts, expo-pkg] Removed `major, minor, patch, deploy` scripts from package.json, added `prepare, prepublishOnly`.
+### expo-pkg
+* Added missing `eslint-plugin-react-hooks, eslint-plugin-react-native` devDeps
+* Added removal of `.git` from sandbox dir.
+
+
 ## 2.2.7 (2021-07-04)
 ### Fixed
 * [expo-pkg] Added `"jsx": "react-jsx"` to `tsconfig.json`

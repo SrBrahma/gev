@@ -1,4 +1,4 @@
-import type { FlavorFunction } from '../../typesAndConsts';
+import type { FlavorFunction } from '../../../typesAndConsts';
 import editJsonFile from 'edit-json-file';
 
 

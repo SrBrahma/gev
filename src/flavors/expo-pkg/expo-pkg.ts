@@ -2,6 +2,7 @@ import type { FlavorFunction } from '../../typesAndConsts';
 import editJsonFile from 'edit-json-file';
 import { Core } from '../../core';
 import ora from 'ora';
+import fse from 'fs-extra';
 
 export const flavorExpoPkg: FlavorFunction = async (core) => {
 
@@ -25,13 +26,15 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
     devDeps: [
+      'typescript@latest',
       'react-native@latest',
       'react', // Without latest, let npm decide it.
       '@types/react-native', // Includes @types/react
-      'typescript@latest',
       'eslint@latest',
       'eslint-config-gev@latest',
       'eslint-plugin-react@latest',
+      'eslint-plugin-react-hooks@latest',
+      'eslint-plugin-react-native@latest',
       '@typescript-eslint/eslint-plugin@latest',
       '@typescript-eslint/parser@latest',
     ],
@@ -48,6 +51,9 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
     cleanOnError: core.consts.cleanOnError,
   });
   await sandboxCore.run();
+
+  // Remove the .git in the sandbox that expo created.
+  await fse.remove(sandboxCore.getPathInProjectDir('.git'));
 
   ora().succeed(`expo-pkg package "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
 

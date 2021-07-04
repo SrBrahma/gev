@@ -14,4 +14,4 @@ web-build/
 
 # gev
 *.env
-/sandbox/
+/lib/
