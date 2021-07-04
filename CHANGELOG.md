@@ -12,7 +12,7 @@
 -->
 
 
-## 2.2.3 (2021-07-3)
+## 2.2.3~4 (2021-07-03)
 ### Changed
 * Removed for now the `-V` version option (now only -v and --version are available)
 ### Fixed

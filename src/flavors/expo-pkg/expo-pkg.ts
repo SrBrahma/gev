@@ -25,8 +25,8 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
     devDeps: [
-      'react@latest',
       'react-native@latest',
+      'react', // Without latest, let npm decide it.
       'typescript@latest',
       'eslint@latest',
       'eslint-config-gev@latest',

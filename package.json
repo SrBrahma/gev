@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Generates boilerplates",
   "main": "./lib/index.js",
   "bin": "./lib/index.js",
@@ -18,7 +18,9 @@
     "minor": "npm version minor --no-git-tag-version",
     "patch": "npm version patch --no-git-tag-version",
     "templates": "ts-node ./scripts/generateTemplates",
-    "templatesDeploy": "npm run templates && npm publish"
+    "templatesDeploy": "npm run templates && npm publish",
+    "start": "cd tests && ts-node ../src/index.ts",
+    "gev": "npm start"
   },
   "repository": {
     "type": "git",
