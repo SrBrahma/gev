@@ -20,7 +20,7 @@ Made it mainly for me, but it's walking towards being a tool to be widely used.
 There is a [templates](./templates) directory that contains all flavors boilerplates generated using the latest gev version.
 
 
-# Usage:
+# 📖 Usage:
 
 ```bash
 npx gev <flavor> # To use the current directory as destination and package name. Directory emptiness will be checked.
@@ -42,7 +42,7 @@ All the flavors uses Typescript.
 
 To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`.
 
-# Future
+# 🔮 Future
 
 * Add Paypal donate button to the end of READMEs (or as a badge). Also funding.yml file.
 
@@ -60,9 +60,9 @@ To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`
 
 * `npx gev ts coolPackage` would start a TS package without going through the menu above.
 
-# [Changelog](CHANGELOG.md)
+# 📰 [Changelog](CHANGELOG.md)
 
-# Etc
+# 🦔 Etc
 
 * As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
 
