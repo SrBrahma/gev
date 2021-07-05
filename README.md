@@ -9,7 +9,7 @@
 
 # gev
 
-A lightly opinionated central way to fastly create new projects with a single command.
+A slightly opinionated central way to fastly create new projects with a single command.
 
 Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.
 
