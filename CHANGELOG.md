@@ -11,6 +11,13 @@
 *
 -->
 
+## 2.3.2 (2021-07-09)
+### all
+* Changed installation in README from ` ```c...` to ` ```bash ...`
+### ts
+* Added `@types/node` to devDeps, as it is commonly used.
+
+
 ## 2.3.1 (2021-07-04)
 ### ts, expo-pkg
 * Added badges: **npm version** and **weekly downloads**

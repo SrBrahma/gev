@@ -62,7 +62,7 @@ ${getBadgesString()}
 <br/>
 
 # Installation
-\`\`\`c
+\`\`\`bash
 npm install ${core.consts.projectName}
 # or
 yarn add ${core.consts.projectName}
