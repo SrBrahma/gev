@@ -1,23 +1,14 @@
 import Path from 'path';
 import fse from 'fs-extra';
-import { Flavor, FlavorFunction, getFlavorWritePath as getFlavorSemitemplatePath } from './typesAndConsts';
+import { getFlavorWritePath as getFlavorSemitemplatePath } from '../typesAndConsts';
 import validatePackageName from 'validate-npm-package-name';
 import execa from 'execa';
-import { get_README, get_README_Options } from './common/get_README';
-import { get_CHANGELOG } from './common/get_CHANGELOG';
+import { get_README, get_README_Options } from '../common/get_README';
+import { get_CHANGELOG } from '../common/get_CHANGELOG';
 import onExit from 'signal-exit';
-import { flavorExpo } from './flavors/expo';
-import { flavorTypescript } from './flavors/ts';
-import { flavorExpoPkg } from './flavors/expo-pkg';
 import ora from 'ora';
+import { getFlavorFunction } from './flavors';
 
-
-
-const flavorExecuters: Record<Flavor, FlavorFunction> = {
-  ts: flavorTypescript,
-  expo: flavorExpo,
-  'expo-pkg': flavorExpoPkg,
-};
 
 
 /** It won't execute any action by itself. The flavor is responsible of calling the actions. */
@@ -25,7 +16,7 @@ export class Core {
   consts: {
     /** If should `npm i` */
     installPackages: boolean;
-    flavor: Flavor;
+    flavor: string;
     /** Where we are running the command. */
     cwd: string;
     receivedProjectName: string | undefined;
@@ -47,7 +38,7 @@ export class Core {
     projectDirName: string;
     /** If will clean on errors. */
     cleanOnError: boolean;
-  }
+  };
 
   vars = {
     /** If we had manually created anything that we should remove if we had an error. */
@@ -55,19 +46,19 @@ export class Core {
     /** So we can just remove the dir contents instead of removing it if it already existed. */
     createdDir: false,
     state: 'notStarted' as 'notStarted' | 'running' | 'finished',
-  }
+  };
 
   constructor({
     cwd = process.cwd(),
     flavor, receivedProjectName, installPackages, cleanOnError,
   }: {
-    flavor: Flavor;
+    flavor: string;
     /** Where the user is running the gev command.
      * @default process.cwd() */
     cwd?: string;
     receivedProjectName?: string | undefined;
     installPackages: boolean;
-    cleanOnError: boolean
+    cleanOnError: boolean;
   }) {
 
     const currentDirectoryIsTarget = (receivedProjectName === undefined || receivedProjectName === '.');
@@ -100,8 +91,8 @@ export class Core {
 
   add = {
     readme: (options?: get_README_Options): void => fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this, options)),
-    changelog: (): void => fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'),  get_CHANGELOG()),
-  }
+    changelog: (): void => fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'), get_CHANGELOG()),
+  };
 
 
   /** Run the flavor.
@@ -112,11 +103,10 @@ export class Core {
       try {
         this.vars.state = 'running';
         // When adding custom flavors, will need to change this.
-        const fun = flavorExecuters[this.consts.flavor]!;
         const cancelOnExit = onExit(async () => {
           await this.actions.errorHappenedCleanIfNeeded();
         });
-        await fun(this);
+        await (await getFlavorFunction(this.consts.flavor))(this);
         cancelOnExit();
         this.vars.state = 'finished';
       } catch (err) {
@@ -146,8 +136,8 @@ export class Core {
      * Will only install if this.consts.installPackages is true
     */
     addPackages: async ({ deps = [], devDeps = [], cwd = this.consts.projectPath, install = this.consts.installPackages }: {
-      deps?: string[],
-      devDeps?: string[],
+      deps?: string[];
+      devDeps?: string[];
       /** @default this.consts.projectPath */
       cwd?: string;
       /** @default this.consts.installPackages */
@@ -167,13 +157,18 @@ export class Core {
       } else {
         await ora.promise(async () => {
           await Promise.all([
-            deps.length && await execa('npx', ['add-dependencies',
-              ...deps.map(d => d.replace('@latest', ''))],
+            deps.length && await execa('npx', [
+              'add-dependencies',
+              ...deps.map(d => d.replace('@latest', '')),
+            ],
             { cwd }),
-            devDeps.length && await execa('npx', ['add-dependencies',
-              ...devDeps.map(d => d.replace('@latest', '')), '-D'],
+            devDeps.length && await execa('npx', [
+              'add-dependencies',
+              ...devDeps.map(d => d.replace('@latest', '')), '-D',
+            ],
             { cwd }),
-          ]); }, 'Adding dependencies without installing them');
+          ]);
+        }, 'Adding dependencies without installing them');
       }
     }, // End of addPackages
 
@@ -195,28 +190,30 @@ export class Core {
      *
      * It will automatically use the flavor.
      *
-     * Should only be called after setProjectDirectory(), so it may set the creation vars. */
-    applyTemplate: async (): Promise<void> => {
+     * Should only be called after setProjectDirectory(), so it may set the creation vars.
+     *
+     * @param flavorOverwrite set this to use another flavor semitemplate. */
+    applySemitemplate: async (flavorOverwrite?: string): Promise<void> => {
       // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
       // `copy` copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537
-      await fse.copy(getFlavorSemitemplatePath(this.consts.flavor), this.consts.projectPath);
+      await fse.copy(getFlavorSemitemplatePath(flavorOverwrite ?? this.consts.flavor), this.consts.projectPath);
 
       // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
       if (await fse.pathExists(this.getPathInProjectDir('gitignore')))
         await fse.rename(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
     },
-  } // End of actions
+  }; // End of actions
 
-
-  /** */
   verifications = {
-
     /** The project path must be empty or don't exist. Else, will throw an error. */
     projectPathMustBeValid: async (): Promise<void> => {
+      /** Even if those exists in projectPath, project will still count as empty. */
+      const allowedFilesAndDirs = ['.git'];
       if (await fse.pathExists(this.consts.projectPath)) {
-        const cwdIsEmpty = (await fse. readdir(this.consts.projectPath)).length === 0; // https://stackoverflow.com/a/60676464/10247962
-        if (!cwdIsEmpty) {
+        const projectPathFiles = await fse.readdir(this.consts.projectPath);
+        const projectPathFilesFiltered = projectPathFiles.filter(f => !allowedFilesAndDirs.includes(f));
+        if (projectPathFilesFiltered.length !== 0) { // https://stackoverflow.com/a/60676464/10247962
           // improve error message.
           throw (`The project path '${this.consts.projectPath}' already exists and it isn't empty!`);
         }
@@ -234,9 +231,9 @@ export class Core {
           errorsString += ` - ${error}` + (i < (errors.length - 1) ? '\n' : '');
         });
 
-        throw (`The package name "${this.consts.projectName}" is invalid!\n${errorsString}`);
+        throw (`The package name '${this.consts.projectName}' is invalid!\n${errorsString}`);
       }
     },
 
-  } // End of verifications
+  }; // End of verifications
 }

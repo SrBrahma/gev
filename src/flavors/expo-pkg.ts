@@ -1,18 +1,20 @@
 import type { FlavorFunction } from '../typesAndConsts';
 import editJsonFile from 'edit-json-file';
-import { Core } from '../core';
+import { Core } from '../core/core';
 import ora from 'ora';
 import fse from 'fs-extra';
 
-export const flavorExpoPkg: FlavorFunction = async (core) => {
+
+
+const flavorExpoPkg: FlavorFunction = async (core) => {
 
   core.verifications.projectNameMustBeNpmValid();
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the Expo Library package "${core.consts.projectName}" at "${core.consts.projectPath}"`);
+  ora().info(`Generating the Expo Package project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
   await core.actions.setProjectDirectory();
-  await core.actions.applyTemplate();
+  await core.actions.applySemitemplate();
 
   core.add.changelog();
   core.add.readme({
@@ -61,9 +63,10 @@ export const flavorExpoPkg: FlavorFunction = async (core) => {
   // Remove the .git in the sandbox that expo created.
   await fse.remove(sandboxCore.getPathInProjectDir('.git'));
 
-  ora().succeed(`expo-pkg package "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
+  ora().succeed(`Expo package project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 
   // fse.symlink() // symlink to src inside src.
   // in expo, should add watch to the ../src.
 };
 
+export default flavorExpoPkg;

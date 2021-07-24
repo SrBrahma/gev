@@ -19,13 +19,14 @@
 // TODO npm gev gev - Boilerplate so others can create their flavors etc. They would need to import Core.
 
 import { Argument, Command } from 'commander';
-import { flavorsArray, currentDirectoryRegex, Flavor } from './typesAndConsts';
-import { Core } from './core';
+import { currentDirectoryRegex } from './typesAndConsts';
+import { Core } from './core/core';
 import latestVersion from 'latest-version';
 import execa from 'execa';
 import chalk from 'chalk';
 import ora from 'ora';
 import compareSemver from 'semver-compare';
+import { availableFlavors } from './core/flavors';
 
 const VERSION = (require('../package.json') as Record<string, unknown>).version as string;
 const program = new Command();
@@ -34,16 +35,16 @@ const program = new Command();
 // TODO add -v as alias to -V/--version.
 program
   .name('gev') // So it appears in the usage help
-  .version(VERSION, '-v, --version', 'Output the version number') // Just capitalize the first letter of description.
-  .helpOption('-h, --help', 'Display help for command') // Just capitalize the first letter of description.
+  .version(VERSION, '-v, --version', 'Output the version number.') // Just capitalize the first letter of description.
+  .helpOption('-h, --help', 'Display help for command.') // Just capitalize the first letter of description.
   .option('-n, --no-install', 'Don\'t install the npm packages after setting the template.')
   .option('-c, --no-check-latest', 'Won\'t check if is using the latest version of gev.')
   .option('-C, --no-clean-on-error', 'Won\'t clean the project being generated if an error happened.')
   // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
-  .addArgument(new Argument('<flavor>', `What kind of project it should be.`)
-    .choices(flavorsArray as any as string[])) // Will also print in the usage the possible options
-  .argument('[projectName]', 'The name of the new project. A new directory will be created and used only if it doesn\'t exists. If ommited or ".", will use the current directory and its name, if empty.')
-  .description('Effortlessly creates slightly opionated projects boilerplates within a single command')
+  .addArgument(new Argument('<flavor>', `The project kind.`)
+    .choices(availableFlavors)) // Will also print in the usage the possible options
+  .argument('[projectName]', "The name of the new project. A new directory will be created and used only if it doesn't exists. If ommited or '.', will use the current directory and its name, if empty.")
+  .description('Effortlessly creates slightly opionated projects boilerplates within a single command.')
   .showHelpAfterError()
   .action(async () => {
     // Commander transforms --no-install into install, with default value of true to install.
@@ -52,9 +53,9 @@ program
       install: installPackages,
       checkLatest, cleanOnError,
     } = program.opts<{
-      install: boolean; checkLatest: boolean; cleanOnError: boolean
+      install: boolean; checkLatest: boolean; cleanOnError: boolean;
     }>();
-    const [flavor, projectNameArg = '.'] = program.args as [Flavor, string | undefined];
+    const [flavor, projectNameArg = '.'] = program.args as [string, string | undefined];
 
     if (checkLatest) {
       // Ensure latest version
@@ -68,7 +69,8 @@ program
           stdio: 'inherit',
           env: {
             npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
-          } });
+          },
+        });
         return;
       } else { // Same version. We are running the latest one!
         spinner.succeed();

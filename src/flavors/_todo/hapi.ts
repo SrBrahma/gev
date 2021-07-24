@@ -1,5 +1,5 @@
-import type { FlavorFunction } from '../../../typesAndConsts';
 import editJsonFile from 'edit-json-file';
+import { FlavorFunction } from '../../typesAndConsts';
 
 
 // Add Heroku
@@ -9,11 +9,11 @@ export const flavorHapi: FlavorFunction = async (core) => {
 
   await core.verifications.projectPathMustBeValid();
 
-  console.log(`Generating the hapi project "${core.consts.projectName}" at "${core.consts.projectPath}"...`);
+  console.log(`Generating the hapi project '${core.consts.projectName}' at '${core.consts.projectPath}'...`);
 
   await core.actions.setProjectDirectory();
 
-  await core.actions.applyTemplate();
+  await core.actions.applySemitemplate();
 
   core.add.changelog();
   core.add.readme();
@@ -38,10 +38,8 @@ export const flavorHapi: FlavorFunction = async (core) => {
 
       '@types/hapi__hapi',
     ],
-    deps: [
-      '@hapi/hapi@latest',
-    ],
+    deps: ['@hapi/hapi@latest'],
   });
 
-  console.log(`hapi project "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
+  console.log(`hapi project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 };

@@ -7,11 +7,11 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
   // silent = false,
   /** If should automatically install the package if not installed or is outdated
    * @default false */
-  install: boolean,
+  install: boolean;
 } = { install: false }): Promise<'notInstalled' | 'outdated' | 'updated'> {
   let state: 'notChecked' | 'notInstalled' | 'outdated' | 'updated' = 'notChecked';
 
-  const spinner = ora().start(`Checking if "${packageName}" is globally installed and updated`);
+  const spinner = ora().start(`Checking if '${packageName}' is globally installed and updated`);
 
   // TODO unknown behavior on errors other than package not installed.
 
@@ -42,11 +42,11 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
 
   if (state !== 'updated') {
     if (state === 'notInstalled')
-      spinner.info(`"${packageName}" is not globally installed. Installing it`);
+      spinner.info(`'${packageName}' is not globally installed. Installing it`);
 
     if (state === 'outdated')
       // TODO add current version and target version.
-      console.info(`"${packageName}" is not updated. Updating it`);
+      console.info(`'${packageName}' is not updated. Updating it`);
 
     await execa('npm', ['i', '-g', packageName]);
   }

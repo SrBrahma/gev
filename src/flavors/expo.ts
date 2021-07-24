@@ -10,27 +10,26 @@ import ora from 'ora';
 
 
 
-export const flavorExpo: FlavorFunction = async (core) => {
+const flavorExpo: FlavorFunction = async (core) => {
 
   await core.verifications.projectPathMustBeValid();
 
   // Ensure expo-cli is installed at latest version. Will print some stuff.
   await checkGlobalPackageUpdate('expo-cli', { install: true });
 
-  ora().info(`Generating the expo project "${core.consts.projectName}" at "${core.consts.projectPath}"`);
+  ora().info(`Generating the Expo project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
   const target = core.consts.currentDirectoryIsTarget ? '.' : core.consts.projectName;
 
   // --no-install Don't install yet! We will install all later.
   // -t expo-template-blank-typescript, got the right name from here https://github.com/expo/expo-cli/blob/master/packages/expo-cli/src/commands/init.ts
-  await execa('expo', ['init', target, '--npm', '--no-install', '-t', 'expo-template-blank-typescript'], {
-    cwd: core.consts.cwd });
+  await execa('expo', ['init', target, '--npm', '--no-install', '-t', 'expo-template-blank-typescript'], { cwd: core.consts.cwd });
 
   // Remove the default App.tsx. We will create another one in src/App.tsx.
   await fse.remove(core.getPathInProjectDir('App.tsx'));
 
 
-  await core.actions.applyTemplate();
+  await core.actions.applySemitemplate();
 
   core.add.changelog();
   core.add.readme({
@@ -56,7 +55,7 @@ export const flavorExpo: FlavorFunction = async (core) => {
 
 
   // Done!
-  ora().succeed(`Expo project "${core.consts.projectName}" created at "${core.consts.projectPath}"!`);
+  ora().succeed(`Expo project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 
   // Copy/paste from what Expo prints at the end, without the cd to the new project.
   console.log(`\nTo run your project, navigate to the directory and run one of the following npm commands:
@@ -66,3 +65,5 @@ export const flavorExpo: FlavorFunction = async (core) => {
   - npm run web`);
 
 };
+
+export default flavorExpo;

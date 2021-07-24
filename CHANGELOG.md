@@ -11,6 +11,17 @@
 *
 -->
 
+## 2.4.0 (2021-07-24)
+### all
+* Changed CHANGELOG.md badges order
+* `.git` is now ignored in dir emptiness check.
+### ts
+* Added **Jest**
+* Added some common consts to `consts.ts`.
+### gev
+* Now dynamically loads the flavor, improves new flavors creation
+* Minor strings changes
+
 ## 2.3.2 (2021-07-09)
 ### all
 * Changed installation in README from ` ```c...` to ` ```bash ...`

@@ -5,7 +5,7 @@ export function get_CHANGELOG(): string {
   let date = new Date();
   // https://stackoverflow.com/a/29774197/10247962
   const offset = date.getTimezoneOffset();
-  date = new Date(date.getTime() - (offset*60*1000));
+  date = new Date(date.getTime() - (offset * 60 * 1000));
   /** YYYY-MM-DD format */
   const formattedDate: string = date.toISOString().split('T')[0]!;
 
