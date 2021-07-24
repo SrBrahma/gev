@@ -62,7 +62,7 @@ program
       const spinner = ora().start('Ensuring latest version');
       const latestVer = await latestVersion('gev');
       if (compareSemver(VERSION, latestVer) === -1) {
-        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest available version [${chalk.yellow(latestVer)}]. Recalling gev with @latest...`);
+        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest available version [${chalk.yellow(latestVer)}]. Recalling gev with @latest.\n`); // additional \n
 
         const rawProgramArgs = process.argv.slice(2);
         await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], {
@@ -70,7 +70,7 @@ program
           env: {
             npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
           },
-        });
+        }).catch(null); // ignore throw here. It will already be treated in the @latest.
         return;
       } else { // Same version. We are running the latest one!
         spinner.succeed();

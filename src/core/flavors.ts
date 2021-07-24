@@ -9,7 +9,7 @@ function getAvailableFlavors() {
   let flavors = readdirSync(flavorsDirPath);
   // omit _todo from flavors
   flavors = flavors.filter(f => !['_todo'].includes(f));
-  flavors = flavors.map(flavor => flavor.replace('.ts', ''));
+  flavors = flavors.map(flavor => flavor.replace(/\.[tj]s/, ''));
   return flavors;
 }
 

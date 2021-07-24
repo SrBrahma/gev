@@ -10,6 +10,10 @@
 ### Fixed
 *
 -->
+## 2.4.1 (2021-07-24)
+### all
+* Fixed flavor having '.js' at its end.
+* Fixed oldest version catching @latest error.
 
 ## 2.4.0 (2021-07-24)
 ### all
