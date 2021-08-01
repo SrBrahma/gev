@@ -14,7 +14,7 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
   const spinner = ora().start(`Checking if '${packageName}' is globally installed and updated`);
 
   // TODO unknown behavior on errors other than package not installed.
-
+  // TODO call 'expo --version' to know if it's intalled and updated. faster.
   const [installed, updatedOrNotInstalled] = await Promise.all([
     (async () => {
       try {
@@ -46,7 +46,7 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
 
     if (state === 'outdated')
       // TODO add current version and target version.
-      console.info(`'${packageName}' is not updated. Updating it`);
+      spinner.info(`'${packageName}' is not updated. Updating it`);
 
     await execa('npm', ['i', '-g', packageName]);
   }
