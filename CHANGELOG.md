@@ -10,6 +10,14 @@
 ### Fixed
 *
 -->
+
+
+## 2.4.2 (2021-07-31)
+### gev
+* Quick change on @latest recall message
+### expo
+* Fixed duplicated message on outdated global expo.
+
 ## 2.4.1 (2021-07-24)
 ### all
 * Fixed flavor having '.js' at its end.

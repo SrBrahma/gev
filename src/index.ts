@@ -63,7 +63,7 @@ program
       const spinner = ora().start('Ensuring latest version');
       const latestVer = await latestVersion('gev');
       if (compareSemver(VERSION, latestVer) === -1) {
-        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest one [${chalk.yellow(latestVer)}]. Recalling with gev @latest.\n`); // Additional \n
+        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest one [${chalk.yellow(latestVer)}]. Recalling gev with @latest.\n`); // Additional \n
 
         const rawProgramArgs = process.argv.slice(2);
         await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], {
