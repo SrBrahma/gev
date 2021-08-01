@@ -19,14 +19,15 @@
 // TODO npm gev gev - Boilerplate so others can create their flavors etc. They would need to import Core.
 
 import { Argument, Command } from 'commander';
-import { currentDirectoryRegex } from './typesAndConsts';
-import { Core } from './core/core';
-import latestVersion from 'latest-version';
 import execa from 'execa';
 import chalk from 'chalk';
 import ora from 'ora';
+import { currentDirectoryRegex } from './typesAndConsts';
+import { Core } from './core/core';
+import latestVersion from 'latest-version';
 import compareSemver from 'semver-compare';
 import { availableFlavors } from './core/flavors';
+
 
 const VERSION = (require('../package.json') as Record<string, unknown>).version as string;
 const program = new Command();
@@ -62,7 +63,7 @@ program
       const spinner = ora().start('Ensuring latest version');
       const latestVer = await latestVersion('gev');
       if (compareSemver(VERSION, latestVer) === -1) {
-        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest available version [${chalk.yellow(latestVer)}]. Recalling gev with @latest.\n`); // additional \n
+        spinner.info(`The current version of gev [${chalk.keyword('brown')(VERSION)}] is lower than the latest one [${chalk.yellow(latestVer)}]. Recalling with gev @latest.\n`); // Additional \n
 
         const rawProgramArgs = process.argv.slice(2);
         await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], {
