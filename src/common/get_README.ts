@@ -47,32 +47,32 @@ export function get_README(core: Core, options?: get_README_Options): string {
 
   // Is trimmed on end.
   let result = (`
-  <!-- <img src=".logo.png" alt=${projectName}/><br/> -->
+<!-- <img src=".logo.png" alt=${projectName}/><br/> -->
 
-  ${getBadgesString()}
+${getBadgesString()}
 
-  ${projectName}
+# ${projectName}
 
-  <!-- descriptionHere -->
+<!-- descriptionHere -->
 
-  <br/>
+<br/>
 
-  <div align="center">
-    <h3> 🏗 ❗ Work In Progress ❗🛠 </h3>
-  </div>
+<div align="center">
+  <h3> 🏗 ❗ Work In Progress ❗🛠 </h3>
+</div>
 
-  <br/>
+<br/>
 
-  ## Installation
-  \`\`\`bash
-  npm install ${core.consts.projectName}
-  # or
-  yarn add ${core.consts.projectName}
-  \`\`\`
+## Installation
+\`\`\`bash
+npm install ${core.consts.projectName}
+# or
+yarn add ${core.consts.projectName}
+\`\`\`
 
-  ## Usage
+## Usage
 
-  ## [Changelog](CHANGELOG.md)`);
+## [Changelog](CHANGELOG.md)`);
 
   result = result.trim();
   return result;

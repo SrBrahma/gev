@@ -11,6 +11,10 @@
 *
 -->
 
+## 2.4.4 - 2021/08/09
+### all
+* Fixed README indentation and title
+
 ## 2.4.3 - 2021/08/09
 ### ts, expo-pkg
 * Changed tsconfig.json to properly exclude tests
