@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.4.3 - 2021/08/09
+### ts, expo-pkg
+* Changed tsconfig.json to properly exclude tests
 
 ## 2.4.2 (2021-07-31)
 ### gev
