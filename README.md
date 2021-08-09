@@ -13,10 +13,6 @@ A slightly opinionated central way to fastly create new projects with a single c
 
 Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.
 
-Also, having to manage the **eslint** of each project and not knowing which one I've updated last, also causes some anxiety.
-
-Made it mainly for me, but it's walking towards being a tool to be widely used.
-
 There is a [templates](./templates) directory that contains all flavors boilerplates generated using the latest gev version.
 
 
