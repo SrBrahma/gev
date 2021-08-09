@@ -11,6 +11,10 @@
 *
 -->
 
+## 2.4.5 - 2021/08/09
+### ts, expo-pkg, gev
+* Added tsconfig.lint.json (2.4.3 haven't properly fixed it.)
+
 ## 2.4.4 - 2021/08/09
 ### all
 * Fixed README indentation and title
