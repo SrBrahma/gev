@@ -11,6 +11,10 @@
 *
 -->
 
+## 2.4.6 - 2021/08/09
+### ts, expo-pkg
+* Changed tsconfig target from es2020 to es5.
+
 ## 2.4.5 - 2021/08/09
 ### ts, expo-pkg, gev
 * Added tsconfig.lint.json (2.4.3 haven't properly fixed it.)
