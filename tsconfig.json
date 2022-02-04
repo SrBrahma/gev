@@ -16,5 +16,5 @@
     "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "semitemplates/write", "todo/_todo"]
+  "include": ["src/**/*"]
 }

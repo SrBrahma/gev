@@ -1,13 +1,11 @@
+// https://www.stefanjudis.com/snippets/how-to-import-json-files-in-es-modules-node-js/
+import { createRequire } from 'module';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// https://www.stefanjudis.com/snippets/how-to-import-json-files-in-es-modules-node-js/
-// eslint-disable-next-line import/newline-after-import
-import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const pkgJson = require('../../package.json');
 

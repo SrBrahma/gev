@@ -11,6 +11,10 @@
 *
 -->
 
+## 2.6.0 - 202-02-04
+### ts
+* Now using ESM!
+
 ## 2.5.0 - 2022-02-03
 * Many, many changes but as I am completly out of time and currently only I use this, won't this time put effort on this changelog.
 

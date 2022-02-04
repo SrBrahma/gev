@@ -1,8 +1,13 @@
-import path from 'path';
+// https://www.stefanjudis.com/snippets/how-to-import-json-files-in-es-modules-node-js/
+import { createRequire } from 'module';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 
 
-const pkgJson = require('../../package.json') as Record<string, string>;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const pkgJson = require('../../package.json');
 
 
 /** General and commonly used info about this program. */
