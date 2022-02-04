@@ -2,7 +2,7 @@
   "name": "ts",
   "version": "0.1.0",
   "description": "",
-  "main": "./lib/main/index.js",
+  "exports": "./lib/main/index.js",
   "scripts": {
     "test": "echo \"No test specified.\"",
     "lint": "eslint --fix \"src/**\"",
@@ -10,8 +10,8 @@
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run lint && npm run test",
     "prepare": "npm run build",
-    "watch": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-    "start": "npm run watch"
+    "start": "node --loader ts-node/esm ./src/main/index.ts",
+    "watch": "nodemon ./src/main/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -27,8 +27,11 @@
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
     "eslint": "^8.8.0",
-    "eslint-config-gev": "^2.26.0",
+    "eslint-config-gev": "^2.26.1",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-no-autofix": "^1.2.3",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "jest": "^27.4.7",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.3",

@@ -2,6 +2,7 @@
   "name": "",
   "version": "0.1.0",
   "description": "",
+  "type": "module",
   "exports": "./lib/main/index.js",
   "scripts": {
     "test": "echo \"No test specified.\"",
@@ -16,7 +17,6 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "types": "./lib/index.d.ts",
   "files": ["/lib"],
   "dependencies": {
   },

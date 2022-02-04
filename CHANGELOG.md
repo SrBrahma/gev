@@ -11,7 +11,10 @@
 *
 -->
 
-## 2.6.0 - 202-02-04
+## 2.6.1 - 2022-02-04
+* Fixed semitemplate dir not being properly shipped
+
+## 2.6.0 - 2022-02-04
 ### ts
 * Now using ESM!
 

@@ -1,13 +1,13 @@
 {
   "name": "gev",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "type": "module",
   "exports": "./lib/main/index.js",
   "engines": { "node": "^12.20.0 || ^14.13.1 || >=16.0.0" },
   "description": "Generates boilerplates",
   "main": "./lib/main/index.js",
   "bin": "./lib/main/index.js",
-  "files": ["/lib", "/semitemplates"],
+  "files": ["lib", "semitemplates"],
   "scripts": {
     "clean": "rimraf lib",
     "test": "echo \"Error: no test specified\"",
