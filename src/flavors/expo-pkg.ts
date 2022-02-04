@@ -3,6 +3,8 @@ import fse from 'fs-extra';
 import ora from 'ora';
 import { Core } from '../core/core.js';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
+import { rnEslintPkgs } from './expo.js';
+import { tsEslintPkgs } from './ts.js';
 
 
 
@@ -33,14 +35,8 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
       'react-native',
       'react', // Without latest, let npm decide it.
       '@types/react-native', // Includes @types/react
-      'eslint',
-      'eslint-plugin-no-autofix',
-      'eslint-config-gev',
-      'eslint-plugin-react',
-      'eslint-plugin-react-hooks',
-      'eslint-plugin-react-native',
-      '@typescript-eslint/eslint-plugin',
-      '@typescript-eslint/parser',
+      ...tsEslintPkgs,
+      ...rnEslintPkgs,
     ],
   });
 

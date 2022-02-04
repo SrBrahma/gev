@@ -25,20 +25,22 @@ export async function generateTemplates(): Promise<void> {
     await execa('npm', ['run', 'build'], { cwd: Path.join(__dirname, '..') });
   }, 'Building project before generating templates');
 
-    // Run from dist each flavor
   for (const flavor of availableFlavors) {
     await ora.promise(async () => {
+
       let projectName = flavor;
       // [expo error on expo named project] `Cannot create an app named "expo" because it would conflict with a dependency of the same name.`
       if (['expo'].includes(flavor))
         projectName += '-'
       await execa('node', ['..', '--no-install', flavor, projectName], { cwd: templatesPath });
-      // Remove possible ".git" in the generated template. It would mess pushing it to git and GitHub.
+
+      // Remove possible ".git" in the generated template. It would mess git-pushing it.
       const gitPaths = await globby('**/.git', {
-        onlyFiles: false, cwd: Path.join(templatesPath, flavor), absolute: true
+        onlyFiles: false, cwd: Path.join(templatesPath, projectName), absolute: true
       })
       for (const gitPath of gitPaths)
         await fse.remove(gitPath)
+
     }, `Generating template "${flavor}"`)
   }
 }

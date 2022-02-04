@@ -3,16 +3,22 @@ import ora from 'ora';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
 
 
+
+export const tsEslintPkgs = [
+  'eslint',
+  'eslint-config-gev',
+  '@typescript-eslint/eslint-plugin',
+  '@typescript-eslint/parser',
+  'eslint-plugin-no-autofix',
+  'eslint-plugin-simple-import-sort',
+];
+
 // [why i did this back then] To be reused?
 export const typescriptDevDeps = [
   'typescript',
   'ts-node-dev',
 
-  'eslint',
-  'eslint-config-gev',
-  'eslint-plugin-no-autofix',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser',
+  ...tsEslintPkgs,
 
   '@types/node',
 
