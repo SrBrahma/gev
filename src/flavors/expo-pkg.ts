@@ -1,8 +1,6 @@
 import editJsonFile from 'edit-json-file';
 import ora from 'ora';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
-import { rnEslintPkgs } from './expo.js';
-import { tsEslintPkgs } from './ts.js';
 
 
 
@@ -33,8 +31,8 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
       'react-native',
       'react', // Without latest, let npm decide it.
       '@types/react-native', // Includes @types/react
-      ...tsEslintPkgs,
-      ...rnEslintPkgs,
+      'eslint',
+      'eslint-config-gev',
     ],
   });
 

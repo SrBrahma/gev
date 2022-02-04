@@ -4,15 +4,10 @@ import fse from 'fs-extra';
 import ora from 'ora';
 import { FlavorFunction } from '../main/typesAndConsts.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
-import { tsEslintPkgs } from './ts.js';
 
 
 
-export const rnEslintPkgs = [
-  'eslint-plugin-react',
-  'eslint-plugin-react-hooks',
-  'eslint-plugin-react-native',
-];
+
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
 //   my cleaunup should handle this.
@@ -82,8 +77,8 @@ const flavorExpo: FlavorFunction = async (core) => {
     ],
     devDeps: [
       'typescript', // Expo template is currently using v4.0.0 instead of v4.2.4 >:(
-      ...tsEslintPkgs,
-      ...rnEslintPkgs,
+      'eslint',
+      'eslint-config-gev',
     ],
   });
 

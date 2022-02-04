@@ -11,6 +11,16 @@
 *
 -->
 
+## 2.7.0 - 20220-02-04
+* .eslintrc.js have now included in their begining:
+
+```js
+// This is a workaround for https://github.com/eslint/eslint/issues/3458
+require("@rushstack/eslint-patch/modern-module-resolution");
+```
+
+With it, it's no longer required to install all the eslint plugins! They are all included in as dependencies in my `eslint-config-gev` package.
+
 ## 2.6.1 - 2022-02-04
 * Fixed semitemplate dir not being properly shipped
 

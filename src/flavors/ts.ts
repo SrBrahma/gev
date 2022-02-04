@@ -4,23 +4,13 @@ import type { FlavorFunction } from '../main/typesAndConsts.js';
 
 
 
-export const tsEslintPkgs = [
-  'eslint',
-  'eslint-config-gev',
-  'eslint-plugin-no-autofix',
-  'eslint-plugin-simple-import-sort',
-  'eslint-plugin-import',
-  'eslint-plugin-unused-imports',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser',
-];
-
 // [why i did this back then] To be reused?
 export const typescriptDevDeps = [
   'typescript',
   'ts-node-dev',
 
-  ...tsEslintPkgs,
+  'eslint',
+  'eslint-config-gev',
 
   '@types/node',
 
