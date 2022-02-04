@@ -1,7 +1,5 @@
 import editJsonFile from 'edit-json-file';
-import fse from 'fs-extra';
 import ora from 'ora';
-import { Core } from '../core/core.js';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
 import { rnEslintPkgs } from './expo.js';
 import { tsEslintPkgs } from './ts.js';

@@ -3,6 +3,7 @@ import { Core } from '../core/core.js';
 
 
 export type get_LICENSE_Options = {
+  license: 'mit';
 };
 
 // TODO custom developer name.

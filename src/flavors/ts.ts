@@ -10,6 +10,7 @@ export const tsEslintPkgs = [
   'eslint-plugin-no-autofix',
   'eslint-plugin-simple-import-sort',
   'eslint-plugin-import',
+  'eslint-plugin-unused-imports',
   '@typescript-eslint/eslint-plugin',
   '@typescript-eslint/parser',
 ];
