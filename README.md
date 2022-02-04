@@ -44,8 +44,6 @@ To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`
 
 * Interactive menu to add other badges and the paypal button to the README.
 
-* typedoc support, with markdown output. I hate writing READMEs!
-
 * jest integration
 
 * Allow custom setups. It could be something like `npx gev -u githubUsername`. This could really be a good way for people to have their own environment setup without too much work.
@@ -54,12 +52,4 @@ To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`
 
 * `npx gev` would open an interactive menu to choose the desired initializer or change user options.
 
-* `npx gev ts coolPackage` would start a TS package without going through the menu above.
-
 # 📰 [Changelog](CHANGELOG.md)
-
-# 🦔 Etc
-
-* As it accepts scoped package names like `npx gev @yourUsername/coolPackage`, it **is not** possible to specify a path in the package name, like `... deep/dir/coolPackage`.
-
-* On errors or process exit during the project generation, it will remove any written file.

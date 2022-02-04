@@ -1,14 +1,17 @@
 import Path from 'path';
+import base64 from 'base-64';
+import fetch from 'cross-fetch';
+import { execa } from 'execa';
 import fse from 'fs-extra';
-import { getFlavorWritePath as getFlavorSemitemplatePath } from '../typesAndConsts';
-import validatePackageName from 'validate-npm-package-name';
-import execa from 'execa';
-import { get_README, get_README_Options } from '../common/get_README';
-import { get_CHANGELOG } from '../common/get_CHANGELOG';
-import onExit from 'signal-exit';
+import latestVersion from 'latest-version';
 import ora from 'ora';
-import { getFlavorFunction } from './flavors';
-
+import onExit from 'signal-exit';
+import validatePackageName from 'validate-npm-package-name';
+import { get_CHANGELOG } from '../common/get_CHANGELOG.js';
+import { get_LICENSE } from '../common/get_LICENSE.js';
+import { get_README, get_README_Options } from '../common/get_README.js';
+import { getFlavorWritePath as getFlavorSemitemplatePath } from '../main/typesAndConsts.js';
+import { getFlavorFunction } from './flavors.js';
 
 
 /** It won't execute any action by itself. The flavor is responsible of calling the actions. */
@@ -19,23 +22,14 @@ export class Core {
     flavor: string;
     /** Where we are running the command. */
     cwd: string;
-    receivedProjectName: string | undefined;
-    /** The last segment of the cwd. */
-    currentDirName: string;
-    /** If the current directory should be used to store the project files.
-     * The inverse of `childDirectoryIsTarget` */
+    /** If the cwd will be used to store the project files. */
     currentDirectoryIsTarget: boolean;
-    /** If will create / has created a new directory for the project.
-     * The inverse of `currentDirectoryAsTarget` */
-    childDirectoryIsTarget: boolean;
     /** The project full path. */
     projectPath: string;
     /** The name of the new project. */
     projectName: string;
     /** The full path of the parent directory of the project. */
     parentDirPath: string;
-    /** The name of the directory containing the project. */
-    projectDirName: string;
     /** If will clean on errors. */
     cleanOnError: boolean;
   };
@@ -50,33 +44,25 @@ export class Core {
 
   constructor({
     cwd = process.cwd(),
-    flavor, receivedProjectName, installPackages, cleanOnError,
+    flavor, projectRelativePath, installPackages, cleanOnError,
   }: {
     flavor: string;
     /** Where the user is running the gev command.
      * @default process.cwd() */
     cwd?: string;
-    receivedProjectName?: string | undefined;
+    /** Use '.' for cwd. */
+    projectRelativePath: string;
     installPackages: boolean;
     cleanOnError: boolean;
   }) {
 
-    const currentDirectoryIsTarget = (receivedProjectName === undefined || receivedProjectName === '.');
-    const currentDirName = Path.basename(cwd);
-    const projectName = currentDirectoryIsTarget ? currentDirName : receivedProjectName!;
-    // The `replace` removes the scope part, if present.
-    const projectDirName = currentDirectoryIsTarget ? currentDirName : projectName.replace(/.*\//, '');
-    const projectPath = currentDirectoryIsTarget ? cwd : Path.join(cwd, projectDirName);
+    const projectPath = Path.join(cwd, projectRelativePath);
 
     this.consts = {
       flavor,
       cwd,
-      receivedProjectName: receivedProjectName,
-      currentDirectoryIsTarget,
-      childDirectoryIsTarget: !currentDirectoryIsTarget,
-      currentDirName,
-      projectName,
-      projectDirName,
+      currentDirectoryIsTarget: projectPath === cwd,
+      projectName: Path.basename(projectPath),
       projectPath,
       parentDirPath: Path.dirname(projectPath),
       installPackages,
@@ -92,6 +78,7 @@ export class Core {
   add = {
     readme: (options?: get_README_Options): void => fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this, options)),
     changelog: (): void => fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'), get_CHANGELOG()),
+    license: (): void => fse.writeFileSync(this.getPathInProjectDir('LICENSE'), get_LICENSE(this)),
   };
 
 
@@ -135,40 +122,47 @@ export class Core {
      *
      * Will only install if this.consts.installPackages is true
     */
-    addPackages: async ({ deps = [], devDeps = [], cwd = this.consts.projectPath, install = this.consts.installPackages }: {
+    addPackages: async ({
+      deps = [], devDeps = [], isExpo,
+      cwd = this.consts.projectPath, install = this.consts.installPackages,
+    }: {
       deps?: string[];
       devDeps?: string[];
+      /** If true, will check and change the deps versions to fit expo compatible versions.
+       *
+       * E.g. for sdk-44: https://github.com/expo/expo/blob/sdk-44/packages/expo/bundledNativeModules.json */
+      isExpo?: boolean;
       /** @default this.consts.projectPath */
       cwd?: string;
       /** @default this.consts.installPackages */
       install?: boolean;
       // peerDeps?: string[],
     } = {}): Promise<void> => {
+      if (isExpo) {
+        await ora.promise(async () => {
+          deps = await getPackagesVersionsForLatestExpo(deps);
+        }, 'Getting dependencies versions compatible with Expo');
+      }
+
+      await ora.promise(async () => {
+        await Promise.all([
+          deps.length && await execa('npx', [
+            'add-dependencies',
+            ...deps.map((d) => d.replace('@latest', '')),
+          ], { cwd }),
+          devDeps.length && await execa('npx', [
+            'add-dependencies',
+            ...devDeps.map((d) => d.replace('@latest', '')), '-D',
+          ], { cwd }),
+        ]);
+      }, 'Adding dependencies to package.json');
+
       if (install) {
         await ora.promise(async () => {
-          if (devDeps.length)
-            await execa('npm', ['i', '-D', ...devDeps], { cwd });
+          // [--ignore-scripts] Don't run `prepare` etc scripts https://stackoverflow.com/a/61975270/10247962
+          await execa('npm', ['i', '--ignore-scripts'], { cwd });
 
-          // If hasn't executed the above, will execute this. Will also execute if there are deps to install.
-          if (!devDeps.length || deps.length)
-            await execa('npm', ['i', ...deps], { cwd });
         }, 'Installing dependencies');
-
-      } else {
-        await ora.promise(async () => {
-          await Promise.all([
-            deps.length && await execa('npx', [
-              'add-dependencies',
-              ...deps.map(d => d.replace('@latest', '')),
-            ],
-            { cwd }),
-            devDeps.length && await execa('npx', [
-              'add-dependencies',
-              ...devDeps.map(d => d.replace('@latest', '')), '-D',
-            ],
-            { cwd }),
-          ]);
-        }, 'Adding dependencies without installing them');
       }
     }, // End of addPackages
 
@@ -212,7 +206,7 @@ export class Core {
       const allowedFilesAndDirs = ['.git'];
       if (await fse.pathExists(this.consts.projectPath)) {
         const projectPathFiles = await fse.readdir(this.consts.projectPath);
-        const projectPathFilesFiltered = projectPathFiles.filter(f => !allowedFilesAndDirs.includes(f));
+        const projectPathFilesFiltered = projectPathFiles.filter((f) => !allowedFilesAndDirs.includes(f));
         if (projectPathFilesFiltered.length !== 0) { // https://stackoverflow.com/a/60676464/10247962
           // improve error message.
           throw (`The project path '${this.consts.projectPath}' already exists and it isn't empty!`);
@@ -236,4 +230,29 @@ export class Core {
     },
 
   }; // End of verifications
+}
+
+
+
+async function getPackagesVersionsForLatestExpo(deps: string[]) {
+  const expoLatestMajor = (await latestVersion('expo')).split('.')[0]!;
+
+  // This is the file from where the versions are found: https://github.com/expo/expo/blob/sdk-44/packages/expo/bundledNativeModules.json
+  // const dictUrl = `https://github.com/expo/expo/blob/sdk-${expoLatestMajor}/packages/expo/bundledNativeModules.json`
+
+  const endpoint = `//api.github.com/repos/expo/expo/contents/packages/expo/bundledNativeModules.json?ref=sdk-${expoLatestMajor}`;
+  const data = (await (await fetch(endpoint)).json()).content;
+
+  if (!data)
+    throw new Error (`No data for '${endpoint}'`);
+
+  const dict = JSON.parse(base64.decode(data)) as Record<string, string>;
+
+  const transformedDeps = deps.map((d) => {
+    const depName = d.split('@')[0]!;
+    const version = dict[depName];
+    return version ? `${depName}@${version}` : d;
+  });
+
+  return transformedDeps;
 }

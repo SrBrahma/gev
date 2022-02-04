@@ -2,7 +2,8 @@
 // research later https://github.com/matiassingers/awesome-readme
 // "Give it a star!" ?
 
-import type { Core } from '../core/core';
+import type { Core } from '../core/core.js';
+
 
 
 type Badges = {

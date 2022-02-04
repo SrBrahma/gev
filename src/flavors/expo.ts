@@ -1,8 +1,9 @@
-import execa from 'execa';
-import { FlavorFunction } from '../typesAndConsts';
-import { checkGlobalPackageUpdate } from '../utils';
+import editJsonFile from 'edit-json-file';
+import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
+import { FlavorFunction } from '../main/typesAndConsts.js';
+import { checkGlobalPackageUpdate } from '../main/utils.js';
 
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
@@ -19,11 +20,9 @@ const flavorExpo: FlavorFunction = async (core) => {
 
   ora().info(`Generating the Expo project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
-  const target = core.consts.currentDirectoryIsTarget ? '.' : core.consts.projectName;
-
   // --no-install Don't install yet! We will install all later.
   // -t expo-template-blank-typescript, got the right name from here https://github.com/expo/expo-cli/blob/master/packages/expo-cli/src/commands/init.ts
-  await execa('expo', ['init', target, '--npm', '--no-install', '-t', 'expo-template-blank-typescript'], { cwd: core.consts.cwd });
+  await execa('expo', ['init', core.consts.projectPath, '--yarn', '--no-install', '-t', 'expo-template-blank-typescript'], { cwd: core.consts.cwd });
 
   // Remove the default App.tsx. We will create another one in src/App.tsx.
   await fse.remove(core.getPathInProjectDir('App.tsx'));
@@ -41,19 +40,58 @@ const flavorExpo: FlavorFunction = async (core) => {
   // Change App.tsx location: https://stackoverflow.com/a/54887872/10247962
 
   await core.actions.addPackages({
+    isExpo: true,
+    deps: [
+      // Navigation
+      '@react-navigation/native',
+      '@react-navigation/bottom-tabs',
+      'react-native-screens',
+      'react-native-safe-area-context',
+      '@react-navigation/stack',
+      'react-native-gesture-handler', // For stack
+
+      // Visual
+      'react-native-svg',
+      'react-native-shadow-2',
+      'pagescrollview',
+
+      // Expo
+      'expo-font',
+      'expo-app-loading',
+      'expo-constants',
+      'expo-navigation-bar',
+
+      // Etc
+      '@callstack/react-theme-provider',
+      'react-native-size-matters',
+
+      // Common
+      '@expo/vector-icons',
+      '@expo-google-fonts/roboto',
+
+      // JS Utils
+      'lodash',
+    ],
     devDeps: [
-      'typescript@latest', // Expo template is currently using v4.0.0 instead of v4.2.4 >:(
-      'eslint@latest',
-      'eslint-config-gev@latest',
-      'eslint-plugin-react@latest',
-      'eslint-plugin-react-hooks@latest',
-      'eslint-plugin-react-native@latest',
-      '@typescript-eslint/eslint-plugin@latest',
-      '@typescript-eslint/parser@latest',
+      'typescript', // Expo template is currently using v4.0.0 instead of v4.2.4 >:(
+      'eslint',
+      'eslint-plugin-no-autofix',
+      'eslint-config-gev',
+      'eslint-plugin-react',
+      'eslint-plugin-react-hooks',
+      'eslint-plugin-react-native',
+      '@typescript-eslint/eslint-plugin',
+      '@typescript-eslint/parser',
     ],
   });
 
+  // Edit package.json
+  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
+  packageJson.set('scripts.lint', 'eslint --fix "src/**"');
+  packageJson.set('main', './lib/main/index.js');
+  packageJson.save();
 
+  // Semitemplate will automatically remove the default App.tsx it creates on s
   // Done!
   ora().succeed(`Expo project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 

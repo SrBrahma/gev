@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 .expo/
 npm-debug.*
 *.jks
@@ -14,4 +14,5 @@ web-build/
 
 # gev
 *.env
-/lib/
+/lib
+.vscode

@@ -2,7 +2,7 @@
   "name": "",
   "version": "0.1.0",
   "description": "",
-  "main": "./lib/index.js",
+  "main": "./lib/main/index.js",
   "scripts": {
     "test": "echo \"No test specified.\"",
     "lint": "eslint --fix \"src/**\"",
@@ -15,11 +15,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "types": "./lib/index.d.ts",
-  "files": [
-    "/lib"
-  ],
+  "files": ["/lib"],
   "dependencies": {
   },
   "devDependencies": {

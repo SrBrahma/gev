@@ -1,16 +1,16 @@
-
-<h1 align="center">
-  <!-- <img src=".logo.png" alt=ts/><br/> -->
-  ts
-</h1>
+<!-- <img src=".logo.png" alt=ts/><br/> -->
 
 <div align="center">
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)
 [![npm](https://img.shields.io/npm/v/ts)](https://www.npmjs.com/package/ts)
+[![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![npm](https://img.shields.io/npm/dw/ts)](https://www.npmjs.com/package/ts)
 </div>
+
+# ts
+
+<!-- descriptionHere -->
 
 <br/>
 
@@ -20,13 +20,13 @@
 
 <br/>
 
-# Installation
-```c
+## Installation
+```bash
 npm install ts
 # or
 yarn add ts
 ```
 
-# Usage
+## Usage
 
-# [Changelog](CHANGELOG.md)
+## [Changelog](CHANGELOG.md)

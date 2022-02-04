@@ -1,8 +1,8 @@
-import type { FlavorFunction } from '../typesAndConsts';
 import editJsonFile from 'edit-json-file';
-import { Core } from '../core/core';
-import ora from 'ora';
 import fse from 'fs-extra';
+import ora from 'ora';
+import { Core } from '../core/core.js';
+import type { FlavorFunction } from '../main/typesAndConsts.js';
 
 
 
@@ -16,6 +16,7 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
   await core.actions.setProjectDirectory();
   await core.actions.applySemitemplate();
 
+  core.add.license();
   core.add.changelog();
   core.add.readme({
     badges: {
@@ -25,48 +26,45 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
     },
   });
 
-  // Edit package.json
-  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
-  packageJson.set('name', core.consts.projectName);
-  packageJson.save();
 
-
-  // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
     devDeps: [
-      'typescript@latest',
-      'react-native@latest',
+      'typescript',
+      'react-native',
       'react', // Without latest, let npm decide it.
       '@types/react-native', // Includes @types/react
-      'eslint@latest',
-      'eslint-config-gev@latest',
-      'eslint-plugin-react@latest',
-      'eslint-plugin-react-hooks@latest',
-      'eslint-plugin-react-native@latest',
-      '@typescript-eslint/eslint-plugin@latest',
-      '@typescript-eslint/parser@latest',
+      'eslint',
+      'eslint-plugin-no-autofix',
+      'eslint-config-gev',
+      'eslint-plugin-react',
+      'eslint-plugin-react-hooks',
+      'eslint-plugin-react-native',
+      '@typescript-eslint/eslint-plugin',
+      '@typescript-eslint/parser',
     ],
   });
 
-  ora().info('Adding sandbox directory, via gev expo');
 
 
-  const sandboxCore = new Core({
-    cwd: core.consts.projectPath,
-    receivedProjectName: 'sandbox',
-    flavor: 'expo',
-    installPackages: core.consts.installPackages,
-    cleanOnError: core.consts.cleanOnError,
-  });
-  await sandboxCore.run();
+  // ora().info('Adding sandbox directory, via gev expo');
+  // const sandboxCore = new Core({
+  //   cwd: core.consts.projectPath,
+  //   receivedProjectName: 'sandbox',
+  //   flavor: 'expo',
+  //   installPackages: core.consts.installPackages,
+  //   cleanOnError: core.consts.cleanOnError,
+  // });
+  // await sandboxCore.run();
 
   // Remove the .git in the sandbox that expo created.
-  await fse.remove(sandboxCore.getPathInProjectDir('.git'));
+  // await fse.remove(sandboxCore.getPathInProjectDir('.git'));
+
+  // Edit package.json. Note that the package.json was already set on semitemplate step.
+  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
+  packageJson.save();
 
   ora().succeed(`Expo package project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 
-  // fse.symlink() // symlink to src inside src.
-  // in expo, should add watch to the ../src.
 };
 
 export default flavorExpoPkg;

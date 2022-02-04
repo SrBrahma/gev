@@ -1,17 +1,18 @@
-import type { FlavorFunction } from '../typesAndConsts';
 import editJsonFile from 'edit-json-file';
 import ora from 'ora';
+import type { FlavorFunction } from '../main/typesAndConsts.js';
 
 
-
+// [why i did this back then] To be reused?
 export const typescriptDevDeps = [
-  'typescript@latest',
-  'ts-node-dev@latest',
+  'typescript',
+  'ts-node-dev',
 
-  'eslint@latest',
-  'eslint-config-gev@latest',
-  '@typescript-eslint/eslint-plugin@latest',
-  '@typescript-eslint/parser@latest',
+  'eslint',
+  'eslint-config-gev',
+  'eslint-plugin-no-autofix',
+  '@typescript-eslint/eslint-plugin',
+  '@typescript-eslint/parser',
 
   '@types/node',
 
@@ -33,6 +34,7 @@ const flavorTypescript: FlavorFunction = async (core) => {
 
   await core.actions.applySemitemplate();
 
+  core.add.license();
   core.add.changelog();
   core.add.readme({
     badges: {
@@ -43,7 +45,7 @@ const flavorTypescript: FlavorFunction = async (core) => {
   });
 
 
-  // Edit package.json
+  // Edit package.json. Note that the package.json was already set on semitemplate step.
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
   packageJson.set('name', core.consts.projectName);
   packageJson.save();

@@ -1,8 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Expo",
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "incremental": true,
     "strict": true,
-    /** By gev below */
     "noUncheckedIndexedAccess": true,    /* Include 'undefined' in index signature results */
-  }
+    "useUnknownInCatchVariables": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/**/*", "*.json", ".*"]
 }

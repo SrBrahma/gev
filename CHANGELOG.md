@@ -11,6 +11,18 @@
 *
 -->
 
+## 2.5.0 - 2022-02-03
+* Many, many changes but as I am completly out of time and currently only I use this, won't this time put effort on this changelog.
+
+### gev
+* Converted to ESM
+* Updated packages
+* Simplified some stuff
+* Added GitHub Actions to it
+
+### expo
+- Added many default packages
+
 ## 2.4.6 - 2021/08/09
 ### ts, expo-pkg
 * Changed tsconfig target from es2020 to es5.
