@@ -7,10 +7,11 @@ import type { FlavorFunction } from '../main/typesAndConsts.js';
 export const tsEslintPkgs = [
   'eslint',
   'eslint-config-gev',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser',
   'eslint-plugin-no-autofix',
   'eslint-plugin-simple-import-sort',
+  'eslint-plugin-import',
+  '@typescript-eslint/eslint-plugin',
+  '@typescript-eslint/parser',
 ];
 
 // [why i did this back then] To be reused?
