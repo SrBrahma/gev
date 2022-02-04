@@ -9,7 +9,6 @@ export const typescriptDevDeps = [
   'typescript',
   'ts-node-dev',
 
-  'eslint',
   'eslint-config-gev',
 
   '@types/node',

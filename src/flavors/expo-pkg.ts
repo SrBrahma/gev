@@ -31,7 +31,6 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
       'react-native',
       'react', // Without latest, let npm decide it.
       '@types/react-native', // Includes @types/react
-      'eslint',
       'eslint-config-gev',
     ],
   });

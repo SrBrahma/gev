@@ -77,7 +77,6 @@ const flavorExpo: FlavorFunction = async (core) => {
     ],
     devDeps: [
       'typescript', // Expo template is currently using v4.0.0 instead of v4.2.4 >:(
-      'eslint',
       'eslint-config-gev',
     ],
   });

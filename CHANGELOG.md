@@ -11,7 +11,7 @@
 *
 -->
 
-## 2.7.0 - 20220-02-04
+## 2.7.0~2 - 2022-02-04
 * .eslintrc.js have now included in their begining:
 
 ```js
