@@ -40,8 +40,6 @@ const flavorExpo: FlavorFunction = async (core) => {
     },
   });
 
-  // Change App.tsx location: https://stackoverflow.com/a/54887872/10247962
-
   await core.actions.addPackages({
     isExpo: true,
     deps: [
@@ -84,7 +82,7 @@ const flavorExpo: FlavorFunction = async (core) => {
   // Edit package.json
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
   packageJson.set('scripts.lint', 'eslint --fix "src/**"');
-  packageJson.set('main', './lib/main/index.js');
+  packageJson.set('main', './src/main/index.js');
   packageJson.save();
 
   // Semitemplate will automatically remove the default App.tsx it creates on s

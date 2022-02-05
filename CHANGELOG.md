@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.7.3 - 2022-02-04
+* expo - Changed package.json `main` field to `src/main/index.js`
+
 ## 2.7.0~2 - 2022-02-04
 * .eslintrc.js have now included in their begining:
 
