@@ -11,6 +11,7 @@ import { get_CHANGELOG } from '../common/get_CHANGELOG.js';
 import { get_LICENSE } from '../common/get_LICENSE.js';
 import { get_README, get_README_Options } from '../common/get_README.js';
 import { getFlavorWritePath as getFlavorSemitemplatePath } from '../main/typesAndConsts.js';
+import { pathHasGit } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
 
 
@@ -199,6 +200,14 @@ export class Core {
       // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
       if (await fse.pathExists(this.getPathInProjectDir('gitignore')))
         await fse.rename(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
+    },
+
+    setupGit: async (): Promise<void> => {
+      if (!await pathHasGit(this.consts.projectPath))
+        await execa('git', ['init']);
+
+      await execa('git', ['branch', '-m', 'master', 'main'])
+        .catch(() => null); // It may error if there is no master / there is already a main.
     },
   }; // End of actions
 

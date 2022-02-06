@@ -36,6 +36,8 @@ const flavorTypescript: FlavorFunction = async (core) => {
     ],
   });
 
+  await core.actions.setupGit();
+
   ora().succeed(`Typescript ESM project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 };
 

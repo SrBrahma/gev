@@ -86,6 +86,8 @@ const flavorExpo: FlavorFunction = async (core) => {
   packageJson.set('main', './src/main/index.js');
   packageJson.save();
 
+  await core.actions.setupGit();
+
   // Semitemplate will automatically remove the default App.tsx it creates on s
   // Done!
   ora().succeed(`Expo project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);

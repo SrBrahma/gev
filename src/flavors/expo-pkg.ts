@@ -50,8 +50,9 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
   packageJson.save();
 
-  ora().succeed(`Expo package project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+  await core.actions.setupGit();
 
+  ora().succeed(`Expo package project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 };
 
 export default flavorExpoPkg;
