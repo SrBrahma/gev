@@ -184,10 +184,13 @@ export class Core {
      *
      * It will automatically use the flavor.
      *
-     * Should only be called after setProjectDirectory(), so it may set the creation vars.
+     * It will call setProjectDirectory().
      *
      * @param flavor set this to use another flavor semitemplate. */
     applySemitemplate: async (flavor?: string): Promise<void> => {
+      // Ensure project path exists.
+      await this.actions.setProjectDirectory();
+
       // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
       // `copy` copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537

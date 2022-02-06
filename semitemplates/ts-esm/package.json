@@ -2,7 +2,8 @@
   "name": "",
   "version": "0.1.0",
   "description": "",
-  "main": "./lib/index.js",
+  "type": "module",
+  "exports": "./lib/main/index.js",
   "scripts": {
     "test": "echo \"No test specified.\"",
     "lint": "eslint --fix \"src/**\"",
@@ -10,19 +11,17 @@
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run lint && npm run test",
     "prepare": "npm run build",
-    "start": "npm run watch"
+    "start": "node --loader ts-node/esm ./src/main/index.ts",
+    "watch": "nodemon ./src/main/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "types": "./lib/index.d.ts",
   "files": [
     "/lib"
   ],
   "dependencies": {
   },
   "devDependencies": {
-  },
-  "peerDependencies": {
   }
 }

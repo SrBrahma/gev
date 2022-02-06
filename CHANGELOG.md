@@ -11,6 +11,10 @@
 *
 -->
 
+## 2.8.0 - 2022-02-06
+* Added `ts-esm`. `ts` was using esm, but sometimes esm won't fit your requirements.
+* `ts` no longer uses esm.
+
 ## 2.7.3 - 2022-02-04
 * expo - Changed package.json `main` field to `src/main/index.js`
 

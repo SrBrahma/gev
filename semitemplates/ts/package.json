@@ -2,8 +2,7 @@
   "name": "",
   "version": "0.1.0",
   "description": "",
-  "type": "module",
-  "exports": "./lib/main/index.js",
+  "main": "./lib/main/index.js",
   "scripts": {
     "test": "echo \"No test specified.\"",
     "lint": "eslint --fix \"src/**\"",
@@ -11,18 +10,17 @@
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run lint && npm run test",
     "prepare": "npm run build",
-    "start": "node --loader ts-node/esm ./src/main/index.ts",
-    "watch": "nodemon ./src/main/index.ts"
+    "watch": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "start": "npm run watch"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "files": ["/lib"],
+  "files": [
+    "/lib"
+  ],
   "dependencies": {
   },
   "devDependencies": {
-    "rimraf": "^3.0.2",
-    "typescript": "^4.2.4",
-    "ts-node-dev": "^1.1.6"
   }
 }

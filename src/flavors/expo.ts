@@ -4,6 +4,7 @@ import fse from 'fs-extra';
 import ora from 'ora';
 import { FlavorFunction } from '../main/typesAndConsts.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
+import { typescriptCommonDevDeps } from './ts.js';
 
 
 
@@ -54,7 +55,9 @@ const flavorExpo: FlavorFunction = async (core) => {
       // Visual
       'react-native-svg',
       'react-native-shadow-2',
-      'pagescrollview',
+
+      // Stuff ?
+      'react-native-gev',
 
       // Expo
       'expo-font',
@@ -63,7 +66,6 @@ const flavorExpo: FlavorFunction = async (core) => {
       'expo-navigation-bar',
 
       // Etc
-      '@callstack/react-theme-provider',
       'react-native-size-matters',
 
       // Common
@@ -74,8 +76,7 @@ const flavorExpo: FlavorFunction = async (core) => {
       'lodash',
     ],
     devDeps: [
-      'typescript', // Expo template is currently using v4.0.0 instead of v4.2.4 >:(
-      'eslint-config-gev',
+      ...typescriptCommonDevDeps,
     ],
   });
 

@@ -1,6 +1,7 @@
 import editJsonFile from 'edit-json-file';
 import ora from 'ora';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
+import { typescriptCommonDevDeps } from './ts.js';
 
 
 
@@ -11,27 +12,22 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
 
   ora().info(`Generating the Expo Package project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
-  await core.actions.setProjectDirectory();
   await core.actions.applySemitemplate();
 
   core.add.license();
   core.add.changelog();
   core.add.readme({
-    badges: {
-      npm: true,
-      prWelcome: true,
-      typescript: true,
-    },
+    badges: { npm: true, prWelcome: true, typescript: true },
   });
 
 
   await core.actions.addPackages({
     devDeps: [
-      'typescript',
+      ...typescriptCommonDevDeps,
       'react-native',
-      'react', // Without latest, let npm decide it.
-      '@types/react-native', // Includes @types/react
-      'eslint-config-gev',
+      'rimraf',
+      'react',
+      '@types/react-native',
     ],
   });
 
