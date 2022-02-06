@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.8.2
+* Readme's npm badge is now downloads/month instead of downloads/week.
+
 ## 2.8.1
 * Flavors are now sorted alphabetically
 

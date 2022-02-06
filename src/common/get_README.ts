@@ -37,7 +37,7 @@ export function get_README(core: Core, options?: get_README_Options): string {
       `[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)`,
     );
     if (badges?.npm) badgesStrings.push(
-      `[![npm](https://img.shields.io/npm/dw/${projectName})](https://www.npmjs.com/package/${projectName})`,
+      `[![npm](https://img.shields.io/npm/dm/${projectName})](https://www.npmjs.com/package/${projectName})`,
     );
 
     if (!badgesStrings.length)
