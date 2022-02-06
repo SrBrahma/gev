@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.8.1
+* Flavors are now sorted alphabetically
+
 ## 2.8.0 - 2022-02-06
 * Added `ts-esm`. `ts` was using esm, but sometimes esm won't fit your requirements.
 * `ts` no longer uses esm.

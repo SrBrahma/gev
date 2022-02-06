@@ -10,9 +10,9 @@ const flavorsDirPath = path.join(Program.srcPath, 'flavors');
 /** Sync, so it's available from the start. */
 function getAvailableFlavors() {
   let flavors = readdirSync(flavorsDirPath);
-  // omit _todo from flavors
-  flavors = flavors.filter((f) => !['_todo'].includes(f));
-  flavors = flavors.map((flavor) => flavor.replace(/\.[tj]s/, ''));
+  flavors = flavors
+    .map((flavor) => flavor.replace(/\.[tj]s/, '')) // Remove ts/js extension from the filenames
+    .sort(); // Sort the flavors alphabetically
   return flavors;
 }
 
