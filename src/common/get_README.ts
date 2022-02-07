@@ -64,16 +64,16 @@ ${getBadgesString()}
 
 <br/>
 
-## Installation
+## 💿 Installation
 \`\`\`bash
 npm install ${core.consts.projectName}
 # or
 yarn add ${core.consts.projectName}
 \`\`\`
 
-## Usage
+## 📖 Usage
 
-## [Changelog](CHANGELOG.md)`);
+## 📰 [Changelog](CHANGELOG.md)`);
 
   result = result.trim();
   return result;

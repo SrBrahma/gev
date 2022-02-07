@@ -11,8 +11,12 @@
 *
 -->
 
+## 2.9.1
+* Added icons to generated readmes headers.
+
 ## 2.9.0
 * Added `git init` on all generators and `master` to `main` rename, if not already `main`.
+
 ## 2.8.2
 * Readme's npm badge is now downloads/month instead of downloads/week.
 
