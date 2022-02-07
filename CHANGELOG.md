@@ -11,16 +11,21 @@
 *
 -->
 
-## 2.9.1
+## 2.9.2 - 2022-02-06
+* Added `declaration: true` to tsconfig.js in `ts` and `ts-esm`.
+* Fixed `target` and `module` for `ts`.
+* Changed generated CHANGELOG time format from `0.1.0 (YYYY-MM-DD)` to `0.1.0 - YYYY-MM-DD`
+
+## 2.9.1 - 2022-02-06
 * Added icons to generated readmes headers.
 
-## 2.9.0
+## 2.9.0 - 2022-02-06
 * Added `git init` on all generators and `master` to `main` rename, if not already `main`.
 
-## 2.8.2
+## 2.8.2 - 2022-02-06
 * Readme's npm badge is now downloads/month instead of downloads/week.
 
-## 2.8.1
+## 2.8.1 - 2022-02-06
 * Flavors are now sorted alphabetically
 
 ## 2.8.0 - 2022-02-06
