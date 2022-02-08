@@ -26,7 +26,7 @@ const flavorExpo: FlavorFunction = async (core) => {
 
   // --no-install Don't install yet! We will install all later.
   // -t expo-template-blank-typescript, got the right name from here https://github.com/expo/expo-cli/blob/master/packages/expo-cli/src/commands/init.ts
-  await execa('expo', ['init', core.consts.projectPath, '--yarn', '--no-install', '-t', 'expo-template-blank-typescript'], { cwd: core.consts.cwd });
+  await execa('expo', ['init', core.consts.projectPath, '--no-install', '-t', 'expo-template-blank-typescript'], { cwd: core.consts.cwd });
 
   // Remove the default App.tsx. We will create another one in src/App.tsx.
   await fse.remove(core.getPathInProjectDir('App.tsx'));
@@ -77,12 +77,21 @@ const flavorExpo: FlavorFunction = async (core) => {
     ],
     devDeps: [
       ...typescriptCommonDevDeps,
+      // Jest configs must be on jest.config.js when possible, not on package.json.
+      // Link the source when possible so we can track it down later.
+      // https://docs.expo.dev/guides/testing-with-jest/
+      // https://github.com/callstack/react-native-testing-library
+      '@testing-library/react-native',
+      'react-test-renderer',
+      '@testing-library/jest-native',
+      'jest-expo', // https://www.npmjs.com/package/jest-expo
     ],
   });
 
   // Edit package.json
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
   packageJson.set('scripts.lint', 'eslint --fix "src/**"');
+  packageJson.set('scripts.test', 'jest --watchAll');
   packageJson.set('main', './src/main/index.js');
   packageJson.save();
 

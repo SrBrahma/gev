@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.9.3 - 2022-02-08
+* Improved some jest settings
+
 ## 2.9.2 - 2022-02-06
 * Added `declaration: true` to tsconfig.js in `ts` and `ts-esm`.
 * Fixed `target` and `module` for `ts`.
