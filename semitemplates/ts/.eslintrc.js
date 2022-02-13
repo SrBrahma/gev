@@ -17,7 +17,7 @@ module.exports = {
     "tsconfigRootDir": __dirname,
     "project": ['./tsconfig.lint.json'],
   },
-  "ignorePatterns": [".eslintrc.js"],
+  "ignorePatterns": ["**/lib/**/*", "**/dist/**/*", "*.json", "**/node_modules/**/*", ".*/**/*", "./*"],
   "rules": {
   }
 };

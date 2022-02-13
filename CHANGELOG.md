@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.9.4 - 2022-02-13
+* Improved `tsconfig.json`s and `eslint.[c]js`s.
+
 ## 2.9.3 - 2022-02-08
 * Improved some jest settings
 

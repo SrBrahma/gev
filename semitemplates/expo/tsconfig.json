@@ -9,5 +9,5 @@
     "useUnknownInCatchVariables": false
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules/**/*", "*.json", ".*"]
+  "exclude": ["src/**/*.test.ts"],
 }

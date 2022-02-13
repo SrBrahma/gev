@@ -21,7 +21,7 @@ module.exports = {
       "jsx": true
     }
   },
-  "ignorePatterns": [".eslintrc.js"],
+  "ignorePatterns": ["**/lib/**/*", "**/dist/**/*", "*.json", "**/node_modules/**/*", ".*/**/*", "./*"],
   "rules": {
   }
 };
