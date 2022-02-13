@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.9.5 - 2022-02-13
+* Added `tsc --noemit && ` to `lint` scripts beginings so it complains about ts errors.
+
 ## 2.9.4 - 2022-02-13
 * Improved `tsconfig.json`s and `eslint.[c]js`s.
 

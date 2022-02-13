@@ -90,7 +90,7 @@ const flavorExpo: FlavorFunction = async (core) => {
 
   // Edit package.json
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
-  packageJson.set('scripts.lint', 'eslint --fix "src/**"');
+  packageJson.set('scripts.lint', 'tsc --noemit && eslint --fix "src/**"');
   packageJson.set('scripts.test', 'jest --watchAll');
   packageJson.set('main', './src/main/index.js');
   packageJson.save();
