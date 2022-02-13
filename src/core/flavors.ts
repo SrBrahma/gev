@@ -1,7 +1,7 @@
 import { readdirSync } from 'fs';
 import path from 'path';
 import { Program } from '../main/consts.js';
-import { FlavorFunction } from '../main/typesAndConsts.js';
+import type { FlavorFunction } from '../main/typesAndConsts.js';
 
 
 

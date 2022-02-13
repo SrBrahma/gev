@@ -1,4 +1,4 @@
-import { Core } from '../core/core.js';
+import type { Core } from '../core/core.js';
 
 
 

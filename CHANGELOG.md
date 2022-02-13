@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.9.6 - 2022-02-13
+* Improved Jest, chores.
+
 ## 2.9.5 - 2022-02-13
 * Added `tsc --noemit && ` to `lint` scripts beginings so it complains about ts errors.
 

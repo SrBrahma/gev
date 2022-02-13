@@ -1,5 +1,5 @@
 import Path from 'path';
-import { Core } from '../core/core.js';
+import type { Core } from '../core/core.js';
 import { Program } from './consts.js';
 
 

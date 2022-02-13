@@ -5,7 +5,8 @@ module.exports = {
   "env": {
     "es2021": true,
     "node": true,
-    "react-native/react-native": true // *2
+    "react-native/react-native": true, // *2
+    'jest/globals': true,
   },
   "extends": [
     "plugin:@typescript-eslint/recommended-requiring-type-checking", // *1

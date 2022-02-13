@@ -2,7 +2,7 @@ import editJsonFile from 'edit-json-file';
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
-import { FlavorFunction } from '../main/typesAndConsts.js';
+import type { FlavorFunction } from '../main/typesAndConsts.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
 import { typescriptCommonDevDeps } from './ts.js';
 
@@ -74,6 +74,9 @@ const flavorExpo: FlavorFunction = async (core) => {
 
       // JS Utils
       'lodash',
+
+      'jest', // Install expo-compatible version: https://docs.expo.dev/guides/testing-with-jest/
+      'jest-expo',
     ],
     devDeps: [
       ...typescriptCommonDevDeps,
@@ -84,8 +87,7 @@ const flavorExpo: FlavorFunction = async (core) => {
       '@testing-library/react-native',
       'react-test-renderer',
       '@testing-library/jest-native',
-      'jest-expo', // https://www.npmjs.com/package/jest-expo
-    ],
+    ].filter((e) => e !== 'jest'), // remove jest from dev install, will be installed above.
   });
 
   // Edit package.json
