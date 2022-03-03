@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.9.7 - 2022-03-03
+* Added `.vscode/settings.json` with `"typescript.tsdk": "node_modules/typescript/lib"` to **ts** flavors, to use the TS version defined in package.json instead of VSCode TS version.
+
 ## 2.9.6 - 2022-02-13
 * Improved Jest, chores.
 

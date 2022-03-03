@@ -22,7 +22,7 @@ module.exports = {
       "jsx": true
     }
   },
-  "ignorePatterns": ["**/lib/**/*", "**/dist/**/*", "*.json", "**/node_modules/**/*", ".*/**/*", "./*"],
+  "ignorePatterns": ["**/lib/**/*", "**/dist/**/*", "*.json", "**/node_modules/**/*", ".*/**/*", "*.js"],
   "rules": {
   }
 };
