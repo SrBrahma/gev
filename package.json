@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.9.7",
+  "version": "2.9.8",
   "type": "module",
   "main": "./lib/main/index.js",
   "bin": "./lib/main/index.js",

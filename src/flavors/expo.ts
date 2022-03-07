@@ -97,6 +97,11 @@ const flavorExpo: FlavorFunction = async (core) => {
   packageJson.set('main', './src/main/index.js');
   packageJson.save();
 
+  // Edit app.json
+  const appJson = editJsonFile(core.getPathInProjectDir('app.json'));
+  appJson.set('expo.splash.resizeMode', 'cover');
+  appJson.save();
+
   await core.actions.setupGit();
 
   // Semitemplate will automatically remove the default App.tsx it creates on s

@@ -11,6 +11,9 @@
 *
 -->
 
+## 2.9.8 - 2022-03-07
+* **expo**: Added `appJson.set('expo.splash.resizeMode', 'cover');`
+
 ## 2.9.7 - 2022-03-03
 * Added `.vscode/settings.json` with `"typescript.tsdk": "node_modules/typescript/lib"` to **ts** flavors, to use the TS version defined in package.json instead of VSCode TS version.
 
