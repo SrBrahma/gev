@@ -3,6 +3,7 @@ import base64 from 'base-64';
 import fetch from 'cross-fetch';
 import { execa } from 'execa';
 import fse from 'fs-extra';
+import hasYarn from 'has-yarn';
 import latestVersion from 'latest-version';
 import ora from 'ora';
 import onExit from 'signal-exit';
@@ -16,32 +17,40 @@ import { pathHasGit } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
 
 
+
+type Consts = {
+  /** If should `npm i` */
+  installPackages: boolean;
+  flavor: string;
+  /** Where we are running the command. */
+  cwd: string;
+  /** If the cwd will be used to store the project files. */
+  currentDirectoryIsTarget: boolean;
+  /** The project full path. */
+  projectPath: string;
+  /** The name of the new project. */
+  projectName: string;
+  /** The full path of the parent directory of the project. */
+  parentDirPath: string;
+  /** If will clean on errors. */
+  cleanOnError: boolean;
+};
+
+type Vars = {
+  /** If we had manually created anything that we should remove if we had an error. */
+  shouldCleanOnError: boolean;
+  /** So we can just remove the dir contents instead of removing it if it already existed. */
+  createdDir: boolean;
+  state: 'notStarted' | 'running' | 'finished';
+};
+
 /** It won't execute any action by itself. The flavor is responsible of calling the actions. */
 export class Core {
-  consts: {
-    /** If should `npm i` */
-    installPackages: boolean;
-    flavor: string;
-    /** Where we are running the command. */
-    cwd: string;
-    /** If the cwd will be used to store the project files. */
-    currentDirectoryIsTarget: boolean;
-    /** The project full path. */
-    projectPath: string;
-    /** The name of the new project. */
-    projectName: string;
-    /** The full path of the parent directory of the project. */
-    parentDirPath: string;
-    /** If will clean on errors. */
-    cleanOnError: boolean;
-  };
-
-  vars = {
-    /** If we had manually created anything that we should remove if we had an error. */
-    shouldCleanOnError: false,
-    /** So we can just remove the dir contents instead of removing it if it already existed. */
+  consts: Consts;
+  vars: Vars = {
     createdDir: false,
-    state: 'notStarted' as 'notStarted' | 'running' | 'finished',
+    shouldCleanOnError: false,
+    state: 'notStarted',
   };
 
   constructor({
@@ -88,27 +97,10 @@ export class Core {
      *
      * May throw errors. Will clean the files on errors or process premature exit. */
   async run(): Promise<void> {
-    if (this.vars.state === 'notStarted') {
-      try {
-        this.vars.state = 'running';
-        // When adding custom flavors, will need to change this.
-        const cancelOnExit = onExit(async () => {
-          await this.actions.errorHappenedCleanIfNeeded();
-        });
-        await (await getFlavorFunction(this.consts.flavor))(this);
-        cancelOnExit();
-        this.vars.state = 'finished';
-      } catch (err) {
-        await this.actions.errorHappenedCleanIfNeeded();
-        throw err; // Rethrow
-      }
-    }
-  }
+    if (this.vars.state !== 'notStarted') return;
 
-
-  actions = {
-
-    errorHappenedCleanIfNeeded: async (): Promise<void> => {
+    // On error, clean if needed.
+    const onError = async () => {
       // Only if the flavor doesn't delete the files by itself
       if (this.consts.cleanOnError && this.vars.shouldCleanOnError) {
         // debugLog('Erasing created files...');
@@ -117,8 +109,50 @@ export class Core {
         else // Run at same dir
           await fse.emptyDir(this.consts.projectPath);
       }
-    },
+    };
 
+    try {
+      this.vars.state = 'running';
+
+      // When adding custom flavors, will need to change this.
+      const cancelOnExit = onExit(async () => { await onError(); });
+      const flavorFunction = await getFlavorFunction(this.consts.flavor);
+      await flavorFunction(this);
+      cancelOnExit();
+      this.vars.state = 'finished';
+    } catch (err) {
+      await onError();
+      throw err; // Rethrow
+    }
+  }
+
+
+  actions = {
+    /** Run after applying the semitemplate and before addPackages. Won't install after this, as addPackage already does it.
+     *
+     * addPackages() will automatically call this if required to use yarn and yarn is not yet set. */
+    setupPackageManager: async ({
+      packageManager,
+      cwd = this.consts.projectPath,
+    }: {
+      packageManager: 'yarn';
+      cwd?: string;
+    }): Promise<void> => {
+      await ora.promise(async () => {
+        // https://yarnpkg.com/getting-started/migration, not using PnP.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (packageManager === 'yarn') {
+        // Ensure yarn is latest version
+          await execa('npm', ['install', '-g', 'yarn'], { cwd });
+          await execa('yarn', ['set', 'version', 'berry'], { cwd });
+          await fse.appendFile(Path.join(cwd, '.yarnrc.yml'), 'nodeLinker: node-modules\n');
+          // https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+          await fse.appendFile(Path.join(cwd, '.gitignore'), `\n\n# Yarn\n.pnp.*\n.yarn/*\n!.yarn/patches\n!.yarn/plugins\n!.yarn/releases\n!.yarn/sdks\n!.yarn/versions\n`);
+          // For `yarn upgrade-interactive`
+          await execa('yarn', ['plugin', 'import', 'interactive-tools'], { cwd });
+        }
+      }, `Setting up ${packageManager}`);
+    },
     // TODO support for specific versions. Check if contains @, if so, won't include the @latest. Can just use regex in the replace.
     /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
      *
@@ -127,6 +161,7 @@ export class Core {
     addPackages: async ({
       deps = [], devDeps = [], isExpo,
       cwd = this.consts.projectPath, install = this.consts.installPackages,
+      packageManager = 'npm',
     }: {
       deps?: string[];
       devDeps?: string[];
@@ -139,6 +174,8 @@ export class Core {
       /** @default this.consts.installPackages */
       install?: boolean;
       // peerDeps?: string[],
+      /** @default 'npm' */
+      packageManager?: 'yarn' | 'npm';
     } = {}): Promise<void> => {
       if (isExpo) {
         await ora.promise(async () => {
@@ -161,12 +198,18 @@ export class Core {
 
       if (install) {
         await ora.promise(async () => {
+          if (packageManager === 'npm')
           // [--ignore-scripts] Don't run `prepare` etc scripts https://stackoverflow.com/a/61975270/10247962
-          await execa('npm', ['i', '--ignore-scripts'], { cwd });
-
-        }, 'Installing dependencies');
+            await execa('npm', ['install', '--ignore-scripts'], { cwd });
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          else if (packageManager === 'yarn') {
+            if (!hasYarn(cwd))
+              await this.actions.setupPackageManager({ packageManager: 'yarn', cwd });
+            await execa('yarn', ['install'], { cwd });
+          }
+        }, `Installing dependencies using ${packageManager}`);
       }
-    }, // End of addPackages
+    },
 
     /** Creates the project directory, if not using the cwd as the path.
      *

@@ -7,12 +7,8 @@ import { checkGlobalPackageUpdate } from '../main/utils.js';
 import { typescriptCommonDevDeps } from './ts.js';
 
 
-
-
-
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
 //   my cleaunup should handle this.
-
 
 
 const flavorExpo: FlavorFunction = async (core) => {
@@ -42,6 +38,7 @@ const flavorExpo: FlavorFunction = async (core) => {
   });
 
   await core.actions.addPackages({
+    packageManager: 'yarn',
     isExpo: true,
     deps: [
       // Navigation
@@ -56,7 +53,7 @@ const flavorExpo: FlavorFunction = async (core) => {
       'react-native-svg',
       'react-native-shadow-2',
 
-      // Stuff ?
+      // Stuff
       'react-native-gev',
 
       // Expo
@@ -71,9 +68,6 @@ const flavorExpo: FlavorFunction = async (core) => {
       // Common
       '@expo/vector-icons',
       '@expo-google-fonts/roboto',
-
-      // JS Utils
-      'lodash',
 
       'jest', // Install expo-compatible version: https://docs.expo.dev/guides/testing-with-jest/
       'jest-expo',

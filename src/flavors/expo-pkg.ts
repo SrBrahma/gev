@@ -22,6 +22,7 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
 
 
   await core.actions.addPackages({
+    packageManager: 'yarn',
     devDeps: [
       ...typescriptCommonDevDeps,
       'react-native',
