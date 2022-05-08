@@ -1,15 +1,7 @@
 # Changelog
 
-<!-- # for major version, ## for minor and patch -->
-<!--
-## 1.0.1 (YYYY-MM-DD)
-### Added
-*
-### Changed
-*
-### Fixed
-*
--->
+## 2.10.1 - 2022-05-07
+* Added `tsconfig.tsbuildinfo` to flavors' .gitignore
 
 ## 2.10.0 - 2022-03-16
 * Added support for yarn (berry). **expo** and **expo-pkg** are now being created using it.

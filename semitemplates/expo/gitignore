@@ -14,3 +14,4 @@ web-build/
 
 # gev
 *.env
+tsconfig.tsbuildinfo
