@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.11.0 - 2022-05-09
+
+### all
+* Improved eslint and tsconfig files. It now lints `.js` files, like config files.
+
+### expo
+* Added `eas.json`. It doesn't mean you need to use EAS or dev-client, you may still use Expo Go and Classic build, although EAS allows you to build for iOS without a Mac.
+* Added `app.config.js` with some cool defaults and configs pattern.
+* Added `metro.config.js` and `babel.config.js` with configs for common libs.
+* Added yarn patterns to .gitignore
+* Added `withDisableForcedDarkModeAndroid` EAS plugin.
+* Added new dependencies.
+* Added `./index.js` to support EAS.
+* Improved **jest** config files.
+
+
 ## 2.10.1 - 2022-05-07
 * Added `tsconfig.tsbuildinfo` to flavors' .gitignore
 

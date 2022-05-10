@@ -24,7 +24,7 @@ const flavorExpo: FlavorFunction = async (core) => {
   // -t expo-template-blank-typescript, got the right name from here https://github.com/expo/expo-cli/blob/master/packages/expo-cli/src/commands/init.ts
   await execa('expo', ['init', core.consts.projectPath, '--no-install', '-t', 'expo-template-blank-typescript'], { cwd: core.consts.cwd });
 
-  // Remove the default App.tsx. We will create another one in src/App.tsx.
+  // Remove the default App.tsx. We will create another one in src/main/App.tsx.
   await fse.remove(core.getPathInProjectDir('App.tsx'));
 
 
@@ -51,10 +51,8 @@ const flavorExpo: FlavorFunction = async (core) => {
 
       // Visual
       'react-native-svg',
+      'react-native-svg-transformer', // To import svgs
       'react-native-shadow-2',
-
-      // Stuff
-      'react-native-gev',
 
       // Expo
       'expo-font',
@@ -66,8 +64,15 @@ const flavorExpo: FlavorFunction = async (core) => {
       'react-native-size-matters',
 
       // Common
+      'lodash', // Not really needed. In index we use this to clone console.
+      'react-native-reanimated', // Usually there are libs using this
+      '@expo-google-fonts/roboto', // TODO remove this
+
+      // Gev
+      'react-native-gev',
+      'expo-image-picker', // TODO remove this
       '@expo/vector-icons',
-      '@expo-google-fonts/roboto',
+      'expo-status-bar',
 
       'jest', // Install expo-compatible version: https://docs.expo.dev/guides/testing-with-jest/
       'jest-expo',
@@ -84,17 +89,27 @@ const flavorExpo: FlavorFunction = async (core) => {
     ].filter((e) => e !== 'jest'), // remove jest from dev install, will be installed above.
   });
 
-  // Edit package.json
+  // Edit package.json.
+  // Those functions were regex'ed by entering the desired package.json scripts with the follow replace:
+  // "(.*?)": "(.*)" and packageJson.set('scripts.$1', '$2'). Could be better!
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
-  packageJson.set('scripts.lint', 'tsc --noemit && eslint --fix "src/**"');
-  packageJson.set('scripts.test', 'jest --watchAll');
-  packageJson.set('main', './src/main/index.js');
-  packageJson.save();
+  packageJson.set('main', './index.js');
+  packageJson.set('scripts.test', 'jest --watchAll'),
+  packageJson.set('scripts.start', 'expo start'),
+  packageJson.set('scripts.start:clean', 'expo start -c'),
+  packageJson.set('scripts.b:dev', 'eas build --platform android --profile development'),
+  packageJson.set('scripts.b:prev', 'eas build --platform all --profile preview'),
+  packageJson.set('scripts.b:prev:ios', 'eas build --platform ios --profile preview'),
+  packageJson.set('scripts.b:prev:android', 'eas build --platform ios --profile preview'),
+  packageJson.set('scripts.b:prod', 'eas build --platform all --profile production'),
+  packageJson.set('scripts.b:prod:ios', 'eas build --platform ios --profile production'),
+  packageJson.set('scripts.b:prod:android', 'eas build --platform android --profile production'),
+  packageJson.set('scripts.bs:prod', 'eas build --platform all --profile production --auto-submit'),
+  packageJson.set('scripts.bs:prod:ios', 'eas build --platform ios --profile production --auto-submit'),
+  packageJson.set('scripts.bs:prod:android', 'eas build --platform android --profile production --auto-submit'),
+  packageJson.set('scripts.lint', 'tsc --noemit && eslint --fix \\"src/**\\"');
 
-  // Edit app.json
-  const appJson = editJsonFile(core.getPathInProjectDir('app.json'));
-  appJson.set('expo.splash.resizeMode', 'cover');
-  appJson.save();
+  packageJson.save();
 
   await core.actions.setupGit();
 

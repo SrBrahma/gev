@@ -6,8 +6,13 @@
     "incremental": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,    /* Include 'undefined' in index signature results */
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "allowJs": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts"],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/**/*.test.*"
+  ]
 }

@@ -2,5 +2,5 @@
 // but then, jest will complain the test files aren't included in tsconfig.
 {
   "extends": "./tsconfig.json",
-  "exclude": [] // Don't exclude test files
+  "exclude": [] // Doesn't exclude test files
 }
