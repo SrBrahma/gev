@@ -5,7 +5,8 @@
   "type": "module",
   "exports": "./lib/main/index.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
     "lint": "tsc --noemit && eslint --fix \"src/**\"",
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",

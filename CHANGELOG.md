@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.11.1 - 2022-06-09
+### ts, ts-esm
+* Removed `--watchAll` flag of `test` script. Added `test:watch` with it.
+
 ## 2.11.0 - 2022-05-09
 
 ### all
