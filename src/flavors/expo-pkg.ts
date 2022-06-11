@@ -49,6 +49,7 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
 
   // Edit package.json. Note that the package.json was already set on semitemplate step.
   const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
+  packageJson.set('name', core.consts.projectName);
   packageJson.save();
 
   await core.actions.setupGit();
