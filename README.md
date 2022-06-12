@@ -30,7 +30,7 @@ Current available flavors are:
 
 **`ts`**: Typescript project
 
-**`ts-rsm`**: Typescript ESM project
+**`ts-esm`**: Typescript ESM project
 
 **`expo`**: Expo project.
 
@@ -41,6 +41,8 @@ All the flavors uses Typescript.
 To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`.
 
 # 🔮 Future
+
+* `vsce`, `cli`,  flavors
 
 * Add Paypal donate button to the end of READMEs (or as a badge). Also funding.yml file.
 
