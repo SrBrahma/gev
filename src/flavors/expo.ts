@@ -1,10 +1,10 @@
-import editJsonFile from 'edit-json-file';
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
+import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
-import { typescriptCommonDevDeps } from './ts.js';
+import { getTypescriptCommonDevDeps } from './ts.js';
 
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
@@ -66,11 +66,9 @@ const flavorExpo: FlavorFunction = async (core) => {
       // Common
       'lodash', // Not really needed. In index we use this to clone console.
       'react-native-reanimated', // Usually there are libs using this
-      '@expo-google-fonts/roboto', // TODO remove this
 
       // Gev
       'react-native-gev',
-      'expo-image-picker', // TODO remove this
       '@expo/vector-icons',
       'expo-status-bar',
 
@@ -78,7 +76,7 @@ const flavorExpo: FlavorFunction = async (core) => {
       'jest-expo',
     ],
     devDeps: [
-      ...typescriptCommonDevDeps,
+      ...getTypescriptCommonDevDeps(),
       // Jest configs must be on jest.config.js when possible, not on package.json.
       // Link the source when possible so we can track it down later.
       // https://docs.expo.dev/guides/testing-with-jest/
@@ -89,27 +87,30 @@ const flavorExpo: FlavorFunction = async (core) => {
     ].filter((e) => e !== 'jest'), // remove jest from dev install, will be installed above.
   });
 
-  // Edit package.json.
-  // Those functions were regex'ed by entering the desired package.json scripts with the follow replace:
-  // "(.*?)": "(.*)" and packageJson.set('scripts.$1', '$2'). Could be better!
-  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
-  packageJson.set('main', './index.js');
-  packageJson.set('scripts.test', 'jest --watchAll'),
-  packageJson.set('scripts.start', 'expo start'),
-  packageJson.set('scripts.start:clean', 'expo start -c'),
-  packageJson.set('scripts.b:dev', 'eas build --platform android --profile development'),
-  packageJson.set('scripts.b:prev', 'eas build --platform all --profile preview'),
-  packageJson.set('scripts.b:prev:ios', 'eas build --platform ios --profile preview'),
-  packageJson.set('scripts.b:prev:android', 'eas build --platform ios --profile preview'),
-  packageJson.set('scripts.b:prod', 'eas build --platform all --profile production'),
-  packageJson.set('scripts.b:prod:ios', 'eas build --platform ios --profile production'),
-  packageJson.set('scripts.b:prod:android', 'eas build --platform android --profile production'),
-  packageJson.set('scripts.bs:prod', 'eas build --platform all --profile production --auto-submit'),
-  packageJson.set('scripts.bs:prod:ios', 'eas build --platform ios --profile production --auto-submit'),
-  packageJson.set('scripts.bs:prod:android', 'eas build --platform android --profile production --auto-submit'),
-  packageJson.set('scripts.lint', 'tsc --noemit && eslint --fix \\"src/**\\"');
-
-  packageJson.save();
+  editPackageJson({
+    projectPath: core.consts.projectPath,
+    name: core.consts.projectName,
+    githubAuthor: core.consts.githubAuthor,
+    data: {
+      main: './index.js',
+      'scripts.test': 'jest --watchAll',
+      'scripts.start': 'expo start',
+      'scripts.start:clean': 'expo start -c',
+      'scripts.b:dev': 'eas build --platform all --profile development',
+      'scripts.b:dev:ios': 'eas build --platform ios --profile development',
+      'scripts.b:dev:android': 'eas build --platform android --profile development',
+      'scripts.b:prev': 'eas build --platform all --profile preview',
+      'scripts.b:prev:ios': 'eas build --platform ios --profile preview',
+      'scripts.b:prev:android': 'eas build --platform ios --profile preview',
+      'scripts.b:prod': 'eas build --platform all --profile production',
+      'scripts.b:prod:ios': 'eas build --platform ios --profile production',
+      'scripts.b:prod:android': 'eas build --platform android --profile production',
+      'scripts.bs:prod': 'eas build --platform all --profile production --auto-submit',
+      'scripts.bs:prod:ios': 'eas build --platform ios --profile production --auto-submit',
+      'scripts.bs:prod:android': 'eas build --platform android --profile production --auto-submit',
+      'scripts.lint': 'tsc --noemit && eslint --fix \\"src/**\\"',
+    },
+  });
 
   await core.actions.setupGit();
 

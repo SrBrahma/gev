@@ -1,7 +1,7 @@
-import editJsonFile from 'edit-json-file';
 import ora from 'ora';
+import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
-import { typescriptCommonDevDeps } from './ts.js';
+import { getTypescriptCommonDevDeps } from './ts.js';
 
 
 
@@ -21,15 +21,16 @@ const flavorTypescript: FlavorFunction = async (core) => {
     badges: { npm: true, prWelcome: true, typescript: true },
   });
 
-  // Edit package.json. Note that the package.json was already set on semitemplate step.
-  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
-  packageJson.set('name', core.consts.projectName);
-  packageJson.save();
+  editPackageJson({
+    name: core.consts.projectName,
+    githubAuthor: core.consts.githubAuthor,
+    projectPath: core.consts.projectPath,
+  });
 
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
     devDeps: [
-      ...typescriptCommonDevDeps,
+      ...getTypescriptCommonDevDeps(),
       'rimraf',
       'ts-node', // For node --loader
       'nodemon', // For watch

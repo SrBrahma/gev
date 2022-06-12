@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.12.0
+### gev
+* Added `author` interactive input and related author info to package.json
+* package.json is now sorted.
+* Moved from yarn to npm.
+
+### expo-pkg
+* Removed testing libraries.
+
+
 ## 2.11.2 - 2022-06-11
 ### expo-pkg
 * Added `"name"` to package.json.

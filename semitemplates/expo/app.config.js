@@ -28,8 +28,6 @@ export default () => {
     },
     android: {
       package: appId,
-      // https://stackoverflow.com/questions/61669696/keyboard-changes-all-components-placement-in-react-native
-      // softwareKeyboardLayoutMode: 'pan', // Disabled - Would mess bottom sheet input.
       versionCode: getAndroidVersion(version),
     },
     plugins: [

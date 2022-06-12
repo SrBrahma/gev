@@ -5,7 +5,7 @@ import { execa } from 'execa';
 import fse from 'fs-extra';
 import hasYarn from 'has-yarn';
 import latestVersion from 'latest-version';
-import ora from 'ora';
+import { oraPromise } from 'ora';
 import onExit from 'signal-exit';
 import validatePackageName from 'validate-npm-package-name';
 import { get_CHANGELOG } from '../common/get_CHANGELOG.js';
@@ -34,6 +34,7 @@ type Consts = {
   parentDirPath: string;
   /** If will clean on errors. */
   cleanOnError: boolean;
+  githubAuthor?: string;
 };
 
 type Vars = {
@@ -55,7 +56,7 @@ export class Core {
 
   constructor({
     cwd = process.cwd(),
-    flavor, projectRelativePath, installPackages, cleanOnError,
+    flavor, projectRelativePath, installPackages, cleanOnError, githubAuthor,
   }: {
     flavor: string;
     /** Where the user is running the gev command.
@@ -65,6 +66,7 @@ export class Core {
     projectRelativePath: string;
     installPackages: boolean;
     cleanOnError: boolean;
+    githubAuthor?: string;
   }) {
 
     const projectPath = Path.join(cwd, projectRelativePath);
@@ -78,6 +80,7 @@ export class Core {
       parentDirPath: Path.dirname(projectPath),
       installPackages,
       cleanOnError,
+      githubAuthor,
     };
   }
 
@@ -138,7 +141,7 @@ export class Core {
       packageManager: 'yarn';
       cwd?: string;
     }): Promise<void> => {
-      await ora.promise(async () => {
+      await oraPromise(async () => {
         // https://yarnpkg.com/getting-started/migration, not using PnP.
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (packageManager === 'yarn') {
@@ -178,12 +181,12 @@ export class Core {
       packageManager?: 'yarn' | 'npm';
     } = {}): Promise<void> => {
       if (isExpo) {
-        await ora.promise(async () => {
+        await oraPromise(async () => {
           deps = await getPackagesVersionsForLatestExpo(deps);
         }, 'Getting dependencies versions compatible with Expo');
       }
 
-      await ora.promise(async () => {
+      await oraPromise(async () => {
         await Promise.all([
           deps.length && await execa('npx', [
             'add-dependencies',
@@ -197,7 +200,7 @@ export class Core {
       }, 'Adding dependencies to package.json');
 
       if (install) {
-        await ora.promise(async () => {
+        await oraPromise(async () => {
           if (packageManager === 'npm')
           // [--ignore-scripts] Don't run `prepare` etc scripts https://stackoverflow.com/a/61975270/10247962
             await execa('npm', ['install', '--ignore-scripts'], { cwd });

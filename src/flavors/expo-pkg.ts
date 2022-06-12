@@ -1,7 +1,7 @@
-import editJsonFile from 'edit-json-file';
 import ora from 'ora';
+import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
-import { typescriptCommonDevDeps } from './ts.js';
+import { getTypescriptCommonDevDeps } from './ts.js';
 
 
 
@@ -20,11 +20,10 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
     badges: { npm: true, prWelcome: true, typescript: true },
   });
 
-
   await core.actions.addPackages({
     packageManager: 'yarn',
     devDeps: [
-      ...typescriptCommonDevDeps,
+      ...getTypescriptCommonDevDeps({ tests: false }),
       'react-native',
       'rimraf',
       'react',
@@ -32,25 +31,11 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
     ],
   });
 
-
-
-  // ora().info('Adding sandbox directory, via gev expo');
-  // const sandboxCore = new Core({
-  //   cwd: core.consts.projectPath,
-  //   receivedProjectName: 'sandbox',
-  //   flavor: 'expo',
-  //   installPackages: core.consts.installPackages,
-  //   cleanOnError: core.consts.cleanOnError,
-  // });
-  // await sandboxCore.run();
-
-  // Remove the .git in the sandbox that expo created.
-  // await fse.remove(sandboxCore.getPathInProjectDir('.git'));
-
-  // Edit package.json. Note that the package.json was already set on semitemplate step.
-  const packageJson = editJsonFile(core.getPathInProjectDir('package.json'));
-  packageJson.set('name', core.consts.projectName);
-  packageJson.save();
+  editPackageJson({
+    name: core.consts.projectName,
+    githubAuthor: core.consts.githubAuthor,
+    projectPath: core.consts.projectPath,
+  });
 
   await core.actions.setupGit();
 

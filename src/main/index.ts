@@ -21,12 +21,14 @@
 import chalk from 'chalk';
 import { Argument, Command } from 'commander';
 import { execa } from 'execa';
+import inquirer from 'inquirer';
 import latestVersion from 'latest-version';
 import ora from 'ora';
 import compareSemver from 'semver-compare';
 import { Core } from '../core/core.js';
 import { availableFlavors } from '../core/flavors.js';
 import { Program } from './consts.js';
+import { configData, loadConfigs, setConfigs } from './npmConfig.js';
 
 
 
@@ -78,11 +80,23 @@ program
       }
     }
 
+    await loadConfigs();
+
+    const defaultAuthor = configData.githubAuthor;
+
+    const { githubAuthor } = await inquirer.prompt<{githubAuthor: string}>([
+      { name: 'githubAuthor', type: 'input', default: defaultAuthor, message: 'Who is the GitHub Author of this project?' },
+    ]);
+
+    if (githubAuthor !== configData.githubAuthor)
+      await setConfigs({ githubAuthor });
+
     const core = new Core({
       flavor,
       projectRelativePath,
       installPackages,
       cleanOnError,
+      githubAuthor: githubAuthor || undefined,
     });
 
     await core.run();
