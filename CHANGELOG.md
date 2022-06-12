@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.13.0
+### gev
+* Can now create yarn projects under another project. Not monorepo, though.
+
+### ts, ts-esm
+* Now using yarn.
+
 ## 2.12.0
 ### gev
 * Added `author` interactive input and related author info to package.json

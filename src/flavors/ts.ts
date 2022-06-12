@@ -46,6 +46,7 @@ const flavorTypescript: FlavorFunction = async (core) => {
 
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
+    packageManager: 'yarn',
     devDeps: [
       ...getTypescriptCommonDevDeps(),
       'ts-node-dev',

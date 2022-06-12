@@ -1,7 +1,7 @@
 import { execa } from 'execa';
 import Path, { dirname } from 'path';
 import fse from 'fs-extra';
-import ora from 'ora';
+import {oraPromise} from 'ora';
 import { globby } from 'globby'
 import { availableFlavors } from '../src/core/flavors.js'
 import { fileURLToPath } from 'url';
@@ -20,14 +20,14 @@ export async function generateTemplates(): Promise<void> {
   const templatesReadmePath = Path.join(templatesPath, 'README.md');
 
   // Ensure the project is built with latest code.
-  await ora.promise(async () => {
+  await oraPromise(async () => {
     await fse.emptyDir(templatesPath);
     await fse.writeFile(templatesReadmePath, readmeContent);
     await execa('npm', ['run', 'build'], { cwd: Path.join(__dirname, '..') });
   }, 'Building project before generating templates');
 
   for (const flavor of availableFlavors) {
-    await ora.promise(async () => {
+    await oraPromise(async () => {
 
       let projectName = flavor;
       // [expo error on expo named project] `Cannot create an app named "expo" because it would conflict with a dependency of the same name.`

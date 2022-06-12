@@ -1803,7 +1803,6 @@ __metadata:
     execa: 6.1.0
     fs-extra: 10.1.0
     globby: 13.1.1
-    has-yarn: 3.0.0
     inquirer: ^8.2.4
     latest-version: 6.0.0
     ora: ^6.1.0
@@ -1986,13 +1985,6 @@ __metadata:
   dependencies:
     has-symbols: ^1.0.2
   checksum: cc12eb28cb6ae22369ebaad3a8ab0799ed61270991be88f208d508076a1e99abe4198c965935ce85ea90b60c94ddda73693b0920b58e7ead048b4a391b502c1c
-  languageName: node
-  linkType: hard
-
-"has-yarn@npm:3.0.0":
-  version: 3.0.0
-  resolution: "has-yarn@npm:3.0.0"
-  checksum: b9e14e78e0a37bc070550c862b201534287bc10e62a86ec9c1f455ffb082db42817ce9aed914bd73f1d589bbf268520e194629ff2f62ff6b98a482c4bd2dcbfb
   languageName: node
   linkType: hard
 

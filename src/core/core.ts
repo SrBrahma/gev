@@ -3,7 +3,6 @@ import base64 from 'base-64';
 import fetch from 'cross-fetch';
 import { execa } from 'execa';
 import fse from 'fs-extra';
-import hasYarn from 'has-yarn';
 import latestVersion from 'latest-version';
 import { oraPromise } from 'ora';
 import onExit from 'signal-exit';
@@ -134,25 +133,32 @@ export class Core {
     /** Run after applying the semitemplate and before addPackages. Won't install after this, as addPackage already does it.
      *
      * addPackages() will automatically call this if required to use yarn and yarn is not yet set. */
-    setupPackageManager: async ({
+    ensurePackageManagerIsSetup: async ({
       packageManager,
       cwd = this.consts.projectPath,
     }: {
-      packageManager: 'yarn';
+      packageManager: 'yarn' | 'npm';
       cwd?: string;
+      // TODO monorepoChild property
     }): Promise<void> => {
       await oraPromise(async () => {
-        // https://yarnpkg.com/getting-started/migration, not using PnP.
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (packageManager === 'yarn') {
-        // Ensure yarn is latest version
-          await execa('npm', ['install', '-g', 'yarn'], { cwd });
-          await execa('yarn', ['set', 'version', 'berry'], { cwd });
-          await fse.appendFile(Path.join(cwd, '.yarnrc.yml'), 'nodeLinker: node-modules\n');
-          // https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-          await fse.appendFile(Path.join(cwd, '.gitignore'), `\n\n# Yarn\n.pnp.*\n.yarn/*\n!.yarn/patches\n!.yarn/plugins\n!.yarn/releases\n!.yarn/sdks\n!.yarn/versions\n`);
-          // For `yarn upgrade-interactive`
-          await execa('yarn', ['plugin', 'import', 'interactive-tools'], { cwd });
+        switch (packageManager) {
+          case 'yarn': {
+            // First create yarn.lock if it doesn't already exist. We do this as else it may complain if inside another project
+            // (like if we try to run `yarn gev -- ts tests/a` during gev development).
+            await fse.ensureFile(Path.join(cwd, 'yarn.lock'));
+
+            // Ensure yarn is installed and on latest version (it's fast)
+            await execa('npm', ['install', '-g', 'yarn'], { cwd });
+            // Add the yarn.js file
+            await execa('yarn', ['set', 'version', 'berry'], { cwd });
+            // If gev is run inside another project, .yarnrc.yml wouldn't be generated. We do this to ensure it's created.
+            await fse.writeFile(Path.join(cwd, '.yarnrc.yml'), `nodeLinker: node-modules\n\nyarnPath: .yarn/releases/yarn-3.2.1.cjs`);
+            // https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+            await fse.appendFile(Path.join(cwd, '.gitignore'), `\n\n# Yarn\n.pnp.*\n.yarn/*\n!.yarn/patches\n!.yarn/plugins\n!.yarn/releases\n!.yarn/sdks\n!.yarn/versions\n`);
+            // For `yarn upgrade-interactive`
+            await execa('yarn', ['plugin', 'import', 'interactive-tools'], { cwd });
+          } break;
         }
       }, `Setting up ${packageManager}`);
     },
@@ -180,6 +186,10 @@ export class Core {
       /** @default 'npm' */
       packageManager?: 'yarn' | 'npm';
     } = {}): Promise<void> => {
+
+      await this.actions.ensurePackageManagerIsSetup({ packageManager: 'yarn', cwd });
+
+
       if (isExpo) {
         await oraPromise(async () => {
           deps = await getPackagesVersionsForLatestExpo(deps);
@@ -206,8 +216,6 @@ export class Core {
             await execa('npm', ['install', '--ignore-scripts'], { cwd });
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           else if (packageManager === 'yarn') {
-            if (!hasYarn(cwd))
-              await this.actions.setupPackageManager({ packageManager: 'yarn', cwd });
             await execa('yarn', ['install'], { cwd });
           }
         }, `Installing dependencies using ${packageManager}`);
