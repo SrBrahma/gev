@@ -42,7 +42,7 @@ To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`
 
 # 🔮 Future
 
-* `vsce`, `cli`,  flavors
+* `vsce`, `cli`, `expo-firebase` flavors
 
 * Add Paypal donate button to the end of READMEs (or as a badge). Also funding.yml file.
 
