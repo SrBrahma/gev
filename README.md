@@ -9,11 +9,11 @@
 
 # gev
 
-A slightly opinionated central way to fastly create new projects with a single command.
+A slightly opinionated tool to fastly create new projects with a single command.
 
-Creating every single Typescript project environment is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way I feel confortable to work with. We know how boring it really is.
+Creating new Typescript projects' environments is a real pain. Takes lots of minutes, sufferings and procrastinations to leave it functional and in the way we feel confortable. *We know how boring it is!*
 
-There is a [templates](./templates) directory that contains all flavors boilerplates generated using the latest gev version.
+<!-- There is a [templates](./templates) directory that contains all flavors boilerplates generated using the latest gev version. -->
 
 
 # 📖 Usage:
@@ -30,9 +30,11 @@ Current available flavors are:
 
 **`ts`**: Typescript project
 
+**`ts-rsm`**: Typescript ESM project
+
 **`expo`**: Expo project.
 
-**`expo-pkg`**: React-Native/Expo components package. It's called expo because it will have a expo sandbox directory for testing your component.
+**`expo-pkg`**: React-Native/Expo component package.
 
 All the flavors uses Typescript.
 
