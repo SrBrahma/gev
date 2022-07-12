@@ -93,7 +93,8 @@ const flavorExpo: FlavorFunction = async (core) => {
     githubAuthor: core.consts.githubAuthor,
     data: {
       main: './index.js',
-      'scripts.test': 'jest --watchAll',
+      'scripts.test': 'jest',
+      'scripts.test:watch': 'jest --watchAll',
       'scripts.start': 'expo start',
       'scripts.start:clean': 'expo start -c',
       'scripts.b:dev': 'eas build --platform all --profile development',

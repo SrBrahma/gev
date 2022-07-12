@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.14.0
+* Added `rn` flavor.
+### expo
+* Removed `--watchAll` flag of `test` script. Added `test:watch` with it.
+
 ## 2.13.0
 ### gev
 * Can now create yarn projects under another project. Not monorepo, though.

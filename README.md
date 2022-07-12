@@ -34,6 +34,8 @@ Current available flavors are:
 
 **`expo-pkg`**: React-Native/Expo components package. It's called expo because it will have a expo sandbox directory for testing your component.
 
+**`rn`**: React Native project. Created this for a job selection process that required a non-Expo RN project.
+
 All the flavors uses Typescript.
 
 To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`.
