@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.14.0
+## 2.14.0~1
 * Added `rn` flavor.
 ### expo
 * Removed `--watchAll` flag of `test` script. Added `test:watch` with it.
