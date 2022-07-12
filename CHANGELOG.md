@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.14.2
+### rn
+* Added Babel JSX transform for implicit `import React from 'react'`.
+* Fixed tsconfig.json
+
 ## 2.14.0~1
 * Added `rn` flavor.
 ### expo
