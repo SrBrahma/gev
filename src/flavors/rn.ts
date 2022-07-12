@@ -30,11 +30,6 @@ const flavorReactNative: FlavorFunction = async (core) => {
   await core.actions.applySemitemplate();
 
   core.add.changelog();
-  core.add.readme({
-    badges: {
-      typescript: true,
-    },
-  });
 
   // Remove unused dev dependencies that were added by the template.
   // The eslint ones are already added by our eslint config package.

@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 2.15.0
+### rn
+* Disabled automatic forced dark mode.
+
 ## 2.14.2
 ### rn
 * Added Babel JSX transform for implicit `import React from 'react'`.

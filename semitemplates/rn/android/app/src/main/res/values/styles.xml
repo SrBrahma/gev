@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <!-- Disable automatic forced dark mode - https://stackoverflow.com/a/64339016 -->
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+
+</resources>
