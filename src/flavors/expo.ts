@@ -31,11 +31,6 @@ const flavorExpo: FlavorFunction = async (core) => {
   await core.actions.applySemitemplate();
 
   core.add.changelog();
-  core.add.readme({
-    badges: {
-      typescript: true,
-    },
-  });
 
   await core.actions.addPackages({
     packageManager: 'yarn',
@@ -60,15 +55,7 @@ const flavorExpo: FlavorFunction = async (core) => {
       'expo-constants',
       'expo-navigation-bar',
 
-      // Etc
-      'react-native-size-matters',
-
       // Common
-      'lodash', // Not really needed. In index we use this to clone console.
-      'react-native-reanimated', // Usually there are libs using this
-
-      // Gev
-      'react-native-gev',
       '@expo/vector-icons',
       'expo-status-bar',
 
@@ -106,9 +93,9 @@ const flavorExpo: FlavorFunction = async (core) => {
       'scripts.b:prod': 'eas build --platform all --profile production',
       'scripts.b:prod:ios': 'eas build --platform ios --profile production',
       'scripts.b:prod:android': 'eas build --platform android --profile production',
-      'scripts.bs:prod': 'eas build --platform all --profile production --auto-submit',
-      'scripts.bs:prod:ios': 'eas build --platform ios --profile production --auto-submit',
-      'scripts.bs:prod:android': 'eas build --platform android --profile production --auto-submit',
+      'scripts.s:prod': 'eas build --platform all --profile production --auto-submit',
+      'scripts.s:prod:ios': 'eas build --platform ios --profile production --auto-submit',
+      'scripts.s:prod:android': 'eas build --platform android --profile production --auto-submit',
       'scripts.lint': 'tsc --noemit && eslint --fix \\"src/**\\"',
     },
   });

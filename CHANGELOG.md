@@ -1,6 +1,11 @@
 # Changelog
 
 
+## 2.16.0
+### expo
+* Improved README
+* Removed some dependencies to make it more generic
+
 ## 2.15.0
 ### rn
 * Disabled automatic forced dark mode.

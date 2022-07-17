@@ -5,8 +5,6 @@
 
 # ${projectName}
 
-<!-- descriptionHere -->
-
 ${description}
 
 <br/>
