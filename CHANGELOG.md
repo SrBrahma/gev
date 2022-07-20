@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 2.17.0
+### expo, rn
+* Moved `App.tsx` from `src/main/` to `src/screens/Main`
+* Removed `ScreenFC_X` types in favor of `ScreenProps_X`
+* Removed unused files and code from screens
+
+### expo
+* Using the new [SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen/)
+
 ## 2.16.0
 ### expo
 * Improved README

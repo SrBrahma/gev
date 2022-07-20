@@ -51,13 +51,11 @@ const flavorExpo: FlavorFunction = async (core) => {
 
       // Expo
       'expo-font',
-      'expo-app-loading',
+      'expo-splash-screen',
       'expo-constants',
       'expo-navigation-bar',
-
-      // Common
-      '@expo/vector-icons',
       'expo-status-bar',
+      '@expo/vector-icons',
 
       'jest', // Install expo-compatible version: https://docs.expo.dev/guides/testing-with-jest/
       'jest-expo',
