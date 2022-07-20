@@ -1,4 +1,9 @@
-export default () => {
+// https://docs.expo.dev/workflow/configuration/#using-typescript-for-configuration-appconfigts-instead-of
+import type { ConfigContext, ExpoConfig } from '@expo/config';
+
+
+
+export default ({ config }: ConfigContext): ExpoConfig => {
 
   const appName = 'Your App Name';
   const appId = 'com.x.y';
@@ -25,6 +30,7 @@ export default () => {
     ios: {
       supportsTablet: true,
       bundleIdentifier: appId,
+      buildNumber: version
     },
     android: {
       package: appId,
@@ -37,9 +43,8 @@ export default () => {
 };
 
 /** From 2.10.4, return 002010004.
- * Based on https://blog.dipien.com/versioning-android-apps-d6ec171cfd82
- * @param {string} semver */
-function getAndroidVersion(semver) {
+ * Based on https://blog.dipien.com/versioning-android-apps-d6ec171cfd82 */
+function getAndroidVersion(semver: string) {
   const parts = semver.split('.');
   return Number(parts.reduce((versionCode, part) => versionCode + part.padStart(3, '0'), ''));
 }

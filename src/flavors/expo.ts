@@ -69,6 +69,7 @@ const flavorExpo: FlavorFunction = async (core) => {
       '@testing-library/react-native',
       'react-test-renderer',
       '@testing-library/jest-native',
+      '@expo/config',
     ].filter((e) => e !== 'jest'), // remove jest from dev install, will be installed above.
   });
 

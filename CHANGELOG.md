@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 2.18.0
+### expo
+* `app.config.js` is now `app.config.ts`
+* Added `@expo/config` as devDep
+* Added `ios/buildNumber` to `app.config.ts`
+
 ## 2.17.1
 ### expo, rn
 * Fixed and linted Screens files
