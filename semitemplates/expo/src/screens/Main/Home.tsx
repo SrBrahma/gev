@@ -1,11 +1,11 @@
-import { RefreshControl, StyleSheet, Text } from 'react-native';
-import { ScreenProps_Root } from './Root';
+import { StyleSheet, View } from 'react-native';
+import type { ScreenProps_Root } from './Root';
 
 
 
 
 
-export function Home({}: ScreenProps_Root<'Main'>): JSX.Element {
+export function Home({}: ScreenProps_Root<'Home'>): JSX.Element {
   return (
     <View>
 

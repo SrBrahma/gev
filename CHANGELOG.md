@@ -1,6 +1,10 @@
 # Changelog
 
 
+## 2.17.1
+### expo, rn
+* Fixed and linted Screens files
+
 ## 2.17.0
 ### expo, rn
 * Moved `App.tsx` from `src/main/` to `src/screens/Main`

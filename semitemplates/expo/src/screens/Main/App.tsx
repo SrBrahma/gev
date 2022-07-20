@@ -1,15 +1,19 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
-import { Root_Navigator } from './Root';
 import * as SplashScreen from 'expo-splash-screen';
+import { Root_Navigator } from './Root';
+
+
 
 // Keep the splash screen visible while we fetch resources
 // https://docs.expo.dev/versions/latest/sdk/splash-screen/
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync();
 
-function Wrappers({ children }: React.PropsWithChildren): JSX.Element {
+function Wrappers({ children }: React.PropsWithChildren<unknown>): JSX.Element {
   return (
     // https://blog.expo.dev/expo-sdk-44-4c4b8306584a
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -19,7 +23,7 @@ function Wrappers({ children }: React.PropsWithChildren): JSX.Element {
         </SafeAreaProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
-  )
+  );
 }
 
 
@@ -37,7 +41,7 @@ export const App: React.FC = () => {
         setAppIsReady(true);
       }
     }
-    prepare();
+    void prepare();
   }, []);
 
   const onLayoutRootView = useCallback(async () => {

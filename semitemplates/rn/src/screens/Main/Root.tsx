@@ -1,7 +1,7 @@
-import type { NavigatorScreenParams } from '@react-navigation/core';
-import type {StackScreenProps } from '@react-navigation/stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Home } from './Home'
+import { Home } from './Home';
+
 
 
 export type ParamList_Root = {
