@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 2.19.0
+### expo
+* Removed `reanimated` plugin from babel.config.js
+* Added `expo-dev-client` to dependencies
+* Moved `index.js` to `src/main`.
+
 ## 2.18.0
 ### expo
 * `app.config.js` is now `app.config.ts`

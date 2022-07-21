@@ -57,6 +57,9 @@ const flavorExpo: FlavorFunction = async (core) => {
       'expo-status-bar',
       '@expo/vector-icons',
 
+      // EAS
+      'expo-dev-client',
+
       'jest', // Install expo-compatible version: https://docs.expo.dev/guides/testing-with-jest/
       'jest-expo',
     ],
@@ -78,7 +81,7 @@ const flavorExpo: FlavorFunction = async (core) => {
     name: core.consts.projectName,
     githubAuthor: core.consts.githubAuthor,
     data: {
-      main: './index.js',
+      main: './src/main/index.js',
       'scripts.test': 'jest',
       'scripts.test:watch': 'jest --watchAll',
       'scripts.start': 'expo start',
