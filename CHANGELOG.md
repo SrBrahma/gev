@@ -1,6 +1,10 @@
 # Changelog
 
 
+## 2.19.1
+### expo
+* Added `"app.config.ts"` to tsconfig.lint.json
+
 ## 2.19.0
 ### expo
 * Removed `reanimated` plugin from babel.config.js
