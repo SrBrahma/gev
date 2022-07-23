@@ -175,7 +175,8 @@ export class Core {
     */
     addPackages: async ({
       deps = [], devDeps = [], isExpo,
-      cwd = this.consts.projectPath, install = this.consts.installPackages,
+      cwd = this.consts.projectPath,
+      install = this.consts.installPackages,
       packageManager = 'npm',
     }: {
       deps?: string[];
@@ -263,11 +264,15 @@ export class Core {
         await fse.rename(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
     },
 
-    setupGit: async (): Promise<void> => {
-      if (!await pathHasGit(this.consts.projectPath))
-        await execa('git', ['init']);
+    setupGit: async ({ cwd = this.consts.projectPath }: {
+      /** @default this.consts.projectPath */
+      cwd?: string;
+    } = {}): Promise<void> => {
+      if (!await pathHasGit(cwd))
+        await execa('git', ['init'], { cwd });
 
-      await execa('git', ['branch', '-m', 'master', 'main'])
+      // Ensure it uses main as main branch.
+      await execa('git', ['branch', '-m', 'main'], { cwd })
         .catch(() => null); // It may error if there is no master / there is already a main.
     },
   }; // End of actions

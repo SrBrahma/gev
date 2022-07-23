@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2.19.3
+* Fixed git being initialized on cwd instead of project path.
+
 ## 2.19.2
 * Fixed `Cannot find module '{path}/.yarn/releases/yarn-3.2.1.cjs'`.
 
