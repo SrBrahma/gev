@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2.19.2
+* Fixed `Cannot find module '{path}/.yarn/releases/yarn-3.2.1.cjs'`.
+
 ## 2.19.1
 ### expo
 * Added `"app.config.ts"` to tsconfig.lint.json
