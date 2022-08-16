@@ -4,7 +4,6 @@ import ora from 'ora';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/typesAndConsts.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
-import { getTypescriptCommonDevDeps } from './ts.js';
 
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
@@ -64,14 +63,19 @@ const flavorExpo: FlavorFunction = async (core) => {
       'jest-expo',
     ],
     devDeps: [
-      ...getTypescriptCommonDevDeps(),
+      'typescript',
+      'eslint-config-gev',
+
       // Jest configs must be on jest.config.js when possible, not on package.json.
       // Link the source when possible so we can track it down later.
       // https://docs.expo.dev/guides/testing-with-jest/
       // https://github.com/callstack/react-native-testing-library
       '@testing-library/react-native',
-      'react-test-renderer',
       '@testing-library/jest-native',
+      'ts-jest',
+      'react-test-renderer@17',
+      '@types/jest',
+
       '@expo/config',
     ].filter((e) => e !== 'jest'), // remove jest from dev install, will be installed above.
   });

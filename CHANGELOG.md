@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.19.4
+### expo
+* Fixed error due to outdate expo-cli package. Npm changed to have an error on `npm outdated` command if outdated.
 
 ## 2.19.3
 * Fixed git being initialized on cwd instead of project path.

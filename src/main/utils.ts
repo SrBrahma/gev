@@ -16,6 +16,7 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
 
   // TODO unknown behavior on errors other than package not installed.
   // TODO call 'expo --version' to know if it's intalled and updated. faster.
+  // e.g. `npx -y latest-version-cli expo-cli`.
   const [installed, updatedOrNotInstalled] = await Promise.all([
     (async () => {
       try {
@@ -23,10 +24,14 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
         return true;
       } catch { return false; }
     })(),
+    // Returns true
     (async () => {
-      const result = await execa('npm', ['outdated', '-g', packageName]);
-      const updatedOrNotInstalled = result.stdout === '';
-      return updatedOrNotInstalled;
+      try {
+        const result = await execa('npm', ['outdated', '-g', packageName]);
+        const updatedOrNotInstalled = result.stdout === '';
+        return updatedOrNotInstalled;
+        // It seems that npm changed and may now throw if package is outdated.
+      } catch { return false; }
     })(),
   ]);
 
