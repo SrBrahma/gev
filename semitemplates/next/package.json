@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --ext ts,tsx --cache --cache-location ./.next/cache/eslint/ .",
+    "lint:write": "npm run lint -- --fix",
+    "start": "next start",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "test:all": "npm run typecheck && npm run lint && npm run jest"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

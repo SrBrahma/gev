@@ -1,7 +1,6 @@
 import type { Core } from '../core/core.js';
 
 
-
 export type get_LICENSE_Options = {
   license: 'mit';
 };

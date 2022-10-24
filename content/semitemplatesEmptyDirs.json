@@ -1,0 +1,20 @@
+{
+  "next": [
+    "components",
+    "types"
+  ],
+  "expo": [
+    "src/components/common",
+    "src/components/contexts",
+    "src/components/hooks",
+    "src/components/specific",
+    "src/main/utils"
+  ],
+  "rn": [
+    "src/components/common",
+    "src/components/contexts",
+    "src/components/hooks",
+    "src/components/specific",
+    "src/main/utils"
+  ]
+}

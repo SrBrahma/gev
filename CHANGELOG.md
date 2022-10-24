@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.20.0
+* Added `next` flavor.
+* Empty dirs can now be in the resulting template.
+* Added Husky
+* Many inner changes and improvments.
+
 ## 2.19.4
 ### expo
 * Fixed error due to outdate expo-cli package. Npm changed to have an error on `npm outdated` command if outdated.

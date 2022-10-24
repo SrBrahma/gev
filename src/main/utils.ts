@@ -37,14 +37,14 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
 
   if (!installed)
     state = 'notInstalled';
-  else {
+  else
     state = updatedOrNotInstalled ? 'updated' : 'outdated';
-  }
 
-  if (!install) {
+
+  if (!install)
     // TODO add spinner handling.
     return state;
-  }
+
 
   if (state !== 'updated') {
     if (state === 'notInstalled')

@@ -23,6 +23,5 @@ export function editPackageJson({ projectPath, data, name, githubAuthor }: {
     repository: `github:${githubAuthor}/${name}`,
   };
   Object.entries({ ...commonData, ...data }).forEach(([key, value]) => json.set(key, value));
-  // const sorted = sortPackageJson(json.toString());
-  json.write(json.toString());
+  json.save();
 }

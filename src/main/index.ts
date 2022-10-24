@@ -31,7 +31,6 @@ import { Program } from './consts.js';
 import { configData, loadConfigs, setConfigs } from './npmConfig.js';
 
 
-
 const program = new Command();
 
 
@@ -84,7 +83,7 @@ program
 
     const defaultAuthor = configData.githubAuthor;
 
-    const { githubAuthor } = await inquirer.prompt<{githubAuthor: string}>([
+    const { githubAuthor } = await inquirer.prompt<{ githubAuthor: string }>([
       { name: 'githubAuthor', type: 'input', default: defaultAuthor, message: 'Who is the GitHub Author of this project?' },
     ]);
 

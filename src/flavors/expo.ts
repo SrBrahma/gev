@@ -2,22 +2,23 @@ import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
 import { editPackageJson } from '../core/utils/utils.js';
-import type { FlavorFunction } from '../main/typesAndConsts.js';
+import type { FlavorFunction } from '../main/types.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
 
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
 //   my cleaunup should handle this.
 
+const humanName = 'Expo';
 
-const flavorExpo: FlavorFunction = async (core) => {
+const generator: FlavorFunction = async (core) => {
 
   await core.verifications.projectPathMustBeValid();
 
   // Ensure expo-cli is installed at latest version. Will print some stuff.
   await checkGlobalPackageUpdate('expo-cli', { install: true });
 
-  ora().info(`Generating the Expo project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
   // --no-install Don't install yet! We will install all later.
   // -t expo-template-blank-typescript, got the right name from here https://github.com/expo/expo-cli/blob/master/packages/expo-cli/src/commands/init.ts
@@ -32,7 +33,6 @@ const flavorExpo: FlavorFunction = async (core) => {
   core.add.changelog();
 
   await core.actions.addPackages({
-    packageManager: 'yarn',
     isExpo: true,
     deps: [
       // Navigation
@@ -107,10 +107,11 @@ const flavorExpo: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupGit();
+  await core.actions.setupHusky();
 
   // Semitemplate will automatically remove the default App.tsx it creates on s
   // Done!
-  ora().succeed(`Expo project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 
   // Copy/paste from what Expo prints at the end, without the cd to the new project.
   console.log(`\nTo run your project, navigate to the directory and run one of the following npm commands:
@@ -121,4 +122,4 @@ const flavorExpo: FlavorFunction = async (core) => {
 
 };
 
-export default flavorExpo;
+export default generator;

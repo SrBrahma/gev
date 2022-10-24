@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.19.4",
+  "version": "2.20.0",
   "description": "Generates boilerplates",
   "keywords": [
     "generator",
@@ -40,52 +40,65 @@
   },
   "files": [
     "lib",
-    "semitemplates/**/*"
+    "semitemplates",
+    "content"
   ],
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf lib",
     "gev": "npm start",
-    "lint": "tsc --noemit && eslint --fix \"src/**\"",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint && npm run test",
-    "start": "node --loader ts-node/esm ./src/main/index.ts",
-    "templates": "node --loader ts-node/esm ./scripts/generateTemplates.ts",
-    "templatesDeploy": "npm run templates && npm publish",
-    "test": "echo \"Error: no test specified\""
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch",
+    "lint": "npx eslint \"src/**\"",
+    "lint:fix": "npx eslint --fix \"src/**\"",
+    "start": "ts-node-esm ./src/main/index.ts",
+    "test": "echo \"Error: no test specified\"",
+    "test:all": "npm run typecheck && npm run lint && npm run test",
+    "postinstall": "husky install",
+    "scripts:templates": "ts-node-esm ./scripts/generateTemplates.ts",
+    "scripts:emptyDirs": "ts-node-esm ./scripts/makeEmptyDirsFile.ts",
+    "pre-commit": "lint-staged && npm run scripts:emptyDirs",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "add-dependencies": "1.1.0",
     "base-64": "1.0.0",
-    "chalk": "5.0.1",
-    "commander": "9.3.0",
+    "chalk": "5.1.2",
+    "commander": "9.4.1",
     "cross-fetch": "3.1.5",
-    "edit-json-file": "https://github.com/SrBrahma/edit-json-file#patch-1",
+    "edit-json-file": "^1.7.0",
     "execa": "6.1.0",
     "fs-extra": "10.1.0",
     "globby": "^13.1.2",
-    "inquirer": "^8.2.4",
-    "latest-version": "6.0.0",
-    "ora": "^6.1.0",
+    "inquirer": "^9.1.4",
+    "latest-version": "7.0.0",
+    "ora": "^6.1.2",
     "rimraf": "3.0.2",
     "semver-compare": "1.0.0",
     "signal-exit": "3.0.7",
-    "sort-package-json": "^1.57.0",
-    "typescript": "^4.7.3",
-    "validate-npm-package-name": "^4.0.0"
+    "typescript": "^4.8.4",
+    "validate-npm-package-name": "^5.0.0"
   },
   "devDependencies": {
     "@types/base-64": "1.0.0",
     "@types/edit-json-file": "^1.7.0",
     "@types/fs-extra": "9.0.13",
-    "@types/inquirer": "^8.2.1",
-    "@types/node": "^17.0.42",
+    "@types/inquirer": "^9.0.2",
+    "@types/node": "^18.11.4",
     "@types/rimraf": "^3.0.2",
     "@types/semver-compare": "1.0.1",
     "@types/signal-exit": "3.0.1",
-    "@types/validate-npm-package-name": "^3.0.3",
-    "eslint-config-gev": "2.33.0",
-    "ts-node": "10.8.1"
+    "@types/validate-npm-package-name": "^4.0.0",
+    "eslint-config-gev": "^2.43.3",
+    "husky": "^8.0.1",
+    "pinst": "^3.0.0",
+    "ts-node": "10.9.1"
   },
   "packageManager": "yarn@3.2.1",
   "engines": {

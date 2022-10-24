@@ -5,7 +5,6 @@
 import type { Core } from '../core/core.js';
 
 
-
 type Badges = {
   prWelcome?: boolean;
   /** Types included */

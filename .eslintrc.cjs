@@ -2,7 +2,6 @@
 require('@rushstack/eslint-patch/modern-module-resolution');
 
 
-
 module.exports = {
   env: {
     es2021: true,
@@ -27,7 +26,7 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['**/lib/**/*', '**/dist/**/*', '**/node_modules/**/*', '.eslintrc.cjs'],
+  ignorePatterns: ['**/lib/**/*', '**/dist/**/*', '**/node_modules/**/*', '.eslintrc.cjs', 'semitemplates/**/*'],
   rules: {
   },
 };

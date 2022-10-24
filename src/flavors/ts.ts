@@ -1,8 +1,9 @@
 import ora from 'ora';
 import { editPackageJson } from '../core/utils/utils.js';
-import type { FlavorFunction } from '../main/typesAndConsts.js';
+import type { FlavorFunction } from '../main/types.js';
 
 
+const humanName = 'Typescript';
 
 // To be reused
 export function getTypescriptCommonDevDeps({ tests }: {
@@ -23,12 +24,12 @@ export function getTypescriptCommonDevDeps({ tests }: {
 }
 
 
-const flavorTypescript: FlavorFunction = async (core) => {
+const generator: FlavorFunction = async (core) => {
 
   core.verifications.projectNameMustBeNpmValid();
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the Typescript project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
   await core.actions.applySemitemplate();
 
@@ -46,7 +47,6 @@ const flavorTypescript: FlavorFunction = async (core) => {
 
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
-    packageManager: 'yarn',
     devDeps: [
       ...getTypescriptCommonDevDeps(),
       'ts-node-dev',
@@ -55,8 +55,10 @@ const flavorTypescript: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupGit();
+  await core.actions.setupHusky();
 
-  ora().succeed(`Typescript project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+
+  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 };
 
-export default flavorTypescript;
+export default generator;

@@ -1,16 +1,17 @@
 import ora from 'ora';
 import { editPackageJson } from '../core/utils/utils.js';
-import type { FlavorFunction } from '../main/typesAndConsts.js';
+import type { FlavorFunction } from '../main/types.js';
 import { getTypescriptCommonDevDeps } from './ts.js';
 
 
+const humanName = 'Expo Package';
 
-const flavorExpoPkg: FlavorFunction = async (core) => {
+const generator: FlavorFunction = async (core) => {
 
   core.verifications.projectNameMustBeNpmValid();
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the Expo Package project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
   await core.actions.applySemitemplate();
 
@@ -21,7 +22,6 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
   });
 
   await core.actions.addPackages({
-    packageManager: 'yarn',
     devDeps: [
       ...getTypescriptCommonDevDeps({ tests: false }),
       'react-native',
@@ -38,8 +38,10 @@ const flavorExpoPkg: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupGit();
+  await core.actions.setupHusky();
 
-  ora().succeed(`Expo package project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+
+  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 };
 
-export default flavorExpoPkg;
+export default generator;

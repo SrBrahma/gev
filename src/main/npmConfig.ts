@@ -1,7 +1,6 @@
 import { execa } from 'execa';
 
 
-
 type Config = {
   githubAuthor?: string;
 };

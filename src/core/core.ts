@@ -1,21 +1,18 @@
 import Path from 'path';
-import base64 from 'base-64';
-import fetch from 'cross-fetch';
 import { execa } from 'execa';
 import fse from 'fs-extra';
-import { globby } from 'globby';
-import latestVersion from 'latest-version';
-import { oraPromise } from 'ora';
 import onExit from 'signal-exit';
 import validatePackageName from 'validate-npm-package-name';
 import { get_CHANGELOG } from '../common/get_CHANGELOG.js';
 import { get_LICENSE } from '../common/get_LICENSE.js';
 import type { get_README_Options } from '../common/get_README.js';
 import { get_README } from '../common/get_README.js';
-import { getFlavorWritePath as getFlavorSemitemplatePath } from '../main/typesAndConsts.js';
+import { Program } from '../main/consts.js';
+import { addPackages } from './methods/addPackages.js';
+import { createEmptySemitemplatesDirs } from './methods/semitemplates.js';
+import { setupHusky } from './methods/setupHusky.js';
 import { pathHasGit } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
-
 
 
 type Consts = {
@@ -35,6 +32,7 @@ type Consts = {
   /** If will clean on errors. */
   cleanOnError: boolean;
   githubAuthor?: string;
+  packageManager: 'yarn' | 'npm';
 };
 
 type Vars = {
@@ -81,6 +79,7 @@ export class Core {
       installPackages,
       cleanOnError,
       githubAuthor,
+      packageManager: 'yarn',
     };
   }
 
@@ -105,13 +104,13 @@ export class Core {
     // On error, clean if needed.
     const onError = async () => {
       // Only if the flavor doesn't delete the files by itself
-      if (this.consts.cleanOnError && this.vars.shouldCleanOnError) {
+      if (this.consts.cleanOnError && this.vars.shouldCleanOnError)
         // debugLog('Erasing created files...');
         if (this.vars.createdDir) // Ran at child dir
           await fse.remove(this.consts.projectPath); // [*1]
         else // Run at same dir
           await fse.emptyDir(this.consts.projectPath);
-      }
+
     };
 
     try {
@@ -131,53 +130,31 @@ export class Core {
 
 
   actions = {
-    /** Run after applying the semitemplate and before addPackages. Won't install after this, as addPackage already does it.
-     *
-     * addPackages() will automatically call this if required to use yarn and yarn is not yet set. */
-    ensurePackageManagerIsSetup: async ({
-      packageManager,
+    setupHusky: async ({
       cwd = this.consts.projectPath,
+      packageManager = this.consts.packageManager,
+      doInstall = this.consts.installPackages,
     }: {
-      packageManager: 'yarn' | 'npm';
       cwd?: string;
-      // TODO monorepoChild property
-    }): Promise<void> => {
-      await oraPromise(async () => {
-        switch (packageManager) {
-          case 'yarn': {
-            // First create yarn.lock if it doesn't already exist. We do this as else it may complain if inside another project
-            // (like if we try to run `yarn gev -- ts tests/a` during gev development).
-            await fse.ensureFile(Path.join(cwd, 'yarn.lock'));
-
-            // Ensure yarn is installed and on latest version (it's fast)
-            await execa('npm', ['install', '-g', 'yarn'], { cwd });
-            // Add the yarn.js file
-            await execa('yarn', ['set', 'version', 'berry'], { cwd });
-
-            const yarnPath = (await globby('.yarn/releases/yarn-*', { cwd }))[0];
-            if (!yarnPath)
-              throw new Error("Yarn path couldn't be found.");
-
-            // If gev is run inside another project, .yarnrc.yml wouldn't be generated. We do this to ensure it's created.
-            await fse.writeFile(Path.join(cwd, '.yarnrc.yml'), `nodeLinker: node-modules\n\nyarnPath: ${yarnPath}`);
-            // https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-            await fse.appendFile(Path.join(cwd, '.gitignore'), `\n\n# Yarn\n.pnp.*\n.yarn/*\n!.yarn/patches\n!.yarn/plugins\n!.yarn/releases\n!.yarn/sdks\n!.yarn/versions\n`);
-            // For `yarn upgrade-interactive`
-            await execa('yarn', ['plugin', 'import', 'interactive-tools'], { cwd });
-          } break;
-        }
-      }, `Setting up ${packageManager}`);
+      packageManager?: 'npm' | 'yarn';
+      /** If should install after adding the packages to package.json */
+      doInstall?: boolean;
+    } = {}): Promise<void> => {
+      await setupHusky({ cwd, packageManager, doInstall });
     },
+
     // TODO support for specific versions. Check if contains @, if so, won't include the @latest. Can just use regex in the replace.
     /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
      *
      * Will only install if this.consts.installPackages is true
     */
     addPackages: async ({
-      deps = [], devDeps = [], isExpo,
+      deps = [],
+      devDeps = [],
+      isExpo,
       cwd = this.consts.projectPath,
-      install = this.consts.installPackages,
-      packageManager = 'npm',
+      doInstall = this.consts.installPackages,
+      packageManager = this.consts.packageManager,
     }: {
       deps?: string[];
       devDeps?: string[];
@@ -188,45 +165,14 @@ export class Core {
       /** @default this.consts.projectPath */
       cwd?: string;
       /** @default this.consts.installPackages */
-      install?: boolean;
+      doInstall?: boolean;
       // peerDeps?: string[],
       /** @default 'npm' */
       packageManager?: 'yarn' | 'npm';
     } = {}): Promise<void> => {
-
-      await this.actions.ensurePackageManagerIsSetup({ packageManager: 'yarn', cwd });
-
-
-      if (isExpo) {
-        await oraPromise(async () => {
-          deps = await getPackagesVersionsForLatestExpo(deps);
-        }, 'Getting dependencies versions compatible with Expo');
-      }
-
-      await oraPromise(async () => {
-        await Promise.all([
-          deps.length && await execa('npx', [
-            'add-dependencies',
-            ...deps.map((d) => d.replace('@latest', '')),
-          ], { cwd }),
-          devDeps.length && await execa('npx', [
-            'add-dependencies',
-            ...devDeps.map((d) => d.replace('@latest', '')), '-D',
-          ], { cwd }),
-        ]);
-      }, 'Adding dependencies to package.json');
-
-      if (install) {
-        await oraPromise(async () => {
-          if (packageManager === 'npm')
-          // [--ignore-scripts] Don't run `prepare` etc scripts https://stackoverflow.com/a/61975270/10247962
-            await execa('npm', ['install', '--ignore-scripts'], { cwd });
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          else if (packageManager === 'yarn') {
-            await execa('yarn', ['install'], { cwd });
-          }
-        }, `Installing dependencies using ${packageManager}`);
-      }
+      await addPackages({
+        cwd, doInstall, packageManager, deps, devDeps, isExpo,
+      });
     },
 
     /** Creates the project directory, if not using the cwd as the path.
@@ -250,18 +196,25 @@ export class Core {
      * It will call setProjectDirectory().
      *
      * @param flavor set this to use another flavor semitemplate. */
-    applySemitemplate: async (flavor?: string): Promise<void> => {
+    applySemitemplate: async (flavor: string = this.consts.flavor): Promise<void> => {
       // Ensure project path exists.
       await this.actions.setProjectDirectory();
 
       // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
       // `copy` copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537
-      await fse.copy(getFlavorSemitemplatePath(flavor ?? this.consts.flavor), this.consts.projectPath);
+      await fse.copy(
+        Program.paths.semitemplates(flavor),
+        this.consts.projectPath,
+      );
 
       // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
       if (await fse.pathExists(this.getPathInProjectDir('gitignore')))
         await fse.rename(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
+
+      await createEmptySemitemplatesDirs({
+        flavor, cwd: this.consts.projectPath,
+      });
     },
 
     setupGit: async ({ cwd = this.consts.projectPath }: {
@@ -285,10 +238,10 @@ export class Core {
       if (await fse.pathExists(this.consts.projectPath)) {
         const projectPathFiles = await fse.readdir(this.consts.projectPath);
         const projectPathFilesFiltered = projectPathFiles.filter((f) => !allowedFilesAndDirs.includes(f));
-        if (projectPathFilesFiltered.length !== 0) { // https://stackoverflow.com/a/60676464/10247962
+        if (projectPathFilesFiltered.length !== 0) // https://stackoverflow.com/a/60676464/10247962
           // improve error message.
-          throw (`The project path '${this.consts.projectPath}' already exists and it isn't empty!`);
-        }
+          throw new Error(`The project path '${this.consts.projectPath}' already exists and it isn't empty!`);
+
       }
     },
 
@@ -303,34 +256,9 @@ export class Core {
           errorsString += ` - ${error}` + (i < (errors.length - 1) ? '\n' : '');
         });
 
-        throw (`The package name '${this.consts.projectName}' is invalid!\n${errorsString}`);
+        throw new Error(`The package name '${this.consts.projectName}' is invalid!\n${errorsString}`);
       }
     },
 
-  }; // End of verifications
-}
-
-
-
-async function getPackagesVersionsForLatestExpo(deps: string[]) {
-  const expoLatestMajor = (await latestVersion('expo')).split('.')[0]!;
-
-  // This is the file from where the versions are found: https://github.com/expo/expo/blob/sdk-44/packages/expo/bundledNativeModules.json
-  // const dictUrl = `https://github.com/expo/expo/blob/sdk-${expoLatestMajor}/packages/expo/bundledNativeModules.json`
-
-  const endpoint = `//api.github.com/repos/expo/expo/contents/packages/expo/bundledNativeModules.json?ref=sdk-${expoLatestMajor}`;
-  const data = (await (await fetch(endpoint)).json()).content;
-
-  if (!data)
-    throw new Error (`No data for '${endpoint}'`);
-
-  const dict = JSON.parse(base64.decode(data)) as Record<string, string>;
-
-  const transformedDeps = deps.map((d) => {
-    const depName = d.split('@')[0]!;
-    const version = dict[depName];
-    return version ? `${depName}@${version}` : d;
-  });
-
-  return transformedDeps;
+  };
 }

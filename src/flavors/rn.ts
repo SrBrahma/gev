@@ -4,18 +4,19 @@ import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
 import { editPackageJson } from '../core/utils/utils.js';
-import type { FlavorFunction } from '../main/typesAndConsts.js';
+import type { FlavorFunction } from '../main/types.js';
 
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
 //   my cleaunup should handle this.
 
+const humanName = 'React Native';
 
-const flavorReactNative: FlavorFunction = async (core) => {
+const generator: FlavorFunction = async (core) => {
 
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the React Native project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
   // --skip-install Don't install yet! We will install all later.
   await execa('npx', ['react-native', 'init', core.consts.projectName, '--template', 'react-native-template-typescript', '--skip-install'], { cwd: core.consts.parentDirPath });
@@ -43,7 +44,6 @@ const flavorReactNative: FlavorFunction = async (core) => {
 
 
   await core.actions.addPackages({
-    packageManager: 'yarn',
     deps: [
       // Navigation
       '@react-navigation/native',
@@ -76,8 +76,10 @@ const flavorReactNative: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupGit();
+  await core.actions.setupHusky();
 
-  ora().succeed(`React Native project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+
+  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
 
   // Copy/paste from what React Native prints at the end.
   console.log(`\nRun instructions for iOS:
@@ -96,4 +98,4 @@ Run instructions for Windows and macOS:
 
 };
 
-export default flavorReactNative;
+export default generator;
