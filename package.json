@@ -57,7 +57,7 @@
     "postinstall": "husky install",
     "scripts:templates": "ts-node-esm ./scripts/generateTemplates.ts",
     "scripts:emptyDirs": "ts-node-esm ./scripts/makeEmptyDirsFile.ts",
-    "pre-commit": "lint-staged && npm run scripts:emptyDirs",
+    "pre-commit": "lint-staged && npm run scripts:emptyDirs && git add -A",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"
   },
