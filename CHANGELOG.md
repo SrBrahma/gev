@@ -1,7 +1,7 @@
 # Changelog
 
 
-## 2.21.0
+## 2.21.0~1
 * Added `pnpm` support.
 * Added `--npm`, `--yarn` and `--pnpm` cli options.
 * `pnpm` is now the default package manager.

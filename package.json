@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.21.0",
+  "version": "2.21.1",
   "description": "Generates boilerplates",
   "keywords": [
     "generator",
@@ -41,7 +41,7 @@
     "start": "ts-node-esm ./src/main/index.ts",
     "test": "echo \"Error: no test specified\"",
     "test:all": "pnpm typecheck && pnpm lint && pnpm test",
-    "prepare": "husky install",
+    "prepare": "husky install && pnpm build",
     "script:templates": "ts-node-esm ./scripts/generateTemplates.ts",
     "script:emptyDirs": "ts-node-esm ./scripts/makeEmptyDirsFile.ts",
     "pre-commit": "lint-staged && pnpm script:emptyDirs && git add -A"
