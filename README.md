@@ -46,17 +46,13 @@ To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`
 
 # 🔮 Future
 
-* `vsce`, `cli`, `expo-firebase` flavors
-
-* Add Paypal donate button to the end of READMEs (or as a badge). Also funding.yml file.
+* `vsce`, `cli` flavors
 
 * Interactive menu to add other badges and the paypal button to the README.
 
 * jest integration
 
 * Allow custom setups. It could be something like `npx gev -u githubUsername`. This could really be a good way for people to have their own environment setup without too much work.
-
-* Use `npm get` and `set` for local configs. Could store Github username, donation link, some **package.json** defaults and custom gev scripts to be used as default.
 
 * `npx gev` would open an interactive menu to choose the desired initializer or change user options.
 
