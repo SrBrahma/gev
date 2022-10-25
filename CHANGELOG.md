@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 2.21.0
+* Added `pnpm` support.
+* Added `--npm`, `--yarn` and `--pnpm` cli options.
+* `pnpm` is now the default package manager.
+* Fixed `lib` not being included in bundle.
+* `gev` now using `pnpm`!
+
 ## 2.20.0
 * Added `next` flavor.
 * Empty dirs can now be in the resulting template.

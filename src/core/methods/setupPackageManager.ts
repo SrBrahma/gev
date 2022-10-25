@@ -3,6 +3,7 @@ import { execa } from 'execa';
 import fse from 'fs-extra';
 import { globby } from 'globby';
 import { oraPromise } from 'ora';
+import type { PackageManager } from '../../main/types.js';
 
 
 /**
@@ -13,11 +14,15 @@ import { oraPromise } from 'ora';
  * yarn is not yet set.
  */
 export async function ensurePackageManagerIsSetup({ packageManager, cwd }: {
-  packageManager: 'yarn' | 'npm';
+  packageManager: PackageManager;
   cwd: string;
 }): Promise<void> {
   await oraPromise(async () => {
     switch (packageManager) {
+      case 'pnpm': {
+        await execa('npm', ['install', '-g', 'pnpm'], { cwd });
+        break;
+      }
       case 'yarn': {
         // First create yarn.lock if it doesn't already exist. We do this as else it may complain if inside another project
         // (like if we try to run `yarn gev -- ts tests/a` during gev development).

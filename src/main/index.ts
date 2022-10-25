@@ -29,6 +29,7 @@ import { Core } from '../core/core.js';
 import { availableFlavors } from '../core/flavors.js';
 import { Program } from './consts.js';
 import { configData, loadConfigs, setConfigs } from './npmConfig.js';
+import type { PackageManager } from './types.js';
 
 
 const program = new Command();
@@ -41,6 +42,9 @@ program
   .helpOption('-h, --help', 'Display help for command.') // Just capitalize the first letter of description.
   .option('-n, --no-install', 'Don\'t install the npm packages after setting the template.')
   .option('-c, --no-check-latest', 'Won\'t check if is using the latest version of gev.')
+  .option('--npm', 'Use npm as package manager')
+  .option('--pnpm', 'Use pnpm as package manager (default)')
+  .option('--yarn', 'Use yarn as package manager')
   .option('-C, --no-clean-on-error', 'Won\'t clean the project being generated if an error happened.')
   // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
   .addArgument(new Argument('<flavor>', `The project kind.`)
@@ -54,10 +58,16 @@ program
     const {
       install: installPackages,
       checkLatest, cleanOnError,
+      npm, yarn, pnpm,
     } = program.opts<{
       install: boolean; checkLatest: boolean; cleanOnError: boolean;
+      npm: boolean; yarn: boolean; pnpm: boolean;
     }>();
     const [flavor, projectRelativePath = '.'] = program.args as [string, string | undefined];
+
+    const defaultPackageManager: PackageManager = 'pnpm';
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const packageManager: PackageManager = (npm && 'npm') || (yarn && 'yarn') || (pnpm && 'pnpm') || defaultPackageManager;
 
     if (checkLatest) {
       // Ensure latest version
@@ -81,14 +91,21 @@ program
 
     await loadConfigs();
 
-    const defaultAuthor = configData.githubAuthor;
 
-    const { githubAuthor } = await inquirer.prompt<{ githubAuthor: string }>([
-      { name: 'githubAuthor', type: 'input', default: defaultAuthor, message: 'Who is the GitHub Author of this project?' },
-    ]);
+    let githubAuthor = configData.githubAuthor;
 
-    if (githubAuthor !== configData.githubAuthor)
-      await setConfigs({ githubAuthor });
+    const canReadStdin = process.stdin.isTTY;
+
+    if (canReadStdin) {
+      const input = await inquirer.prompt<{ githubAuthor: string }>([
+        { name: 'githubAuthor', type: 'input', default: githubAuthor, message: 'Who is the GitHub Author of this project?' },
+      ]);
+      githubAuthor = input.githubAuthor;
+
+      if (githubAuthor !== configData.githubAuthor)
+        await setConfigs({ githubAuthor });
+    }
+
 
     const core = new Core({
       flavor,
@@ -96,6 +113,7 @@ program
       installPackages,
       cleanOnError,
       githubAuthor: githubAuthor || undefined,
+      packageManager,
     });
 
     await core.run();

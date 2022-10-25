@@ -6,9 +6,7 @@
 
 ### While you may use those templates directly, it's recommended to generate the desired flavor by the use of the `gev` command, so the latest packages are installed and the configurations related to you and your project are used.
 
-#### Some flavoyrs, like `expo`, may have a '-' at its name ending. Expo, as example, would complain the name conflicted with the dependency with the same name.
-<br/>
 
-## Generated at: **Mon, 24 Oct 2022 05:44:29 GMT**
+## Generated at: **Mon, 24 Oct 2022 23:10:25 GMT**
 
 ## Gev version: **2.20.0**

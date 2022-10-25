@@ -6,13 +6,16 @@ import { Program } from '../../main/consts.js';
 import { addPackages } from './addPackages.js';
 
 
-/** Sets up husky and lint-staged. */
-export async function setupHusky({ cwd, packageManager, doInstall }: {
+export type SetupHuskyProps = {
   cwd: string;
-  packageManager: 'npm' | 'yarn';
+  packageManager: 'npm' | 'yarn' | 'pnpm';
   /** If should install after adding the packages to package.json */
   doInstall: boolean;
-}): Promise<void> {
+};
+/** Sets up husky and lint-staged. */
+export async function setupHusky({
+  cwd, packageManager, doInstall,
+}: SetupHuskyProps): Promise<void> {
   await oraPromise(async () => {
 
     const devDeps = ['husky', 'lint-staged'];

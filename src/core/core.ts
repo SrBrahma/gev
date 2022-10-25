@@ -8,8 +8,10 @@ import { get_LICENSE } from '../common/get_LICENSE.js';
 import type { get_README_Options } from '../common/get_README.js';
 import { get_README } from '../common/get_README.js';
 import { Program } from '../main/consts.js';
+import type { PackageManager } from '../main/types.js';
 import { addPackages } from './methods/addPackages.js';
 import { createEmptySemitemplatesDirs } from './methods/semitemplates.js';
+import type { SetupHuskyProps } from './methods/setupHusky.js';
 import { setupHusky } from './methods/setupHusky.js';
 import { pathHasGit } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
@@ -32,7 +34,7 @@ type Consts = {
   /** If will clean on errors. */
   cleanOnError: boolean;
   githubAuthor?: string;
-  packageManager: 'yarn' | 'npm';
+  packageManager: 'yarn' | 'npm' | 'pnpm';
 };
 
 type Vars = {
@@ -55,6 +57,7 @@ export class Core {
   constructor({
     cwd = process.cwd(),
     flavor, projectRelativePath, installPackages, cleanOnError, githubAuthor,
+    packageManager,
   }: {
     flavor: string;
     /** Where the user is running the gev command.
@@ -65,6 +68,7 @@ export class Core {
     installPackages: boolean;
     cleanOnError: boolean;
     githubAuthor?: string;
+    packageManager: PackageManager;
   }) {
 
     const projectPath = Path.join(cwd, projectRelativePath);
@@ -79,7 +83,7 @@ export class Core {
       installPackages,
       cleanOnError,
       githubAuthor,
-      packageManager: 'yarn',
+      packageManager,
     };
   }
 
@@ -134,14 +138,9 @@ export class Core {
       cwd = this.consts.projectPath,
       packageManager = this.consts.packageManager,
       doInstall = this.consts.installPackages,
-    }: {
-      cwd?: string;
-      packageManager?: 'npm' | 'yarn';
-      /** If should install after adding the packages to package.json */
-      doInstall?: boolean;
-    } = {}): Promise<void> => {
-      await setupHusky({ cwd, packageManager, doInstall });
-    },
+    }: Partial<SetupHuskyProps> = {}): Promise<void> =>
+      setupHusky({ cwd, packageManager, doInstall })
+    ,
 
     // TODO support for specific versions. Check if contains @, if so, won't include the @latest. Can just use regex in the replace.
     /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
@@ -168,12 +167,11 @@ export class Core {
       doInstall?: boolean;
       // peerDeps?: string[],
       /** @default 'npm' */
-      packageManager?: 'yarn' | 'npm';
-    } = {}): Promise<void> => {
-      await addPackages({
-        cwd, doInstall, packageManager, deps, devDeps, isExpo,
-      });
-    },
+      packageManager?: PackageManager;
+    } = {}): Promise<void> => addPackages({
+      cwd, doInstall, packageManager, deps, devDeps, isExpo,
+    })
+    ,
 
     /** Creates the project directory, if not using the cwd as the path.
      *

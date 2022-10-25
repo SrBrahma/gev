@@ -3,17 +3,11 @@ import fetch from 'cross-fetch';
 import { execa } from 'execa';
 import latestVersion from 'latest-version';
 import { oraPromise } from 'ora';
+import type { PackageManager } from '../../main/types.js';
 import { ensurePackageManagerIsSetup } from './setupPackageManager.js';
 
 
-export async function addPackages({
-  deps = [],
-  devDeps = [],
-  isExpo,
-  cwd,
-  doInstall,
-  packageManager,
-}: {
+export type AddPackages = {
   deps?: string[];
   devDeps?: string[];
   /** If true, will check and change the deps versions to fit expo compatible versions.
@@ -23,16 +17,23 @@ export async function addPackages({
   cwd: string;
   /** If should install after adding the packages to package.json */
   doInstall: boolean;
-  packageManager: 'yarn' | 'npm';
-}): Promise<void> {
+  packageManager: PackageManager;
+};
 
-  await ensurePackageManagerIsSetup({ packageManager: 'yarn', cwd });
+export async function addPackages({
+  deps = [],
+  devDeps = [],
+  isExpo,
+  cwd,
+  doInstall,
+  packageManager,
+}: AddPackages): Promise<void> {
+  await ensurePackageManagerIsSetup({ packageManager, cwd });
 
   if (isExpo)
     await oraPromise(async () => {
       deps = await getPackagesVersionsForLatestExpo(deps);
     }, 'Getting dependencies versions compatible with Expo');
-
 
   await oraPromise(async () => {
     await Promise.all([
@@ -49,15 +50,14 @@ export async function addPackages({
 
   if (doInstall)
     await oraPromise(async () => {
-      if (packageManager === 'npm')
       // [--ignore-scripts] Don't run `prepare` etc scripts https://stackoverflow.com/a/61975270/10247962
+      if (packageManager === 'npm')
         await execa('npm', ['install', '--ignore-scripts'], { cwd });
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       else if (packageManager === 'yarn')
         await execa('yarn', ['install'], { cwd });
-
+      else
+        await execa('pnpm', ['install', '--ignore-scripts'], { cwd });
     }, `Installing dependencies using ${packageManager}`);
-
 }
 
 
