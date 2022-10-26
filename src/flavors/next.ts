@@ -23,7 +23,7 @@ const generator: FlavorFunction = async (core) => {
       '@types/node',
       '@types/react',
       'eslint-config-gev',
-      'typescript', // Ensure latest
+      'typescript',
     ],
   });
 
