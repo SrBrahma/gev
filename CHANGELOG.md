@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.22.2
+* Fixed wrong `chrome-react` semitemplate dir name
+
 ## 2.22.1
 * Fixed `ENOENT` error on LICENSE file write.
 
