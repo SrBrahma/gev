@@ -177,11 +177,11 @@ export class Core {
      *
      * As it uses createProjectDir action, createdDir and shouldCleanOnError may be set.
      * You should run projectDirMustBeValid before. */
-    setProjectDirectory: async (): Promise<void> => {
+    setProjectDirectory: (): void => {
       // TODO [*1] get the higher level dir created to remove it.
-      const dirExists = await fse.pathExists(this.consts.projectPath);
+      const dirExists = fse.pathExistsSync(this.consts.projectPath);
       if (!dirExists) {
-        await fse.ensureDir(this.consts.projectPath);
+        fse.ensureDirSync(this.consts.projectPath);
         this.vars.shouldCleanOnError = true;
         this.vars.createdDir = true;
       }
@@ -196,7 +196,7 @@ export class Core {
      * @param flavor set this to use another flavor semitemplate. */
     applySemitemplate: async (flavor: string = this.consts.flavor): Promise<void> => {
       // Ensure project path exists.
-      await this.actions.setProjectDirectory();
+      this.actions.setProjectDirectory();
 
       // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
@@ -207,10 +207,10 @@ export class Core {
       );
 
       // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
-      if (await fse.pathExists(this.getPathInProjectDir('gitignore')))
-        await fse.rename(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
+      if (fse.pathExistsSync(this.getPathInProjectDir('gitignore')))
+        fse.renameSync(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
 
-      await createEmptySemitemplatesDirs({
+      createEmptySemitemplatesDirs({
         flavor, cwd: this.consts.projectPath,
       });
     },

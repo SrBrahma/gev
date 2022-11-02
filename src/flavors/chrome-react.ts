@@ -12,6 +12,8 @@ const generator: FlavorFunction = async (core) => {
 
   ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
+  core.actions.setProjectDirectory();
+
   core.add.license();
   core.add.changelog();
 

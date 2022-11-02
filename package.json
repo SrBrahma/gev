@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.22.0",
+  "version": "2.22.1",
   "description": "Generates boilerplates",
   "keywords": [
     "generator",
@@ -36,20 +36,17 @@
     "gev": "pnpm start",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "lint": "pnpx eslint \"src/**\"",
-    "lint:fix": "pnpx eslint --fix \"src/**\"",
+    "lint": "eslint \"src/**\"",
+    "lint:fix": "eslint --fix \"src/**\"",
     "start": "ts-node-esm ./src/main/index.ts",
     "test": "echo \"Error: no test specified\"",
     "test:all": "pnpm typecheck && pnpm lint && pnpm test",
     "prepare": "husky install && pnpm build",
     "script:templates": "ts-node-esm ./scripts/generateTemplates.ts",
     "script:emptyDirs": "ts-node-esm ./scripts/makeEmptyDirsFile.ts",
-    "pre-commit": "lint-staged && pnpm script:emptyDirs && git add -A"
+    "pre-commit": "pnpm test:all && pnpm script:emptyDirs && git add -A"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix"
-    ]
   },
   "dependencies": {
     "add-dependencies": "1.1.0",
@@ -67,7 +64,8 @@
     "semver-compare": "1.0.0",
     "signal-exit": "3.0.7",
     "typescript": "^4.8.4",
-    "validate-npm-package-name": "^5.0.0"
+    "validate-npm-package-name": "^5.0.0",
+    "eslint-config-gev": "^2.43.3"
   },
   "devDependencies": {
     "@types/base-64": "1.0.0",
@@ -78,7 +76,6 @@
     "@types/semver-compare": "1.0.1",
     "@types/signal-exit": "3.0.1",
     "@types/validate-npm-package-name": "^4.0.0",
-    "eslint-config-gev": "^2.43.3",
     "husky": "^8.0.1",
     "lint-staged": "13.0.3",
     "pinst": "^3.0.0",
