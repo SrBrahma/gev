@@ -36,7 +36,7 @@
     "gev": "pnpm start",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "lint": "eslint \"src/**\"",
+    "lint": "eslint \"src/**\" --cache",
     "lint:fix": "eslint --fix \"src/**\"",
     "start": "ts-node-esm ./src/main/index.ts",
     "test": "echo \"Error: no test specified\"",
@@ -44,7 +44,7 @@
     "prepare": "husky install && pnpm build",
     "script:templates": "ts-node-esm ./scripts/generateTemplates.ts",
     "script:emptyDirs": "ts-node-esm ./scripts/makeEmptyDirsFile.ts",
-    "pre-commit": "pnpm test:all && pnpm script:emptyDirs && git add -A"
+    "pre-commit": "pnpm typecheck && pnpm lint:fix && pnpm script:emptyDirs && git add -A"
   },
   "lint-staged": {
   },
