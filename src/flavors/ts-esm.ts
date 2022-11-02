@@ -1,4 +1,5 @@
 import ora from 'ora';
+import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 import { getTypescriptCommonDevDeps } from './ts.js';
@@ -13,13 +14,13 @@ const generator: FlavorFunction = async (core) => {
 
   ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
-  await core.actions.applySemitemplate();
-
   core.add.license();
   core.add.changelog();
   core.add.readme({
     badges: { npm: true, prWelcome: true, typescript: true },
   });
+
+  await core.actions.applySemitemplate();
 
   editPackageJson({
     name: core.consts.projectName,
@@ -39,6 +40,7 @@ const generator: FlavorFunction = async (core) => {
 
   await core.actions.setupGit();
   await core.actions.setupHusky();
+  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'ts', cjs: true });
 
 
   ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);

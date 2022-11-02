@@ -30,17 +30,21 @@ npx gev -h # For help and all commands and options available.
 
 Current available flavors are:
 
-**`ts`**: Typescript project
+**`ts`**: Typescript
 
-**`ts-esm`**: Typescript ESM project
+**`ts-esm`**: Typescript ESM
 
-**`expo`**: Expo project.
+**`expo`**: Expo
 
-**`expo-pkg`**: React-Native/Expo component package.
+**`expo-pkg`**: Expo/React-Native package
 
-**`rn`**: React Native project. Created this for a job selection process that required a non-Expo RN project.
+**`rn`**: React Native
 
-All the flavors uses Typescript.
+**`next`**: NextJS
+
+**`chrome-react`**: Google Chrome extension with React
+
+All the flavors uses Typescript. There may be other flavors that I didn't add here yet, run `npx gev -h` for all the latest flavors.
 
 To supress the npm@7 possible npx confirmation message, you can use `npx -y gev`.
 

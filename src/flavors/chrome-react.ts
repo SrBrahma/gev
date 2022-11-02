@@ -4,7 +4,7 @@ import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
 
-const humanName = 'Next.js';
+const humanName = 'Chrome Extension';
 
 const generator: FlavorFunction = async (core) => {
 
@@ -12,19 +12,32 @@ const generator: FlavorFunction = async (core) => {
 
   ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
 
+  core.add.license();
+  core.add.changelog();
+
   await core.actions.applySemitemplate();
 
   await core.actions.addPackages({
     deps: [
-      'next',
       'react',
       'react-dom',
     ],
     devDeps: [
-      '@types/node',
+      '@types/chrome',
+      '@types/jest',
+      '@types/react',
+      '@types/react-dom',
+      'copy-webpack-plugin',
+      'jest',
+      'rimraf',
+      'ts-jest',
+      'ts-loader',
+      'typescript',
+      'webpack',
+      'webpack-cli',
+      'webpack-merge',
       '@types/react',
       'eslint-config-gev',
-      'typescript',
     ],
   });
 

@@ -3,6 +3,7 @@ import editJsonFile from 'edit-json-file';
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
+import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
@@ -27,10 +28,9 @@ const generator: FlavorFunction = async (core) => {
   // Remove the prettier file created by the template. We don't use it.
   await fse.remove(core.getPathInProjectDir('.prettierrc.js'));
 
+  core.add.changelog();
 
   await core.actions.applySemitemplate();
-
-  core.add.changelog();
 
   // Remove unused dev dependencies that were added by the template.
   // The eslint ones are already added by our eslint config package.
@@ -62,7 +62,7 @@ const generator: FlavorFunction = async (core) => {
     ],
     devDeps: [
       'eslint-config-gev',
-      'typescript', // Ensure latest
+      'typescript',
     ],
   });
 
@@ -77,6 +77,7 @@ const generator: FlavorFunction = async (core) => {
 
   await core.actions.setupGit();
   await core.actions.setupHusky();
+  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
 
   ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);

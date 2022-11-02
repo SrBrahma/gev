@@ -9,7 +9,13 @@
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "test:all": "npm run typecheck && npm run lint && npm run jest"
+    "test:all": "npm run typecheck && npm run lint && npm run jest",
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
   },

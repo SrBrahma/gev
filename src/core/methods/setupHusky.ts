@@ -29,11 +29,12 @@ export async function setupHusky({
         devDeps.push('pinst');
         json.set('scripts.prepack', 'pinst --disable');
         json.set('scripts.postpack', 'pinst --enable');
-        json.set('lint-staged.*\\.{js,ts,tsx}', ['eslint --write']);
       }
     } else {
-      json.set('prepare', 'husky install');
+      json.set('scripts.prepare', 'husky install');
     }
+    json.set('scripts.pre-commit', 'lint-staged');
+    json.set('lint-staged.*\\.{js,jsx,ts,tsx}', ['eslint --write']);
 
     json.save();
 

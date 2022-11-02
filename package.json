@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.21.1",
+  "version": "2.22.0",
   "description": "Generates boilerplates",
   "keywords": [
     "generator",
@@ -85,7 +85,6 @@
     "rimraf": "3.0.2",
     "ts-node": "10.9.1"
   },
-  "packageManager": "yarn@3.2.1",
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   }

@@ -2,6 +2,7 @@
 require('@rushstack/eslint-patch/modern-module-resolution');
 
 module.exports = {
+  root: true,
   env: {
     es2021: true,
     node: true,
@@ -10,12 +11,12 @@ module.exports = {
     'eslint-config-gev/js' // https://github.com/SrBrahma/eslint-config-gev
   ],
   parser: '@typescript-eslint/parser',
-  overrides: [ //* 2
+  overrides: [
     {
       files: ['*.ts', '*.tsx'],
       extends: [
         'plugin:@typescript-eslint/recommended-requiring-type-checking', // *1
-        'eslint-config-gev/react-native' // https://github.com/SrBrahma/eslint-config-gev
+        'eslint-config-gev/ts' // https://github.com/SrBrahma/eslint-config-gev
       ],
       parserOptions: {
         tsconfigRootDir: __dirname, // *1
@@ -25,7 +26,7 @@ module.exports = {
       },
     }
   ],
-  ignorePatterns: ['**/lib/**/*', '**/dist/**/*', '**/node_modules/**/*', '.eslintrc.cjs'],
+  ignorePatterns: ['**/lib/**/*', '**/dist/**/*', '**/node_modules/**/*'],
   rules: {
   }
 };

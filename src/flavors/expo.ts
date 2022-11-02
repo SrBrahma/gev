@@ -1,6 +1,7 @@
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
+import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
@@ -27,10 +28,9 @@ const generator: FlavorFunction = async (core) => {
   // Remove the default App.tsx. We will create another one in src/main/App.tsx.
   await fse.remove(core.getPathInProjectDir('App.tsx'));
 
+  core.add.changelog();
 
   await core.actions.applySemitemplate();
-
-  core.add.changelog();
 
   await core.actions.addPackages({
     isExpo: true,
@@ -108,6 +108,8 @@ const generator: FlavorFunction = async (core) => {
 
   await core.actions.setupGit();
   await core.actions.setupHusky();
+  // This will certainly throw as .eslintrc will exist. Check what expo uses before setting the force flag here.
+  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
   // Semitemplate will automatically remove the default App.tsx it creates on s
   // Done!
