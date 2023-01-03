@@ -1,8 +1,6 @@
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setup/eslint.js';
-import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 import { checkGlobalPackageUpdate } from '../main/utils.js';
 
@@ -12,7 +10,7 @@ import { checkGlobalPackageUpdate } from '../main/utils.js';
 const humanName = 'Expo';
 
 const generator: FlavorFunction = async (core) => {
-  await core.verifications.projectPathMustBeValid();
+  await core.verifications.projectPathIsValid();
 
   // Ensure expo-cli is installed at latest version. Will print some stuff.
   await checkGlobalPackageUpdate('expo-cli', { install: true });
@@ -67,9 +65,6 @@ const generator: FlavorFunction = async (core) => {
       'jest-expo',
     ],
     devDeps: [
-      'typescript',
-      'eslint-config-gev',
-
       // Jest configs must be on jest.config.js when possible, not on package.json.
       // Link the source when possible so we can track it down later.
       // https://docs.expo.dev/guides/testing-with-jest/
@@ -79,41 +74,36 @@ const generator: FlavorFunction = async (core) => {
       'ts-jest',
       'react-test-renderer@17',
       '@types/jest',
-
       '@expo/config',
     ].filter((e) => e !== 'jest'), // remove jest from dev install, will be installed above.
   });
 
-  editPackageJson({
-    projectPath: core.consts.projectPath,
-    name: core.consts.projectName,
-    githubAuthor: core.consts.githubAuthor,
-    data: {
-      main: './src/main/index.js',
-      'scripts.test': 'jest',
-      'scripts.test:watch': 'jest --watchAll',
-      'scripts.start': 'expo start',
-      'scripts.start:clean': 'expo start -c',
-      'scripts.b:dev': 'eas build --platform all --profile development',
-      'scripts.b:dev:ios': 'eas build --platform ios --profile development',
-      'scripts.b:dev:android': 'eas build --platform android --profile development',
-      'scripts.b:prev': 'eas build --platform all --profile preview',
-      'scripts.b:prev:ios': 'eas build --platform ios --profile preview',
-      'scripts.b:prev:android': 'eas build --platform ios --profile preview',
-      'scripts.b:prod': 'eas build --platform all --profile production',
-      'scripts.b:prod:ios': 'eas build --platform ios --profile production',
-      'scripts.b:prod:android': 'eas build --platform android --profile production',
-      'scripts.s:prod': 'eas build --platform all --profile production --auto-submit',
-      'scripts.s:prod:ios': 'eas build --platform ios --profile production --auto-submit',
-      'scripts.s:prod:android': 'eas build --platform android --profile production --auto-submit',
-      'scripts.lint': 'tsc --noemit && eslint --fix \\"src/**\\"',
+  // This will certainly throw as .eslintrc will exist. Check what expo uses before setting the force flag here.
+  await core.actions.setupCommonStuff({
+    eslint: { flavor: 'react-native-ts' },
+    packageJson: {
+      data: {
+        main: './src/main/index.js',
+        'scripts.test': 'jest',
+        'scripts.test:watch': 'jest --watchAll',
+        'scripts.start': 'expo start',
+        'scripts.start:clean': 'expo start -c',
+        'scripts.b:dev': 'eas build --platform all --profile development',
+        'scripts.b:dev:ios': 'eas build --platform ios --profile development',
+        'scripts.b:dev:android': 'eas build --platform android --profile development',
+        'scripts.b:prev': 'eas build --platform all --profile preview',
+        'scripts.b:prev:ios': 'eas build --platform ios --profile preview',
+        'scripts.b:prev:android': 'eas build --platform ios --profile preview',
+        'scripts.b:prod': 'eas build --platform all --profile production',
+        'scripts.b:prod:ios': 'eas build --platform ios --profile production',
+        'scripts.b:prod:android': 'eas build --platform android --profile production',
+        'scripts.s:prod': 'eas build --platform all --profile production --auto-submit',
+        'scripts.s:prod:ios': 'eas build --platform ios --profile production --auto-submit',
+        'scripts.s:prod:android': 'eas build --platform android --profile production --auto-submit',
+        'scripts.lint': 'tsc --noemit && eslint --fix \\"src/**\\"',
+      },
     },
   });
-
-  await core.actions.setupGit();
-  await core.actions.setupHusky();
-  // This will certainly throw as .eslintrc will exist. Check what expo uses before setting the force flag here.
-  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
   // Semitemplate will automatically remove the default App.tsx it creates on s
   // Done!

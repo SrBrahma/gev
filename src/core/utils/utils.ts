@@ -7,25 +7,34 @@ export function pathHasGit(path: string): Promise<boolean> {
   return fse.pathExists(Path.join(path, '.git'));
 }
 
-export function editPackageJson({
-  projectPath,
-  data,
-  name,
-  githubAuthor,
-}: {
+export type EditPackageJsonProps = {
   projectPath: string;
-  name: string;
-  githubAuthor?: string;
+  name?: string;
+  author?: string;
   data?: Record<string, any>;
-}): void {
-  const json = editJsonFile(Path.join(projectPath, 'package.json'));
+  // TODO add scripts
+};
+export function editPackageJson(props: EditPackageJsonProps): void {
+  const json = editJsonFile(Path.join(props.projectPath, 'package.json'));
+  const content: Record<string, string> = json.read() as Record<string, string>;
+  const author: string | undefined = props.author ?? content.author;
+  const name: string | undefined = props.name ?? content.name;
+
   const commonData = {
-    name,
-    author: githubAuthor,
-    homepage: `https://github.com/${githubAuthor}/${name}#readme`,
-    bugs: `https://github.com/${githubAuthor}/${name}/issues`,
-    repository: `github:${githubAuthor}/${name}`,
+    name: props.name ?? content.name,
+    ...(author && {
+      author,
+    }),
+    ...(author &&
+      name && {
+        homepage: `https://github.com/${author}/${name}#readme`,
+        bugs: `https://github.com/${author}/${name}/issues`,
+        repository: `github:${author}/${name}`,
+      }),
   };
-  Object.entries({ ...commonData, ...data }).forEach(([key, value]) => json.set(key, value));
+
+  Object.entries({ ...commonData, ...props.data }).forEach(([key, value]) => json.set(key, value));
   json.save();
 }
+
+export const commonTestDeps = ['jest', 'ts-jest', '@types/jest'];

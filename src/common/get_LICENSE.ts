@@ -1,11 +1,9 @@
-import type { Core } from '../core/core.js';
-
-export type get_LICENSE_Options = {
-  license: 'mit';
-};
+// type get_LICENSE_Options = {
+//   license: 'mit';
+// };
 
 // TODO custom developer name.
-export function get_LICENSE(core: Core, options?: get_LICENSE_Options): string {
+export function get_LICENSE(): string {
   const year = '2022';
   const devName = 'Henrique Bruno';
   const mit = `MIT License

@@ -1,13 +1,14 @@
+import path from 'path';
+import editJsonFile from 'edit-json-file';
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setup/eslint.js';
-import { editPackageJson } from '../core/utils/utils.js';
+import { commonTestDeps } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
 const humanName = 'Typescript ESM';
 
 const generator: FlavorFunction = async (core) => {
-  core.verifications.projectNameMustBeNpmValid();
-  await core.verifications.projectPathMustBeValid();
+  core.verifications.projectNameIsNpmValid();
+  await core.verifications.projectPathIsValid();
 
   ora().info(
     `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
@@ -23,32 +24,21 @@ const generator: FlavorFunction = async (core) => {
 
   await core.actions.applySemitemplate();
 
-  editPackageJson({
-    name: core.consts.projectName,
-    githubAuthor: core.consts.githubAuthor,
-    projectPath: core.consts.projectPath,
-  });
-
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
-    devDeps: [
-      'typescript',
-      'eslint-config-gev',
-      '@types/node',
-      '@swc/core',
-      'jest',
-      'ts-jest',
-      '@types/jest',
-      'rimraf',
-      'ts-node', // For node --loader
-      'nodemon', // For watch
-      '@swc/core',
-    ],
+    devDeps: ['@types/node', 'rimraf', 'ts-node', 'ts-node-dev', '@swc/core', ...commonTestDeps],
   });
 
-  await core.actions.setupGit();
-  await core.actions.setupHusky();
-  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'ts', cjs: true });
+  editJsonFile(path.join(core.consts.projectPath, 'tsconfig.json'))
+    .set('ts-node', {
+      swc: true,
+      esm: true,
+    })
+    .save();
+
+  await core.actions.setupCommonStuff({
+    eslint: { flavor: 'ts', cjs: true },
+  });
 
   ora().succeed(
     `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,

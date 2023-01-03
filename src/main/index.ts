@@ -25,7 +25,7 @@ import inquirer from 'inquirer';
 import latestVersion from 'latest-version';
 import ora from 'ora';
 import compareSemver from 'semver-compare';
-import { Core } from '../core/core.js';
+import { CoreClass } from '../core/core.js';
 import { availableFlavors } from '../core/flavors.js';
 import { Program } from './consts.js';
 import { configData, loadConfigs, setConfigs } from './npmConfig.js';
@@ -78,8 +78,8 @@ program
     const [flavor, projectRelativePath = '.'] = program.args as [string, string | undefined];
 
     const defaultPackageManager: PackageManager = 'pnpm';
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const packageManager: PackageManager =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       (npm && 'npm') || (yarn && 'yarn') || (pnpm && 'pnpm') || defaultPackageManager;
 
     if (checkLatest) {
@@ -129,7 +129,7 @@ program
       if (githubAuthor !== configData.githubAuthor) await setConfigs({ githubAuthor });
     }
 
-    const core = new Core({
+    const core = new CoreClass({
       flavor,
       projectRelativePath,
       installPackages,

@@ -2,7 +2,7 @@
 // research later https://github.com/matiassingers/awesome-readme
 // "Give it a star!" ?
 
-import type { Core } from '../core/core.js';
+import type { CoreConsts } from '../core/core';
 
 type Badges = {
   prWelcome?: boolean;
@@ -18,8 +18,8 @@ export type get_README_Options = {
 };
 
 // Be sure when changing the defaults.
-export function get_README(core: Core, options?: get_README_Options): string {
-  const projectName = core.consts.projectName;
+export function get_README(consts: CoreConsts, options?: get_README_Options): string {
+  const projectName = consts.projectName;
 
   function getBadgesString() {
     const badges = options?.badges;
@@ -66,9 +66,9 @@ ${getBadgesString()}
 
 ## 💿 Installation
 \`\`\`bash
-npm install ${core.consts.projectName}
+npm install ${consts.projectName}
 # or
-yarn add ${core.consts.projectName}
+yarn add ${consts.projectName}
 \`\`\`
 
 ## 📖 Usage

@@ -1,13 +1,11 @@
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setup/eslint.js';
-import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
 const humanName = 'Expo Package';
 
 const generator: FlavorFunction = async (core) => {
-  core.verifications.projectNameMustBeNpmValid();
-  await core.verifications.projectPathMustBeValid();
+  core.verifications.projectNameIsNpmValid();
+  await core.verifications.projectPathIsValid();
 
   ora().info(
     `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
@@ -24,26 +22,12 @@ const generator: FlavorFunction = async (core) => {
   await core.actions.applySemitemplate();
 
   await core.actions.addPackages({
-    devDeps: [
-      'typescript',
-      'eslint-config-gev',
-      '@types/node',
-      '@types/react-native',
-      'react-native',
-      'rimraf',
-      'react',
-    ],
+    devDeps: ['@types/node', '@types/react-native', 'react-native', 'rimraf', 'react'],
   });
 
-  editPackageJson({
-    name: core.consts.projectName,
-    githubAuthor: core.consts.githubAuthor,
-    projectPath: core.consts.projectPath,
+  await core.actions.setupCommonStuff({
+    eslint: { flavor: 'react-native-ts' },
   });
-
-  await core.actions.setupGit();
-  await core.actions.setupHusky();
-  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
   ora().succeed(
     `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,

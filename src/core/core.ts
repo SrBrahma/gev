@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Path from 'path';
-import { execa } from 'execa';
 import fse from 'fs-extra';
 import onExit from 'signal-exit';
+import type { SetOptional } from 'type-fest';
 import validatePackageName from 'validate-npm-package-name';
 import { get_CHANGELOG } from '../common/get_CHANGELOG.js';
 import { get_LICENSE } from '../common/get_LICENSE.js';
@@ -9,25 +10,30 @@ import type { get_README_Options } from '../common/get_README.js';
 import { get_README } from '../common/get_README.js';
 import { Program } from '../main/consts.js';
 import type { PackageManager } from '../main/types.js';
+import type { AddPackagesProps } from './methods/addPackages.js';
 import { addPackages } from './methods/addPackages.js';
 import { createEmptySemitemplatesDirs } from './methods/semitemplates.js';
-import type { SetupHuskyProps } from './methods/setup/husky.js';
+import type { SetupEslintrcProps } from './methods/setup/eslint.js';
+import { setupGit } from './methods/setup/git.js';
 import { setupHusky } from './methods/setup/husky.js';
-import { pathHasGit } from './utils/utils.js';
+import { setupPrettier } from './methods/setup/prettier.js';
+import { setProjectDirectory } from './methods/setup/projectDirectory.js';
+import type { EditPackageJsonProps } from './utils/utils.js';
+import { editPackageJson } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
 
-type Consts = {
-  /** If should `npm i` */
+export type CoreConsts = {
+  /** If should `npm i` etc */
   installPackages: boolean;
   flavor: string;
-  /** Where we are running the command. */
-  cwd: string;
   /** If the cwd will be used to store the project files. */
   currentDirectoryIsTarget: boolean;
   /** The project full path. */
   projectPath: string;
   /** The name of the new project. */
   projectName: string;
+  /** Where the command is being run. */
+  cwd: string;
   /** The full path of the parent directory of the project. */
   parentDirPath: string;
   /** If will clean on errors. */
@@ -36,25 +42,23 @@ type Consts = {
   packageManager: 'yarn' | 'npm' | 'pnpm';
 };
 
-type Vars = {
+export type CoreVars = {
   /** If we had manually created anything that we should remove if we had an error. */
   shouldCleanOnError: boolean;
   /** So we can just remove the dir contents instead of removing it if it already existed. */
   createdDir: boolean;
-  state: 'notStarted' | 'running' | 'finished';
 };
 
 /** It won't execute any action by itself. The flavor is responsible of calling the actions. */
-export class Core {
-  consts: Consts;
-  vars: Vars = {
+export class CoreClass {
+  consts: CoreConsts;
+  // TODO remove this somehow, or at least make it private.
+  vars: CoreVars = {
     createdDir: false,
     shouldCleanOnError: false,
-    state: 'notStarted',
   };
 
   constructor({
-    cwd = process.cwd(),
     flavor,
     projectRelativePath,
     installPackages,
@@ -63,9 +67,6 @@ export class Core {
     packageManager,
   }: {
     flavor: string;
-    /** Where the user is running the gev command.
-     * @default process.cwd() */
-    cwd?: string;
     /** Use '.' for cwd. */
     projectRelativePath: string;
     installPackages: boolean;
@@ -73,6 +74,7 @@ export class Core {
     githubAuthor?: string;
     packageManager: PackageManager;
   }) {
+    const cwd = process.cwd();
     const projectPath = Path.join(cwd, projectRelativePath);
 
     this.consts = {
@@ -96,18 +98,16 @@ export class Core {
 
   add = {
     readme: (options?: get_README_Options): void =>
-      fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this, options)),
+      fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this.consts, options)),
     changelog: (): void =>
       fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'), get_CHANGELOG()),
-    license: (): void => fse.writeFileSync(this.getPathInProjectDir('LICENSE'), get_LICENSE(this)),
+    license: (): void => fse.writeFileSync(this.getPathInProjectDir('LICENSE'), get_LICENSE()),
   };
 
   /** Run the flavor.
    *
    * May throw errors. Will clean the files on errors or process premature exit. */
   async run(): Promise<void> {
-    if (this.vars.state !== 'notStarted') return;
-
     // On error, clean if needed.
     const onError = async () => {
       // Only if the flavor doesn't delete the files by itself
@@ -121,8 +121,6 @@ export class Core {
     };
 
     try {
-      this.vars.state = 'running';
-
       // When adding custom flavors, will need to change this.
       const cancelOnExit = onExit(async () => {
         await onError();
@@ -130,7 +128,6 @@ export class Core {
       const flavorFunction = await getFlavorFunction(this.consts.flavor);
       await flavorFunction(this);
       cancelOnExit();
-      this.vars.state = 'finished';
     } catch (err) {
       await onError();
       throw err; // Rethrow
@@ -138,60 +135,41 @@ export class Core {
   }
 
   actions = {
-    setupHusky: async ({
-      cwd = this.consts.projectPath,
-      packageManager = this.consts.packageManager,
-      doInstall = this.consts.installPackages,
-    }: Partial<SetupHuskyProps> = {}): Promise<void> =>
-      setupHusky({ cwd, packageManager, doInstall }),
-    // TODO support for specific versions. Check if contains @, if so, won't include the @latest. Can just use regex in the replace.
-    /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
-     *
-     * Will only install if this.consts.installPackages is true
-     */
-    addPackages: async ({
-      deps = [],
-      devDeps = [],
-      isExpo,
-      cwd = this.consts.projectPath,
-      doInstall = this.consts.installPackages,
-      packageManager = this.consts.packageManager,
-    }: {
-      deps?: string[];
-      devDeps?: string[];
-      /** If true, will check and change the deps versions to fit expo compatible versions.
-       *
-       * E.g. for sdk-44: https://github.com/expo/expo/blob/sdk-44/packages/expo/bundledNativeModules.json */
-      isExpo?: boolean;
-      /** @default this.consts.projectPath */
-      cwd?: string;
-      /** @default this.consts.installPackages */
-      doInstall?: boolean;
-      // peerDeps?: string[],
-      /** @default 'npm' */
-      packageManager?: PackageManager;
-    } = {}): Promise<void> =>
-      addPackages({
-        cwd,
-        doInstall,
-        packageManager,
-        deps,
-        devDeps,
-        isExpo,
-      }),
-    /** Creates the project directory, if not using the cwd as the path.
-     *
-     * As it uses createProjectDir action, createdDir and shouldCleanOnError may be set.
-     * You should run projectDirMustBeValid before. */
-    setProjectDirectory: (): void => {
-      // TODO [*1] get the higher level dir created to remove it.
-      const dirExists = fse.pathExistsSync(this.consts.projectPath);
-      if (!dirExists) {
-        fse.ensureDirSync(this.consts.projectPath);
-        this.vars.shouldCleanOnError = true;
-        this.vars.createdDir = true;
-      }
+    setProjectDirectory: () => setProjectDirectory(this),
+    setupCommonStuff: async (props: {
+      /** @default true */
+      git?: boolean;
+      /** @default true */
+      husky?: boolean;
+      /** @default true */
+      prettier?: boolean;
+      eslint?: Omit<SetupEslintrcProps, 'projectPath'>;
+      /** @default `name` and `author`. Props here will be merged with them */
+      packageJson?: Omit<EditPackageJsonProps, 'projectPath'>;
+    }) => {
+      editPackageJson({
+        projectPath: this.consts.projectPath,
+        name: this.consts.projectName,
+        author: this.consts.githubAuthor,
+        ...props.packageJson,
+      });
+      if (props.git) await this.actions.setupGit();
+      if (props.husky) await this.actions.setupHusky();
+      if (props.prettier) await this.actions.setupPrettier();
     },
+    setupGit: () => setupGit(this.consts),
+    setupHusky: () => setupHusky(this),
+    setupPrettier: () => setupPrettier(this.consts),
+
+    addPackages: (
+      props: SetOptional<AddPackagesProps, 'packageManager' | 'projectPath' | 'installPackages'>,
+    ) =>
+      addPackages({
+        ...this.consts,
+        ...props,
+        // TODO Improve this, but works for now
+        devDeps: ['eslint-config-gev', 'typescript', ...(props.devDeps ?? [])],
+      }),
 
     /** Copies files from the template to the project path.
      *
@@ -200,7 +178,8 @@ export class Core {
      * It will call setProjectDirectory().
      *
      * @param flavor set this to use another flavor semitemplate. */
-    applySemitemplate: async (flavor: string = this.consts.flavor): Promise<void> => {
+    applySemitemplate: async (): Promise<void> => {
+      const flavor = this.consts.flavor;
       // Ensure project path exists.
       this.actions.setProjectDirectory();
 
@@ -221,23 +200,11 @@ export class Core {
         cwd: this.consts.projectPath,
       });
     },
-
-    setupGit: async ({
-      cwd = this.consts.projectPath,
-    }: {
-      /** @default this.consts.projectPath */
-      cwd?: string;
-    } = {}): Promise<void> => {
-      if (!(await pathHasGit(cwd))) await execa('git', ['init'], { cwd });
-
-      // Ensure it uses main as main branch.
-      await execa('git', ['branch', '-m', 'main'], { cwd }).catch(() => null); // It may error if there is no master / there is already a main.
-    },
   }; // End of actions
 
   verifications = {
-    /** The project path must be empty or don't exist. Else, will throw an error. */
-    projectPathMustBeValid: async (): Promise<void> => {
+    /** The project path must be empty or don't exist. Else, throw. */
+    projectPathIsValid: async (): Promise<void> => {
       /** Even if those exists in projectPath, project will still count as empty. */
       const allowedFilesAndDirs = ['.git'];
       if (await fse.pathExists(this.consts.projectPath)) {
@@ -254,8 +221,8 @@ export class Core {
       }
     },
 
-    /** Checks if the project name is npm-valid. If not, throws error. */
-    projectNameMustBeNpmValid: (): void => {
+    /** Checks if the project name is npm-valid. Else, throw. */
+    projectNameIsNpmValid: (): void => {
       // Validate package name.
       const pkgNameValidation = validatePackageName(this.consts.projectName);
       if (!pkgNameValidation.validForNewPackages) {

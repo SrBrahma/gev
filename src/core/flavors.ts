@@ -1,5 +1,6 @@
 import { readdirSync } from 'fs';
 import path from 'path';
+import url from 'url';
 import { Program } from '../main/consts.js';
 import type { FlavorFunction } from '../main/types.js';
 
@@ -17,5 +18,7 @@ export const availableFlavors = getAvailableFlavors();
 export async function getFlavorFunction(flavor: string): Promise<FlavorFunction> {
   if (!availableFlavors.includes(flavor))
     throw new Error(`Invalid flavor! flavor=${flavor}, availableFlavors=${availableFlavors}`);
-  return (await import(path.join(Program.paths.flavors(), `${flavor}.js`))).default;
+  const filepath = path.join(Program.paths.flavors(), `${flavor}.js`);
+  const filepathWindowsFriendly = url.pathToFileURL(filepath).toString();
+  return (await import(filepathWindowsFriendly)).default;
 }

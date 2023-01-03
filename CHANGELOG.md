@@ -2,9 +2,10 @@
 
 ## 2.3.0
 
-- `ts-esm` renamed to `ts` and `ts` renamed to `ts-common`
-- Use `swc` in `ts` and `ts-common`
+- `ts-esm` renamed to `ts` and `ts` renamed to `ts-cjs`
+- Use `swc` in `ts` and `ts-cjs`
 - Use Prettier
+- Simplified implementation
 - Minor fixes
 
 ## 2.22.2

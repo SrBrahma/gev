@@ -3,8 +3,6 @@ import editJsonFile from 'edit-json-file';
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setup/eslint.js';
-import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
@@ -13,7 +11,7 @@ import type { FlavorFunction } from '../main/types.js';
 const humanName = 'React Native';
 
 const generator: FlavorFunction = async (core) => {
-  await core.verifications.projectPathMustBeValid();
+  await core.verifications.projectPathIsValid();
 
   ora().info(
     `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
@@ -65,26 +63,18 @@ const generator: FlavorFunction = async (core) => {
 
       // Visual
       'react-native-svg',
-      'react-native-shadow-2',
-
-      // Etc
-      'react-native-size-matters',
     ],
-    devDeps: ['eslint-config-gev', 'typescript'],
+    devDeps: [],
   });
 
-  editPackageJson({
-    projectPath: core.consts.projectPath,
-    name: core.consts.projectName,
-    githubAuthor: core.consts.githubAuthor,
-    data: {
-      'scripts.test:watch': 'jest --watchAll',
+  await core.actions.setupCommonStuff({
+    eslint: { flavor: 'react-native-ts' },
+    packageJson: {
+      data: {
+        'scripts.test:watch': 'jest --watchAll',
+      },
     },
   });
-
-  await core.actions.setupGit();
-  await core.actions.setupHusky();
-  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
   ora().succeed(
     `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,
