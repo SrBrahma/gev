@@ -31,7 +31,6 @@ import { Program } from './consts.js';
 import { configData, loadConfigs, setConfigs } from './npmConfig.js';
 import type { PackageManager } from './types.js';
 
-
 const program = new Command();
 
 // TODO add -v as alias to -V/--version.
@@ -39,14 +38,8 @@ program
   .name('gev') // So it appears in the usage help
   .version(Program.version, '-v, --version', 'Output the version number.') // Just capitalize the first letter of description.
   .helpOption('-h, --help', 'Display help for command.') // Just capitalize the first letter of description.
-  .option(
-    '-n, --no-install',
-    "Don't install the npm packages after setting the template.",
-  )
-  .option(
-    '-c, --no-check-latest',
-    "Won't check if is using the latest version of gev.",
-  )
+  .option('-n, --no-install', "Don't install the npm packages after setting the template.")
+  .option('-c, --no-check-latest', "Won't check if is using the latest version of gev.")
   .option('--npm', 'Use npm as package manager')
   .option('--pnpm', 'Use pnpm as package manager (default)')
   .option('--yarn', 'Use yarn as package manager')
@@ -55,9 +48,7 @@ program
     "Won't clean the project being generated if an error happened.",
   )
   // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
-  .addArgument(
-    new Argument('<flavor>', `The project kind.`).choices(availableFlavors),
-  ) // Will also print in the usage the possible options
+  .addArgument(new Argument('<flavor>', `The project kind.`).choices(availableFlavors)) // Will also print in the usage the possible options
   .argument(
     '[projectName]',
     "The name of the new project. A new directory will be created and used only if it doesn't exists. If ommited or '.', will use the current directory and its name, if empty.",
@@ -84,18 +75,12 @@ program
       yarn: boolean;
       pnpm: boolean;
     }>();
-    const [flavor, projectRelativePath = '.'] = program.args as [
-      string,
-      string | undefined,
-    ];
+    const [flavor, projectRelativePath = '.'] = program.args as [string, string | undefined];
 
     const defaultPackageManager: PackageManager = 'pnpm';
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const packageManager: PackageManager =
-      (npm && 'npm') ||
-      (yarn && 'yarn') ||
-      (pnpm && 'pnpm') ||
-      defaultPackageManager;
+      (npm && 'npm') || (yarn && 'yarn') || (pnpm && 'pnpm') || defaultPackageManager;
 
     if (checkLatest) {
       // Ensure latest version
@@ -111,16 +96,12 @@ program
         ); // Additional \n
 
         const rawProgramArgs = process.argv.slice(2);
-        await execa(
-          'npx',
-          ['gev@latest', '--no-check-latest', ...rawProgramArgs],
-          {
-            stdio: 'inherit',
-            env: {
-              npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
-            },
+        await execa('npx', ['gev@latest', '--no-check-latest', ...rawProgramArgs], {
+          stdio: 'inherit',
+          env: {
+            npm_config_yes: 'true', // https://github.com/npm/cli/issues/2226#issuecomment-732475247
           },
-        ).catch(null); // ignore throw here. It will already be treated in the @latest.
+        }).catch(null); // ignore throw here. It will already be treated in the @latest.
         return;
       } else {
         // Same version. We are running the latest one!
@@ -145,8 +126,7 @@ program
       ]);
       githubAuthor = input.githubAuthor;
 
-      if (githubAuthor !== configData.githubAuthor)
-        await setConfigs({ githubAuthor });
+      if (githubAuthor !== configData.githubAuthor) await setConfigs({ githubAuthor });
     }
 
     const core = new Core({
@@ -166,9 +146,9 @@ program.parseAsync().catch((err) => {
   if (typeof err === 'object' && err !== null) msg = err.message;
   else msg = err;
   console.error(
-    `\n${chalk.redBright('An error happened!')} ${chalk.white(
-      '-',
-    )} ${chalk.yellow(`[gev v${Program.version}]`)}\n`,
+    `\n${chalk.redBright('An error happened!')} ${chalk.white('-')} ${chalk.yellow(
+      `[gev v${Program.version}]`,
+    )}\n`,
   );
   console.error(msg);
   console.error(err.stack);

@@ -2,13 +2,11 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { generateData } from '../api/generateData';
 
-
-
 type Props = {
   myData: number[];
 };
 
-export default function Home({ }: Props) {
+export default function Home({}: Props) {
   return (
     <>
       <Head>

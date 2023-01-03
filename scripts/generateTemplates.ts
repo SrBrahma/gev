@@ -7,7 +7,6 @@ import { oraPromise } from 'ora';
 import { availableFlavors } from '../src/core/flavors.js';
 import { Program } from '../src/main/consts.js';
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Some flavors like expo may have a '-' at its name ending. Expo would complain the name
@@ -16,7 +15,6 @@ const problematicFlavors = ['expo'];
 
 /** Will build, to use the dist code */
 export async function generateTemplates(): Promise<void> {
-
   const templatesPath = Path.join(__dirname, '..', 'templates');
   const templatesReadmePath = Path.join(templatesPath, 'README.md');
 
@@ -29,11 +27,9 @@ export async function generateTemplates(): Promise<void> {
 
   for (const flavor of availableFlavors)
     await oraPromise(async () => {
-
       let projectName = flavor;
       // [expo error on expo named project] `Cannot create an app named "expo" because it would conflict with a dependency of the same name.`
-      if (problematicFlavors.includes(flavor))
-        projectName += '-';
+      if (problematicFlavors.includes(flavor)) projectName += '-';
       await execa('node', ['..', '--no-install', flavor, projectName], {
         cwd: templatesPath,
         // stdout: process.stdout,
@@ -42,23 +38,21 @@ export async function generateTemplates(): Promise<void> {
 
       // Remove possible ".git" in the generated template. It would mess git-pushing it.
       const gitPaths = await globby('**/.git', {
-        onlyFiles: false, cwd: Path.join(templatesPath, projectName), absolute: true,
+        onlyFiles: false,
+        cwd: Path.join(templatesPath, projectName),
+        absolute: true,
       });
       await Promise.all(gitPaths.map((p) => fse.remove(p)));
 
       // Rename problematic dirs by removing last char
       await Promise.all(problematicFlavors.map((p) => fse.rename(p, p.slice(0, -1))));
-
     }, `Generating template "${flavor}"`);
 }
 
-
 generateTemplates().catch((err) => {
   let msg;
-  if (typeof err === 'object' && err !== null)
-    msg = err.message;
-  else
-    msg = err;
+  if (typeof err === 'object' && err !== null) msg = err.message;
+  else msg = err;
   console.error('Error generating templates:');
   console.error(msg);
   process.exit(1);

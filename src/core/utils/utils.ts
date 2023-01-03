@@ -2,13 +2,17 @@ import Path from 'path';
 import editJsonFile from 'edit-json-file';
 import fse from 'fs-extra';
 
-
 /** True if has git, false if don't. */
 export function pathHasGit(path: string): Promise<boolean> {
   return fse.pathExists(Path.join(path, '.git'));
 }
 
-export function editPackageJson({ projectPath, data, name, githubAuthor }: {
+export function editPackageJson({
+  projectPath,
+  data,
+  name,
+  githubAuthor,
+}: {
   projectPath: string;
   name: string;
   githubAuthor?: string;

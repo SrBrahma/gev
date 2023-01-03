@@ -1,10 +1,7 @@
 // https://docs.expo.dev/workflow/configuration/#using-typescript-for-configuration-appconfigts-instead-of
 import type { ConfigContext, ExpoConfig } from '@expo/config';
 
-
-
 export default ({ config }: ConfigContext): ExpoConfig => {
-
   const appName = 'Your App Name';
   const appId = 'com.x.y';
   const version = '1.0.0'; // SemVer
@@ -24,21 +21,17 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     updates: {
       fallbackToCacheTimeout: 0,
     },
-    assetBundlePatterns: [
-      './assets/**/*',
-    ],
+    assetBundlePatterns: ['./assets/**/*'],
     ios: {
       supportsTablet: true,
       bundleIdentifier: appId,
-      buildNumber: version
+      buildNumber: version,
     },
     android: {
       package: appId,
       versionCode: getAndroidVersion(version),
     },
-    plugins: [
-      ['./easPlugins/withDisableForcedDarkModeAndroid.js', {}],
-    ],
+    plugins: [['./easPlugins/withDisableForcedDarkModeAndroid.js', {}]],
   };
 };
 

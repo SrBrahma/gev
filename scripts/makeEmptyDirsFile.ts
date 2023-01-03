@@ -2,7 +2,6 @@ import fse from 'fs-extra';
 import { globby } from 'globby';
 import { Program } from '../src/main/consts.js';
 
-
 async function makeEmptyDirsFile(): Promise<void> {
   const emptyDirs = await getSemitemplatesEmptyDirs();
   await fse.writeJson(Program.paths.semitemplatesEmptyDirs(), emptyDirs, {
@@ -17,8 +16,7 @@ async function getSemitemplatesEmptyDirs(): Promise<Record<string, string[]>> {
   });
   const emptyDirsObj: Record<string, string[]> = {};
 
-  const emptyDirs: string[] = allDirs
-    .filter(isDirEmpty);
+  const emptyDirs: string[] = allDirs.filter(isDirEmpty);
 
   emptyDirs.forEach((d) => {
     const splitted = d.split('/');
@@ -31,7 +29,7 @@ async function getSemitemplatesEmptyDirs(): Promise<Record<string, string[]>> {
 }
 
 function isDirEmpty(path: string): boolean {
-  return !(fse.readdirSync(path)).length;
+  return !fse.readdirSync(path).length;
 }
 
 void makeEmptyDirsFile();

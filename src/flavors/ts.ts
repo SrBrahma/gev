@@ -3,11 +3,12 @@ import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
-
 const humanName = 'Typescript';
 
 // To be reused
-export function getTypescriptCommonDevDeps({ tests }: {
+export function getTypescriptCommonDevDeps({
+  tests,
+}: {
   /** If shall add testing packages.
    * @default true */
   tests?: boolean;
@@ -16,21 +17,17 @@ export function getTypescriptCommonDevDeps({ tests }: {
     'typescript',
     'eslint-config-gev',
     '@types/node',
-    ...(tests ? [
-      'jest',
-      'ts-jest',
-      '@types/jest',
-    ] : []),
+    ...(tests ? ['jest', 'ts-jest', '@types/jest'] : []),
   ];
 }
 
-
 const generator: FlavorFunction = async (core) => {
-
   core.verifications.projectNameMustBeNpmValid();
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(
+    `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
+  );
 
   core.actions.setProjectDirectory();
 
@@ -50,19 +47,16 @@ const generator: FlavorFunction = async (core) => {
 
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
-    devDeps: [
-      ...getTypescriptCommonDevDeps(),
-      'ts-node-dev',
-      'rimraf',
-    ],
+    devDeps: [...getTypescriptCommonDevDeps(), 'ts-node-dev', 'rimraf'],
   });
 
   await core.actions.setupGit();
   await core.actions.setupHusky();
   await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'ts' });
 
-
-  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+  ora().succeed(
+    `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,
+  );
 };
 
 export default generator;

@@ -4,7 +4,6 @@
 
 import type { Core } from '../core/core.js';
 
-
 type Badges = {
   prWelcome?: boolean;
   /** Types included */
@@ -20,33 +19,35 @@ export type get_README_Options = {
 
 // Be sure when changing the defaults.
 export function get_README(core: Core, options?: get_README_Options): string {
-
   const projectName = core.consts.projectName;
 
   function getBadgesString() {
     const badges = options?.badges;
     const badgesStrings = [];
-    if (badges?.npm) badgesStrings.push(
-      `[![npm](https://img.shields.io/npm/v/${projectName})](https://www.npmjs.com/package/${projectName})`,
-    );
-    if (badges?.typescript) badgesStrings.push(
-      `[![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)`,
-    );
-    if (badges?.prWelcome) badgesStrings.push(
-      `[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)`,
-    );
-    if (badges?.npm) badgesStrings.push(
-      `[![npm](https://img.shields.io/npm/dm/${projectName})](https://www.npmjs.com/package/${projectName})`,
-    );
+    if (badges?.npm)
+      badgesStrings.push(
+        `[![npm](https://img.shields.io/npm/v/${projectName})](https://www.npmjs.com/package/${projectName})`,
+      );
+    if (badges?.typescript)
+      badgesStrings.push(
+        `[![TypeScript](https://badgen.net/npm/types/env-var)](http://www.typescriptlang.org/)`,
+      );
+    if (badges?.prWelcome)
+      badgesStrings.push(
+        `[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)`,
+      );
+    if (badges?.npm)
+      badgesStrings.push(
+        `[![npm](https://img.shields.io/npm/dm/${projectName})](https://www.npmjs.com/package/${projectName})`,
+      );
 
-    if (!badgesStrings.length)
-      return '';
-      // Must have an empty line between html tags and markdown.
-    return (`<div align="center">\n\n${badgesStrings.join('\n')}\n</div>`);
+    if (!badgesStrings.length) return '';
+    // Must have an empty line between html tags and markdown.
+    return `<div align="center">\n\n${badgesStrings.join('\n')}\n</div>`;
   }
 
   // Is trimmed on end.
-  let result = (`
+  let result = `
 <!-- <img src=".logo.png" alt=${projectName}/><br/> -->
 
 ${getBadgesString()}
@@ -72,7 +73,7 @@ yarn add ${core.consts.projectName}
 
 ## 📖 Usage
 
-## 📰 [Changelog](CHANGELOG.md)`);
+## 📰 [Changelog](CHANGELOG.md)`;
 
   result = result.trim();
   return result;

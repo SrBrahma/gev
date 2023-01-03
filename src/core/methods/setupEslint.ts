@@ -3,9 +3,10 @@ import { execaCommand } from 'execa';
 import fse from 'fs-extra';
 import { oraPromise } from 'ora';
 
-
 export async function setupEslintrc({
-  cwd, cjs, flavor,
+  cwd,
+  cjs,
+  flavor,
 }: {
   cwd: string;
   /** If should create '.eslintrc.cjs' instead of '.eslintrc.js' */

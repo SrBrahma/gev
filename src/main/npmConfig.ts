@@ -1,6 +1,5 @@
 import { execa } from 'execa';
 
-
 type Config = {
   githubAuthor?: string;
 };
@@ -9,8 +8,7 @@ export let configData: Config = {};
 
 export async function loadConfigs(): Promise<void> {
   let loadedData: string = (await execa('npm', ['get', 'gev'])).stdout;
-  if (loadedData === 'undefined')
-    loadedData = '{}';
+  if (loadedData === 'undefined') loadedData = '{}';
 
   configData = JSON.parse(loadedData);
 }

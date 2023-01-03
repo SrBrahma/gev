@@ -4,15 +4,15 @@ import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 import { getTypescriptCommonDevDeps } from './ts.js';
 
-
 const humanName = 'Expo Package';
 
 const generator: FlavorFunction = async (core) => {
-
   core.verifications.projectNameMustBeNpmValid();
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(
+    `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
+  );
 
   core.actions.setProjectDirectory();
 
@@ -44,8 +44,9 @@ const generator: FlavorFunction = async (core) => {
   await core.actions.setupHusky();
   await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
-
-  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+  ora().succeed(
+    `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,
+  );
 };
 
 export default generator;

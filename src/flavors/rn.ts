@@ -7,20 +7,31 @@ import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
-
 // TODO expo wont remove the created dir on error. (no template on expo-cli did it.)
 //   my cleaunup should handle this.
 
 const humanName = 'React Native';
 
 const generator: FlavorFunction = async (core) => {
-
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(
+    `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
+  );
 
   // --skip-install Don't install yet! We will install all later.
-  await execa('npx', ['react-native', 'init', core.consts.projectName, '--template', 'react-native-template-typescript', '--skip-install'], { cwd: core.consts.parentDirPath });
+  await execa(
+    'npx',
+    [
+      'react-native',
+      'init',
+      core.consts.projectName,
+      '--template',
+      'react-native-template-typescript',
+      '--skip-install',
+    ],
+    { cwd: core.consts.parentDirPath },
+  );
 
   // Remove the default App.tsx. We will create another one in src/main/App.tsx.
   await fse.remove(core.getPathInProjectDir('App.tsx'));
@@ -42,7 +53,6 @@ const generator: FlavorFunction = async (core) => {
   ].forEach((devDep) => pkgJson.unset(`devDependencies.${devDep}`));
   pkgJson.save();
 
-
   await core.actions.addPackages({
     deps: [
       // Navigation
@@ -60,10 +70,7 @@ const generator: FlavorFunction = async (core) => {
       // Etc
       'react-native-size-matters',
     ],
-    devDeps: [
-      'eslint-config-gev',
-      'typescript',
-    ],
+    devDeps: ['eslint-config-gev', 'typescript'],
   });
 
   editPackageJson({
@@ -79,8 +86,9 @@ const generator: FlavorFunction = async (core) => {
   await core.actions.setupHusky();
   await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-native-ts' });
 
-
-  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+  ora().succeed(
+    `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,
+  );
 
   // Copy/paste from what React Native prints at the end.
   console.log(`\nRun instructions for iOS:
@@ -96,7 +104,6 @@ Run instructions for Android:
 Run instructions for Windows and macOS:
   • See https://aka.ms/ReactNative for the latest up-to-date instructions.
 `);
-
 };
 
 export default generator;

@@ -6,7 +6,6 @@ import { oraPromise } from 'ora';
 import type { PackageManager } from '../../main/types.js';
 import { ensurePackageManagerIsSetup } from './setupPackageManager.js';
 
-
 export type AddPackages = {
   deps?: string[];
   devDeps?: string[];
@@ -37,29 +36,27 @@ export async function addPackages({
 
   await oraPromise(async () => {
     await Promise.all([
-      deps.length && await execa('npx', [
-        'add-dependencies',
-        ...deps.map((d) => d.replace('@latest', '')),
-      ], { cwd }),
-      devDeps.length && await execa('npx', [
-        'add-dependencies',
-        ...devDeps.map((d) => d.replace('@latest', '')), '-D',
-      ], { cwd }),
+      deps.length &&
+        (await execa('npx', ['add-dependencies', ...deps.map((d) => d.replace('@latest', ''))], {
+          cwd,
+        })),
+      devDeps.length &&
+        (await execa(
+          'npx',
+          ['add-dependencies', ...devDeps.map((d) => d.replace('@latest', '')), '-D'],
+          { cwd },
+        )),
     ]);
   }, 'Adding dependencies to package.json');
 
   if (doInstall)
     await oraPromise(async () => {
       // [--ignore-scripts] Don't run `prepare` etc scripts https://stackoverflow.com/a/61975270/10247962
-      if (packageManager === 'npm')
-        await execa('npm', ['install', '--ignore-scripts'], { cwd });
-      else if (packageManager === 'yarn')
-        await execa('yarn', ['install'], { cwd });
-      else
-        await execa('pnpm', ['install', '--ignore-scripts'], { cwd });
+      if (packageManager === 'npm') await execa('npm', ['install', '--ignore-scripts'], { cwd });
+      else if (packageManager === 'yarn') await execa('yarn', ['install'], { cwd });
+      else await execa('pnpm', ['install', '--ignore-scripts'], { cwd });
     }, `Installing dependencies using ${packageManager}`);
 }
-
 
 async function getPackagesVersionsForLatestExpo(deps: string[]) {
   const expoLatestMajor = (await latestVersion('expo')).split('.')[0]!;
@@ -70,8 +67,7 @@ async function getPackagesVersionsForLatestExpo(deps: string[]) {
   const endpoint = `//api.github.com/repos/expo/expo/contents/packages/expo/bundledNativeModules.json?ref=sdk-${expoLatestMajor}`;
   const data = (await (await fetch(endpoint)).json()).content;
 
-  if (!data)
-    throw new Error (`No data for '${endpoint}'`);
+  if (!data) throw new Error(`No data for '${endpoint}'`);
 
   const dict = JSON.parse(base64.decode(data)) as Record<string, string>;
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 const Options = () => {
-  const [color, setColor] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+  const [color, setColor] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
   const [like, setLike] = useState<boolean>(false);
 
   useEffect(() => {
@@ -11,13 +11,13 @@ const Options = () => {
     // stored in chrome.storage.
     chrome.storage.sync.get(
       {
-        favoriteColor: "red",
+        favoriteColor: 'red',
         likesColor: true,
       },
       (items) => {
         setColor(items.favoriteColor);
         setLike(items.likesColor);
-      }
+      },
     );
   }, []);
 
@@ -30,32 +30,30 @@ const Options = () => {
       },
       () => {
         // Update status to let user know options were saved.
-        setStatus("Options saved.");
+        setStatus('Options saved.');
         const id = setTimeout(() => {
-          setStatus("");
+          setStatus('');
         }, 1000);
         return () => clearTimeout(id);
-      }
+      },
     );
   };
 
   return (
     <>
       <div>
-        Favorite color: <select
-          value={color}
-          onChange={(event) => setColor(event.target.value)}
-        >
-          <option value="red">red</option>
-          <option value="green">green</option>
-          <option value="blue">blue</option>
-          <option value="yellow">yellow</option>
+        Favorite color:{' '}
+        <select value={color} onChange={(event) => setColor(event.target.value)}>
+          <option value='red'>red</option>
+          <option value='green'>green</option>
+          <option value='blue'>blue</option>
+          <option value='yellow'>yellow</option>
         </select>
       </div>
       <div>
         <label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={like}
             onChange={(event) => setLike(event.target.checked)}
           />
@@ -72,5 +70,5 @@ ReactDOM.render(
   <React.StrictMode>
     <Options />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root'),
 );

@@ -7,8 +7,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import { Root_Navigator } from './Root';
 
-
-
 // Keep the splash screen visible while we fetch resources
 // https://docs.expo.dev/versions/latest/sdk/splash-screen/
 void SplashScreen.preventAutoHideAsync();
@@ -18,17 +16,13 @@ function Wrappers({ children }: React.PropsWithChildren<unknown>): JSX.Element {
     // https://blog.expo.dev/expo-sdk-44-4c4b8306584a
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <SafeAreaProvider>
-          {children}
-        </SafeAreaProvider>
+        <SafeAreaProvider>{children}</SafeAreaProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
   );
 }
 
-
 export const App: React.FC = () => {
-
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -48,13 +42,12 @@ export const App: React.FC = () => {
     if (appIsReady) await SplashScreen.hideAsync();
   }, [appIsReady]);
 
-  if (!appIsReady)
-    return null;
+  if (!appIsReady) return null;
 
   return (
     <Wrappers>
-      <View onLayout={onLayoutRootView}/>
-      <Root_Navigator/>
+      <View onLayout={onLayoutRootView} />
+      <Root_Navigator />
     </Wrappers>
   );
 };

@@ -2,13 +2,12 @@
 // I first shared it in here: https://github.com/expo/google-fonts/issues/6
 import { Platform } from 'react-native';
 import {
-  MaterialCommunityIcons // Commonly used
+  MaterialCommunityIcons, // Commonly used
 } from '@expo/vector-icons';
 // import * as DM_Sans from '@expo-google-fonts/dm-sans';
 // import * as Inter from '@expo-google-fonts/inter';
 import * as Roboto from '@expo-google-fonts/roboto'; // Aditional fontWeights and to be used on iOS
 import { useFonts } from 'expo-font';
-
 
 // Instead of using the useFonts(fontsArg) hook to get the loaded state, use useMyFonts().
 
@@ -31,19 +30,18 @@ const additional = {
   monospace: Platform.OS === 'ios' ? 'Courier' : 'monospace',
 };
 
-
 /** Fonts. `F` instead of `Fonts` as it's commonly used.
  *
  * In your component style, use `{ fontFamily: F.Roboto_500Medium }`.
  *
  * It's type-smart! Intellisense will autofill and TS will complain if it's wrong */
-export const F = getFont()
-
-
+export const F = getFont();
 
 // === Implementation ===
 
-const iconsFonts = (Object.fromEntries(Object.entries(Icons).map(([iconName, icon]) => ([iconName, icon.font]))));
+const iconsFonts = Object.fromEntries(
+  Object.entries(Icons).map(([iconName, icon]) => [iconName, icon.font]),
+);
 
 const useFontsArg = {
   ...(fontsToLoad as Omit<typeof fontsToLoad, '__metadata__' | 'useFonts'>),
@@ -58,7 +56,6 @@ type PropsToString<Obj> = { [K in keyof Obj]: string };
 
 // Prettify obj type
 type Id<T> = unknown & { [P in keyof T]: T[P] };
-
 
 function getFont() {
   return {

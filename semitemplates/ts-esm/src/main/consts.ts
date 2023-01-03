@@ -3,11 +3,9 @@ import { createRequire } from 'module';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const pkgJson = require('../../package.json');
-
 
 const paths = {
   /** Path of the src/ dir, or lib, if compiled. */

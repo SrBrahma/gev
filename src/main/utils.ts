@@ -1,15 +1,19 @@
 import { execa } from 'execa';
 import ora from 'ora';
 
-
 // TODO add cwd to execa for non global executions
-export async function checkGlobalPackageUpdate(packageName: string, { install }: {
-  /** If should omit the print of the checking process and of the ins ... */
-  // silent = false,
-  /** If should automatically install the package if not installed or is outdated
-   * @default false */
-  install: boolean;
-} = { install: false }): Promise<'notInstalled' | 'outdated' | 'updated'> {
+export async function checkGlobalPackageUpdate(
+  packageName: string,
+  {
+    install,
+  }: {
+    /** If should omit the print of the checking process and of the ins ... */
+    // silent = false,
+    /** If should automatically install the package if not installed or is outdated
+     * @default false */
+    install: boolean;
+  } = { install: false },
+): Promise<'notInstalled' | 'outdated' | 'updated'> {
   let state: 'notChecked' | 'notInstalled' | 'outdated' | 'updated' = 'notChecked';
 
   const spinner = ora().start(`Checking if '${packageName}' is globally installed and updated`);
@@ -22,7 +26,9 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
       try {
         await execa('npm', ['list', '-g', packageName]);
         return true;
-      } catch { return false; }
+      } catch {
+        return false;
+      }
     })(),
     // Returns true
     (async () => {
@@ -31,20 +37,18 @@ export async function checkGlobalPackageUpdate(packageName: string, { install }:
         const updatedOrNotInstalled = result.stdout === '';
         return updatedOrNotInstalled;
         // It seems that npm changed and may now throw if package is outdated.
-      } catch { return false; }
+      } catch {
+        return false;
+      }
     })(),
   ]);
 
-  if (!installed)
-    state = 'notInstalled';
-  else
-    state = updatedOrNotInstalled ? 'updated' : 'outdated';
-
+  if (!installed) state = 'notInstalled';
+  else state = updatedOrNotInstalled ? 'updated' : 'outdated';
 
   if (!install)
     // TODO add spinner handling.
     return state;
-
 
   if (state !== 'updated') {
     if (state === 'notInstalled')

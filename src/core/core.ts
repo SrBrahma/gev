@@ -16,7 +16,6 @@ import { setupHusky } from './methods/setupHusky.js';
 import { pathHasGit } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
 
-
 type Consts = {
   /** If should `npm i` */
   installPackages: boolean;
@@ -56,7 +55,11 @@ export class Core {
 
   constructor({
     cwd = process.cwd(),
-    flavor, projectRelativePath, installPackages, cleanOnError, githubAuthor,
+    flavor,
+    projectRelativePath,
+    installPackages,
+    cleanOnError,
+    githubAuthor,
     packageManager,
   }: {
     flavor: string;
@@ -70,7 +73,6 @@ export class Core {
     githubAuthor?: string;
     packageManager: PackageManager;
   }) {
-
     const projectPath = Path.join(cwd, projectRelativePath);
 
     this.consts = {
@@ -93,15 +95,16 @@ export class Core {
   }
 
   add = {
-    readme: (options?: get_README_Options): void => fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this, options)),
-    changelog: (): void => fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'), get_CHANGELOG()),
+    readme: (options?: get_README_Options): void =>
+      fse.writeFileSync(this.getPathInProjectDir('README.md'), get_README(this, options)),
+    changelog: (): void =>
+      fse.writeFileSync(this.getPathInProjectDir('CHANGELOG.md'), get_CHANGELOG()),
     license: (): void => fse.writeFileSync(this.getPathInProjectDir('LICENSE'), get_LICENSE(this)),
   };
 
-
   /** Run the flavor.
-     *
-     * May throw errors. Will clean the files on errors or process premature exit. */
+   *
+   * May throw errors. Will clean the files on errors or process premature exit. */
   async run(): Promise<void> {
     if (this.vars.state !== 'notStarted') return;
 
@@ -109,19 +112,21 @@ export class Core {
     const onError = async () => {
       // Only if the flavor doesn't delete the files by itself
       if (this.consts.cleanOnError && this.vars.shouldCleanOnError)
-        // debugLog('Erasing created files...');
-        if (this.vars.createdDir) // Ran at child dir
+        if (this.vars.createdDir)
+          // debugLog('Erasing created files...');
+          // Ran at child dir
           await fse.remove(this.consts.projectPath); // [*1]
-        else // Run at same dir
-          await fse.emptyDir(this.consts.projectPath);
-
+        // Run at same dir
+        else await fse.emptyDir(this.consts.projectPath);
     };
 
     try {
       this.vars.state = 'running';
 
       // When adding custom flavors, will need to change this.
-      const cancelOnExit = onExit(async () => { await onError(); });
+      const cancelOnExit = onExit(async () => {
+        await onError();
+      });
       const flavorFunction = await getFlavorFunction(this.consts.flavor);
       await flavorFunction(this);
       cancelOnExit();
@@ -132,21 +137,18 @@ export class Core {
     }
   }
 
-
   actions = {
     setupHusky: async ({
       cwd = this.consts.projectPath,
       packageManager = this.consts.packageManager,
       doInstall = this.consts.installPackages,
     }: Partial<SetupHuskyProps> = {}): Promise<void> =>
-      setupHusky({ cwd, packageManager, doInstall })
-    ,
-
+      setupHusky({ cwd, packageManager, doInstall }),
     // TODO support for specific versions. Check if contains @, if so, won't include the @latest. Can just use regex in the replace.
     /** `npm i`. Will print that they are being installed. You may pass additional dependencies.
      *
      * Will only install if this.consts.installPackages is true
-    */
+     */
     addPackages: async ({
       deps = [],
       devDeps = [],
@@ -168,11 +170,15 @@ export class Core {
       // peerDeps?: string[],
       /** @default 'npm' */
       packageManager?: PackageManager;
-    } = {}): Promise<void> => addPackages({
-      cwd, doInstall, packageManager, deps, devDeps, isExpo,
-    })
-    ,
-
+    } = {}): Promise<void> =>
+      addPackages({
+        cwd,
+        doInstall,
+        packageManager,
+        deps,
+        devDeps,
+        isExpo,
+      }),
     /** Creates the project directory, if not using the cwd as the path.
      *
      * As it uses createProjectDir action, createdDir and shouldCleanOnError may be set.
@@ -201,30 +207,31 @@ export class Core {
       // Before applying anything, as setting up the new files may take a while.
       this.vars.shouldCleanOnError = true;
       // `copy` copies all content from dir, if one is a src https://github.com/jprichardson/node-fs-extra/issues/537
-      await fse.copy(
-        Program.paths.semitemplates(flavor),
-        this.consts.projectPath,
-      );
+      await fse.copy(Program.paths.semitemplates(flavor), this.consts.projectPath);
 
       // NPM and its team really sucks sometimes. https://github.com/npm/npm/issues/3763
       if (fse.pathExistsSync(this.getPathInProjectDir('gitignore')))
-        fse.renameSync(this.getPathInProjectDir('gitignore'), this.getPathInProjectDir('.gitignore'));
+        fse.renameSync(
+          this.getPathInProjectDir('gitignore'),
+          this.getPathInProjectDir('.gitignore'),
+        );
 
       createEmptySemitemplatesDirs({
-        flavor, cwd: this.consts.projectPath,
+        flavor,
+        cwd: this.consts.projectPath,
       });
     },
 
-    setupGit: async ({ cwd = this.consts.projectPath }: {
+    setupGit: async ({
+      cwd = this.consts.projectPath,
+    }: {
       /** @default this.consts.projectPath */
       cwd?: string;
     } = {}): Promise<void> => {
-      if (!await pathHasGit(cwd))
-        await execa('git', ['init'], { cwd });
+      if (!(await pathHasGit(cwd))) await execa('git', ['init'], { cwd });
 
       // Ensure it uses main as main branch.
-      await execa('git', ['branch', '-m', 'main'], { cwd })
-        .catch(() => null); // It may error if there is no master / there is already a main.
+      await execa('git', ['branch', '-m', 'main'], { cwd }).catch(() => null); // It may error if there is no master / there is already a main.
     },
   }; // End of actions
 
@@ -235,11 +242,15 @@ export class Core {
       const allowedFilesAndDirs = ['.git'];
       if (await fse.pathExists(this.consts.projectPath)) {
         const projectPathFiles = await fse.readdir(this.consts.projectPath);
-        const projectPathFilesFiltered = projectPathFiles.filter((f) => !allowedFilesAndDirs.includes(f));
-        if (projectPathFilesFiltered.length !== 0) // https://stackoverflow.com/a/60676464/10247962
+        const projectPathFilesFiltered = projectPathFiles.filter(
+          (f) => !allowedFilesAndDirs.includes(f),
+        );
+        if (projectPathFilesFiltered.length !== 0)
+          // https://stackoverflow.com/a/60676464/10247962
           // improve error message.
-          throw new Error(`The project path '${this.consts.projectPath}' already exists and it isn't empty!`);
-
+          throw new Error(
+            `The project path '${this.consts.projectPath}' already exists and it isn't empty!`,
+          );
       }
     },
 
@@ -248,15 +259,16 @@ export class Core {
       // Validate package name.
       const pkgNameValidation = validatePackageName(this.consts.projectName);
       if (!pkgNameValidation.validForNewPackages) {
-        const errors = [...pkgNameValidation.errors ?? [], ...pkgNameValidation.warnings ?? []];
+        const errors = [...(pkgNameValidation.errors ?? []), ...(pkgNameValidation.warnings ?? [])];
         let errorsString = '';
         errors.forEach((error, i) => {
-          errorsString += ` - ${error}` + (i < (errors.length - 1) ? '\n' : '');
+          errorsString += ` - ${error}` + (i < errors.length - 1 ? '\n' : '');
         });
 
-        throw new Error(`The package name '${this.consts.projectName}' is invalid!\n${errorsString}`);
+        throw new Error(
+          `The package name '${this.consts.projectName}' is invalid!\n${errorsString}`,
+        );
       }
     },
-
   };
 }

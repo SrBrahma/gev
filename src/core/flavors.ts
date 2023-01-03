@@ -3,7 +3,6 @@ import path from 'path';
 import { Program } from '../main/consts.js';
 import type { FlavorFunction } from '../main/types.js';
 
-
 /** Sync, so it's available from the start. */
 function getAvailableFlavors() {
   let flavors = readdirSync(Program.paths.flavors());

@@ -5,7 +5,6 @@ import { oraPromise } from 'ora';
 import { Program } from '../../main/consts.js';
 import { addPackages } from './addPackages.js';
 
-
 export type SetupHuskyProps = {
   cwd: string;
   packageManager: 'npm' | 'yarn' | 'pnpm';
@@ -14,10 +13,11 @@ export type SetupHuskyProps = {
 };
 /** Sets up husky and lint-staged. */
 export async function setupHusky({
-  cwd, packageManager, doInstall,
+  cwd,
+  packageManager,
+  doInstall,
 }: SetupHuskyProps): Promise<void> {
   await oraPromise(async () => {
-
     const devDeps = ['husky', 'lint-staged'];
     const json = editJsonFile(path.join(cwd, 'package.json'));
 
@@ -38,10 +38,7 @@ export async function setupHusky({
 
     json.save();
 
-    await fse.copy(
-      path.resolve(Program.paths.content('.husky')),
-      path.resolve(cwd, '.husky'),
-    );
+    await fse.copy(path.resolve(Program.paths.content('.husky')), path.resolve(cwd, '.husky'));
 
     await addPackages({
       devDeps,
@@ -49,6 +46,5 @@ export async function setupHusky({
       doInstall,
       packageManager,
     });
-
   }, 'Setting up Husky');
 }

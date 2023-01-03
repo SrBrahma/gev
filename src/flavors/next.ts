@@ -3,30 +3,21 @@ import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 
-
 const humanName = 'Next.js';
 
 const generator: FlavorFunction = async (core) => {
-
   await core.verifications.projectPathMustBeValid();
 
-  ora().info(`Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`);
+  ora().info(
+    `Generating the ${humanName} project '${core.consts.projectName}' at '${core.consts.projectPath}'`,
+  );
 
   core.actions.setProjectDirectory();
   await core.actions.applySemitemplate();
 
   await core.actions.addPackages({
-    deps: [
-      'next',
-      'react',
-      'react-dom',
-    ],
-    devDeps: [
-      '@types/node',
-      '@types/react',
-      'eslint-config-gev',
-      'typescript',
-    ],
+    deps: ['next', 'react', 'react-dom'],
+    devDeps: ['@types/node', '@types/react', 'eslint-config-gev', 'typescript'],
   });
 
   editPackageJson({
@@ -39,8 +30,9 @@ const generator: FlavorFunction = async (core) => {
   await core.actions.setupHusky();
   await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'react-ts' });
 
-
-  ora().succeed(`${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`);
+  ora().succeed(
+    `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,
+  );
 };
 
 export default generator;
