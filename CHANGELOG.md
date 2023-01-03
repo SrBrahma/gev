@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.23.0
+## 2.23.0~1
 
 - Renamed `ts-esm` to `ts` and `ts` to `ts-cjs`
 - Added `swc` in `ts` and `ts-cjs`

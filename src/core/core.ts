@@ -173,6 +173,8 @@ export class CoreClass {
           'typescript',
           'husky',
           'lint-staged',
+          'prettier-config-gev',
+          'prettier',
           ...(props.devDeps ?? []),
         ],
       }),
