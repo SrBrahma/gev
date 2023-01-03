@@ -17,5 +17,9 @@
     "incremental": true,
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*"]
+  "exclude": ["src/**/*.test.*"],
+  "ts-node": {
+    "swc": true,
+    "esm": true
+  }
 }
