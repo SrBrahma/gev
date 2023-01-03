@@ -1,10 +1,8 @@
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setupEslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
-import { getTypescriptCommonDevDeps } from './ts.js';
 
-const humanName = 'Typescript ESM';
+const humanName = 'Typescript CommonJS';
 
 const generator: FlavorFunction = async (core) => {
   core.verifications.projectNameMustBeNpmValid();
@@ -33,16 +31,21 @@ const generator: FlavorFunction = async (core) => {
   // To install the latest. The semitemplate deps don't matter too much,
   await core.actions.addPackages({
     devDeps: [
-      ...getTypescriptCommonDevDeps(),
+      'typescript',
+      'eslint-config-gev',
+      '@types/node',
+      '@swc/core',
+      'jest',
+      'ts-jest',
+      '@types/jest',
+      'ts-node-dev',
       'rimraf',
-      'ts-node', // For node --loader
-      'nodemon', // For watch
     ],
   });
 
   await core.actions.setupGit();
   await core.actions.setupHusky();
-  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'ts', cjs: true });
+  await setupEslintrc({ cwd: core.consts.projectPath, flavor: 'ts' });
 
   ora().succeed(
     `${humanName} project '${core.consts.projectName}' created at '${core.consts.projectPath}'!`,
