@@ -2,8 +2,8 @@ import path from 'path';
 import editJsonFile from 'edit-json-file';
 import fse from 'fs-extra';
 import { oraPromise } from 'ora';
-import { Program } from '../../main/consts.js';
-import { addPackages } from './addPackages.js';
+import { Program } from '../../../main/consts.js';
+import { addPackages } from '../addPackages.js';
 
 export type SetupHuskyProps = {
   cwd: string;
@@ -34,7 +34,7 @@ export async function setupHusky({
       json.set('scripts.prepare', 'husky install');
     }
     json.set('scripts.pre-commit', 'lint-staged');
-    json.set('lint-staged.*\\.{js,jsx,ts,tsx}', ['eslint --write']);
+    json.set('lint-staged.*\\.{js,jsx,ts,tsx}', ['eslint --fix', 'prettier --write']);
 
     json.save();
 

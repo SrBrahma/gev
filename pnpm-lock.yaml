@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@swc/core': ^1.3.24
-  '@swc/helpers': ^0.4.14
   '@types/base-64': 1.0.0
   '@types/edit-json-file': ^1.7.0
   '@types/fs-extra': 9.0.13
@@ -29,7 +28,6 @@ specifiers:
   pinst: ^3.0.0
   prettier: ^2.8.1
   prettier-config-gev: ^1.1.2
-  regenerator-runtime: ^0.13.11
   rimraf: 3.0.2
   semver-compare: 1.0.0
   signal-exit: 3.0.7
@@ -58,7 +56,6 @@ dependencies:
 
 devDependencies:
   '@swc/core': 1.3.24
-  '@swc/helpers': 0.4.14
   '@types/base-64': 1.0.0
   '@types/edit-json-file': 1.7.0
   '@types/fs-extra': 9.0.13
@@ -72,7 +69,6 @@ devDependencies:
   pinst: 3.0.0
   prettier: 2.8.1
   prettier-config-gev: 1.1.2
-  regenerator-runtime: 0.13.11
   rimraf: 3.0.2
   ts-node: 10.9.1_kxjws4risb2q4lg75btpsp6dgq
 
@@ -414,12 +410,6 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.3.24
       '@swc/core-win32-ia32-msvc': 1.3.24
       '@swc/core-win32-x64-msvc': 1.3.24
-    dev: true
-
-  /@swc/helpers/0.4.14:
-    resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
-    dependencies:
-      tslib: 2.4.0
     dev: true
 
   /@szmarczak/http-timer/5.0.1:
@@ -2554,10 +2544,6 @@ packages:
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
     dev: false
-
-  /regenerator-runtime/0.13.11:
-    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-    dev: true
 
   /regexp.prototype.flags/1.4.3:
     resolution: {integrity: sha512-fjggEOO3slI6Wvgjwflkc4NFRCTZAu5CnNfBd5qOMYhWdn67nJBBu34/TkD++eeFmd8C9r9jfXJ27+nSiRkSUA==}

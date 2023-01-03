@@ -4,7 +4,7 @@ import { execa } from 'execa';
 import latestVersion from 'latest-version';
 import { oraPromise } from 'ora';
 import type { PackageManager } from '../../main/types.js';
-import { ensurePackageManagerIsSetup } from './setupPackageManager.js';
+import { ensurePackageManagerIsSetup } from './setup/packageManager.js';
 
 export type AddPackages = {
   deps?: string[];

@@ -3,7 +3,7 @@ import editJsonFile from 'edit-json-file';
 import { execa } from 'execa';
 import fse from 'fs-extra';
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setupEslint.js';
+import { setupEslintrc } from '../core/methods/setup/eslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
 

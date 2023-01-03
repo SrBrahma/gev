@@ -3,7 +3,7 @@ import { execa } from 'execa';
 import fse from 'fs-extra';
 import { globby } from 'globby';
 import { oraPromise } from 'ora';
-import type { PackageManager } from '../../main/types.js';
+import type { PackageManager } from '../../../main/types.js';
 
 /**
  * Run after applying the semitemplate and before addPackages. Won't install

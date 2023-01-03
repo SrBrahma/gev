@@ -11,8 +11,8 @@ import { Program } from '../main/consts.js';
 import type { PackageManager } from '../main/types.js';
 import { addPackages } from './methods/addPackages.js';
 import { createEmptySemitemplatesDirs } from './methods/semitemplates.js';
-import type { SetupHuskyProps } from './methods/setupHusky.js';
-import { setupHusky } from './methods/setupHusky.js';
+import type { SetupHuskyProps } from './methods/setup/husky.js';
+import { setupHusky } from './methods/setup/husky.js';
 import { pathHasGit } from './utils/utils.js';
 import { getFlavorFunction } from './flavors.js';
 

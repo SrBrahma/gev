@@ -1,8 +1,7 @@
 import ora from 'ora';
-import { setupEslintrc } from '../core/methods/setupEslint.js';
+import { setupEslintrc } from '../core/methods/setup/eslint.js';
 import { editPackageJson } from '../core/utils/utils.js';
 import type { FlavorFunction } from '../main/types.js';
-import { getTypescriptCommonDevDeps } from './ts.js';
 
 const humanName = 'Expo Package';
 
@@ -26,11 +25,13 @@ const generator: FlavorFunction = async (core) => {
 
   await core.actions.addPackages({
     devDeps: [
-      ...getTypescriptCommonDevDeps({ tests: false }),
+      'typescript',
+      'eslint-config-gev',
+      '@types/node',
+      '@types/react-native',
       'react-native',
       'rimraf',
       'react',
-      '@types/react-native',
     ],
   });
 
