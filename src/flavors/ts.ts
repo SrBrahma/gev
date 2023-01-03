@@ -28,7 +28,7 @@ const generator: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupCommonStuff({
-    eslint: { flavor: 'ts', cjs: true },
+    eslint: { eslintFlavor: 'ts', cjs: true },
   });
 
   ora().succeed(

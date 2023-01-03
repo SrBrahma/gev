@@ -68,7 +68,7 @@ const generator: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupCommonStuff({
-    eslint: { flavor: 'react-native-ts' },
+    eslint: { eslintFlavor: 'react-native-ts' },
     packageJson: {
       data: {
         'scripts.test:watch': 'jest --watchAll',

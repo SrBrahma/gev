@@ -36,7 +36,7 @@ const generator: FlavorFunction = async (core) => {
   });
 
   await core.actions.setupCommonStuff({
-    eslint: { flavor: 'react-ts' },
+    eslint: { eslintFlavor: 'react-ts' },
   });
 
   ora().succeed(

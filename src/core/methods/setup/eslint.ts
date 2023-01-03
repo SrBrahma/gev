@@ -10,6 +10,7 @@ export type EslintFlavor =
   | 'react-js'
   | 'react-native-ts'
   | 'react-native-js';
+
 export type SetupEslintrcProps = {
   projectPath: string;
   /**
@@ -18,16 +19,16 @@ export type SetupEslintrcProps = {
    */
   cjs?: boolean;
   /** Run `npx eslint-config-gev -h` for updated flavors. */
-  flavor: EslintFlavor;
+  eslintFlavor: EslintFlavor;
 };
 
 export async function setupEslintrc({
   projectPath,
   cjs,
-  flavor,
+  eslintFlavor,
 }: SetupEslintrcProps): Promise<void> {
   await oraPromise(async () => {
-    await execaCommand(`npx -y eslint-config-gev ${flavor} ${cjs ? '--cjs' : ''}`, {
+    await execaCommand(`npx -y eslint-config-gev ${eslintFlavor} ${cjs ? '--cjs' : ''}`, {
       cwd: projectPath,
     });
 

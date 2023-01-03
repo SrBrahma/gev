@@ -14,6 +14,7 @@ import type { AddPackagesProps } from './methods/addPackages.js';
 import { addPackages } from './methods/addPackages.js';
 import { createEmptySemitemplatesDirs } from './methods/semitemplates.js';
 import type { SetupEslintrcProps } from './methods/setup/eslint.js';
+import { setupEslintrc } from './methods/setup/eslint.js';
 import { setupGit } from './methods/setup/git.js';
 import { setupHusky } from './methods/setup/husky.js';
 import { setupPrettier } from './methods/setup/prettier.js';
@@ -143,6 +144,7 @@ export class CoreClass {
       husky?: boolean;
       /** @default true */
       prettier?: boolean;
+      /** Must be defined in order to be set. */
       eslint?: Omit<SetupEslintrcProps, 'projectPath'>;
       /** @default `name` and `author`. Props here will be merged with them */
       packageJson?: Omit<EditPackageJsonProps, 'projectPath'>;
@@ -156,6 +158,8 @@ export class CoreClass {
       if (props.git ?? true) await this.actions.setupGit();
       if (props.husky ?? true) await this.actions.setupHusky();
       if (props.prettier ?? true) await this.actions.setupPrettier();
+      if (props.eslint)
+        await setupEslintrc({ projectPath: this.consts.projectPath, ...props.eslint });
     },
     setupGit: () => setupGit(this.consts),
     setupHusky: () => setupHusky(this),

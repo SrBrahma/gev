@@ -80,7 +80,7 @@ const generator: FlavorFunction = async (core) => {
 
   // This will certainly throw as .eslintrc will exist. Check what expo uses before setting the force flag here.
   await core.actions.setupCommonStuff({
-    eslint: { flavor: 'react-native-ts' },
+    eslint: { eslintFlavor: 'react-native-ts' },
     packageJson: {
       data: {
         main: './src/main/index.js',
