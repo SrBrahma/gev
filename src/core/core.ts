@@ -153,9 +153,9 @@ export class CoreClass {
         author: this.consts.githubAuthor,
         ...props.packageJson,
       });
-      if (props.git) await this.actions.setupGit();
-      if (props.husky) await this.actions.setupHusky();
-      if (props.prettier) await this.actions.setupPrettier();
+      if (props.git ?? true) await this.actions.setupGit();
+      if (props.husky ?? true) await this.actions.setupHusky();
+      if (props.prettier ?? true) await this.actions.setupPrettier();
     },
     setupGit: () => setupGit(this.consts),
     setupHusky: () => setupHusky(this),
@@ -168,7 +168,13 @@ export class CoreClass {
         ...this.consts,
         ...props,
         // TODO Improve this, but works for now
-        devDeps: ['eslint-config-gev', 'typescript', ...(props.devDeps ?? [])],
+        devDeps: [
+          'eslint-config-gev',
+          'typescript',
+          'husky',
+          'lint-staged',
+          ...(props.devDeps ?? []),
+        ],
       }),
 
     /** Copies files from the template to the project path.

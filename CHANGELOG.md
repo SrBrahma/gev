@@ -1,11 +1,13 @@
 # Changelog
 
-## 2.3.0
+## 2.23.0
 
-- `ts-esm` renamed to `ts` and `ts` renamed to `ts-cjs`
-- Use `swc` in `ts` and `ts-cjs`
-- Use Prettier
-- Simplified implementation
+- Renamed `ts-esm` to `ts` and `ts` to `ts-cjs`
+- Added `swc` in `ts` and `ts-cjs`
+- Added Prettier
+- Fixed usage in Windows
+- Fixed pnpm installation check
+- Many good reworks in implementation
 - Minor fixes
 
 ## 2.22.2

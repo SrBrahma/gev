@@ -16,7 +16,6 @@ export async function setupHusky({
   };
 }): Promise<void> {
   await oraPromise(async () => {
-    const devDeps = ['husky', 'lint-staged'];
     const json = editJsonFile(path.join(projectPath, 'package.json'));
 
     if (packageManager === 'yarn') {
@@ -24,7 +23,12 @@ export async function setupHusky({
       /** https://typicode.github.io/husky/#/?id=yarn-2 */
       const isPrivate = json.get('private') as boolean | undefined;
       if (isPrivate) {
-        devDeps.push('pinst');
+        await addPackages({
+          devDeps: ['pinst'],
+          projectPath,
+          installPackages,
+          packageManager,
+        });
         json.set('scripts.prepack', 'pinst --disable');
         json.set('scripts.postpack', 'pinst --enable');
       }
@@ -40,12 +44,5 @@ export async function setupHusky({
       path.resolve(Program.paths.content('.husky')),
       path.resolve(projectPath, '.husky'),
     );
-
-    await addPackages({
-      devDeps,
-      projectPath,
-      installPackages,
-      packageManager,
-    });
   }, 'Setting up Husky');
 }

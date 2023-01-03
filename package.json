@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "2.22.2",
+  "version": "2.23.0",
   "description": "Generates boilerplates",
   "keywords": [
     "generator",
@@ -38,6 +38,7 @@
     "typecheck:watch": "tsc --noEmit --watch",
     "lint": "eslint \"src/**\" --cache",
     "lint:fix": "eslint --fix \"src/**\"",
+    "prettier": "prettier \"**/*.{ts,tsx}\"",
     "prettier:fix": "prettier --write \"**/*.{ts,tsx}\"",
     "prettify": "pnpm lint:fix && pnpm prettier:fix",
     "start": "ts-node ./src/main/index.ts",
@@ -48,7 +49,12 @@
     "script:emptyDirs": "ts-node ./scripts/makeEmptyDirsFile.ts",
     "pre-commit": ""
   },
-  "lint-staged": {},
+  "lint-staged": {
+    "{js,jsx,ts,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "add-dependencies": "1.1.0",
     "base-64": "1.0.0",

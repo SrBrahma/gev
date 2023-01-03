@@ -1,5 +1,5 @@
 import path from 'path';
-import { execaCommand } from 'execa';
+import { execaCommand, execaCommandSync } from 'execa';
 import fse from 'fs-extra';
 import { globby } from 'globby';
 import { oraPromise } from 'ora';
@@ -22,7 +22,11 @@ export async function ensurePackageManagerIsSetup({
   await oraPromise(async () => {
     switch (packageManager) {
       case 'pnpm': {
-        await execaCommand('npm install -g pnpm', { cwd: projectPath });
+        try {
+          execaCommandSync('pnpm -v');
+        } catch {
+          await execaCommand('npm install -g pnpm', { cwd: projectPath });
+        }
         break;
       }
       case 'yarn':

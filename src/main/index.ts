@@ -43,6 +43,7 @@ program
   .option('--npm', 'Use npm as package manager')
   .option('--pnpm', 'Use pnpm as package manager (default)')
   .option('--yarn', 'Use yarn as package manager')
+  .option('--prompt', 'Prompt for configs even after they were already set')
   .option(
     '-C, --no-clean-on-error',
     "Won't clean the project being generated if an error happened.",
@@ -67,6 +68,7 @@ program
       npm,
       yarn,
       pnpm,
+      prompt,
     } = program.opts<{
       install: boolean;
       checkLatest: boolean;
@@ -74,6 +76,7 @@ program
       npm: boolean;
       yarn: boolean;
       pnpm: boolean;
+      prompt: boolean;
     }>();
     const [flavor, projectRelativePath = '.'] = program.args as [string, string | undefined];
 
@@ -113,32 +116,35 @@ program
 
     let githubAuthor = configData.githubAuthor;
 
-    const canReadStdin = process.stdin.isTTY;
+    const areConfigsSet = !!githubAuthor;
+    const getUserConfigs = prompt || !areConfigsSet;
 
-    if (canReadStdin) {
-      const input = await inquirer.prompt<{ githubAuthor: string }>([
-        {
-          name: 'githubAuthor',
-          type: 'input',
-          default: githubAuthor,
-          message: 'Who is the GitHub Author of this project?',
-        },
-      ]);
-      githubAuthor = input.githubAuthor;
+    if (getUserConfigs) {
+      const canReadStdin = process.stdin.isTTY;
 
-      if (githubAuthor !== configData.githubAuthor) await setConfigs({ githubAuthor });
+      if (canReadStdin) {
+        const input = await inquirer.prompt<{ githubAuthor: string }>([
+          {
+            name: 'githubAuthor',
+            type: 'input',
+            default: githubAuthor,
+            message: 'Who is the GitHub Author of this project?',
+          },
+        ]);
+        githubAuthor = input.githubAuthor;
+
+        if (githubAuthor !== configData.githubAuthor) await setConfigs({ githubAuthor });
+      }
     }
 
-    const core = new CoreClass({
+    await new CoreClass({
       flavor,
       projectRelativePath,
       installPackages,
       cleanOnError,
       githubAuthor: githubAuthor || undefined,
       packageManager,
-    });
-
-    await core.run();
+    }).run();
   });
 
 program.parseAsync().catch((err) => {
