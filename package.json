@@ -38,13 +38,15 @@
     "typecheck:watch": "tsc --noEmit --watch",
     "lint": "eslint \"src/**\" --cache",
     "lint:fix": "eslint --fix \"src/**\"",
+    "prettier:fix": "prettier --write \"**/*.{ts,tsx}\"",
+    "prettify": "pnpm lint:fix && prettier:dix",
     "start": "ts-node ./src/main/index.ts",
     "test": "echo \"Error: no test specified\"",
     "test:all": "pnpm typecheck && pnpm lint && pnpm test",
     "prepare": "husky install && pnpm build",
     "script:templates": "ts-node ./scripts/generateTemplates.ts",
     "script:emptyDirs": "ts-node ./scripts/makeEmptyDirsFile.ts",
-    "pre-commit": "pnpm typecheck && pnpm lint:fix && pnpm script:emptyDirs && git add -A"
+    "pre-commit": ""
   },
   "lint-staged": {},
   "dependencies": {
@@ -54,7 +56,7 @@
     "commander": "9.4.1",
     "cross-fetch": "3.1.5",
     "edit-json-file": "^1.7.0",
-    "eslint-config-gev": "^2.43.3",
+    "eslint-config-gev": "^3.1.0",
     "execa": "6.1.0",
     "fs-extra": "10.1.0",
     "globby": "^13.1.2",
@@ -80,11 +82,14 @@
     "husky": "^8.0.1",
     "lint-staged": "13.0.3",
     "pinst": "^3.0.0",
+    "prettier": "^2.8.1",
+    "prettier-config-gev": "^1.1.2",
     "regenerator-runtime": "^0.13.11",
     "rimraf": "3.0.2",
     "ts-node": "10.9.1"
   },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
-  }
+  },
+  "prettier": "prettier-config-gev"
 }
