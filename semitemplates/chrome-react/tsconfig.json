@@ -8,12 +8,12 @@
     "rootDir": "src",
     "outDir": "dist/js",
     "noEmitOnError": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts"],
+  "exclude": ["src/**/*.test.ts"]
 }

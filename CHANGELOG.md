@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.24.0
+
+- Add `./vscode/extensions' to flavors
+
 ## 2.23.0~2
 
 - Renamed `ts-esm` to `ts` and `ts` to `ts-cjs`
