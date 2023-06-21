@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.24.1
+## 2.24.1~2
 
 - Fixed `ts` flavor not working due to duplicated eslintrc.
 
