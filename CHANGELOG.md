@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.24.1
+
+- Fixed `ts` flavor not working due to duplicated eslintrc.
+
 ## 2.24.0
 
 - Add `./vscode/extensions' to flavors
