@@ -1,10 +1,11 @@
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import path from 'path';
 import { execaCommand, execaSync } from 'execa';
 
 export const pathFromRoot = (...p: Array<string>) => path.resolve(import.meta.dir, '..', ...p);
-// const require = createRequire(import.meta.url);
-// export const { version } = JSON.parse(readFileSync(pathFromRoot('package.json'), 'utf-8')) as { version: string };
+export const { version } = JSON.parse(readFileSync(pathFromRoot('./package.json'), 'utf8')) as {
+  version: string;
+};
 
 export const getAvailableFlavors = () => readdirSync(pathFromRoot('.bun-create')).sort();
 

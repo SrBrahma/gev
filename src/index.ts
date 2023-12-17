@@ -6,8 +6,14 @@ import { execa } from 'execa';
 import inquirer from 'inquirer';
 import latestVersion from 'latest-version';
 import compareSemver from 'semver-compare';
-import { version } from '../package.json' assert { type: 'json' };
-import { configData, getAvailableFlavors, loadConfigs, pathFromRoot, setConfigs } from './utils.js';
+import {
+  configData,
+  getAvailableFlavors,
+  loadConfigs,
+  pathFromRoot,
+  setConfigs,
+  version,
+} from './utils.js';
 
 const program = new Command();
 

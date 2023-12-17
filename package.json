@@ -1,7 +1,7 @@
 {
   "name": "gev",
   "type": "module",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Sets up templates",
   "keywords": [
     "generator",
