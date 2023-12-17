@@ -6,14 +6,8 @@ import { execa } from 'execa';
 import inquirer from 'inquirer';
 import latestVersion from 'latest-version';
 import compareSemver from 'semver-compare';
-import {
-  configData,
-  getAvailableFlavors,
-  loadConfigs,
-  pathFromRoot,
-  setConfigs,
-  version,
-} from './utils.js';
+import { version } from '../package.json' assert { type: 'json' };
+import { configData, getAvailableFlavors, loadConfigs, pathFromRoot, setConfigs } from './utils.js';
 
 const program = new Command();
 
@@ -55,7 +49,7 @@ program
           )}]. Recalling gev with @latest.\n`,
         );
 
-        await execa('bunx', ['gev@latest', '--no-check-latest', ...process.argv.slice(2)], {
+        await execa('bunx', [`gev@${latestVer}`, '--no-check-latest', ...process.argv.slice(2)], {
           stdio: 'inherit',
         }).catch(null); // ignore throw here. It will already be treated in the @latest.
 
