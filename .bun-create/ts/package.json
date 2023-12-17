@@ -9,7 +9,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "bun --watch run src/index.ts",
-    "build": "bun run build.mjs",
+    "build": "rimraf dist && tsc",
     "prepublishOnly": "bun run build"
   },
   "keywords": [],

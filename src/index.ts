@@ -13,7 +13,7 @@ import {
   pathFromRoot,
   setConfigs,
   version,
-} from './utils';
+} from './utils.js';
 
 const program = new Command();
 

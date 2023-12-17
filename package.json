@@ -1,6 +1,7 @@
 {
   "name": "gev",
-  "version": "3.0.4",
+  "type": "module",
+  "version": "3.0.6",
   "description": "Sets up templates",
   "keywords": [
     "generator",
@@ -20,20 +21,17 @@
     "type": "git",
     "url": "git+https://github.com/SrBrahma/gev.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "author": "SrBrahma",
-  "type": "module",
-  "exports": "./dist/main/index.js",
-  "main": "./dist/main/index.js",
-  "bin": "./dist/main/index.js",
+  "exports": "./dist/index.js",
+  "main": "./dist/index.js",
+  "bin": "./dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "bun run build.cjs",
-    "clean": "rimraf dist",
-    "start": "bun ./src/main/index.ts",
-    "gev": "bun start",
+    "build": "rimraf dist && tsc",
+    "start": "bun ./src/index.ts",
     "typecheck": "tsc --noEmit",
     "tsw": "tsc --noEmit --watch",
     "format:check": "bun eslint && bun prettier \"**/*.{ts,tsx}\"",
