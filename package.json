@@ -1,7 +1,7 @@
 {
   "name": "gev",
   "type": "module",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Sets up templates",
   "keywords": [
     "generator",
@@ -51,6 +51,7 @@
     "execa": "8.0.1",
     "globby": "14.0.0",
     "inquirer": "9.1.4",
+    "latest-version": "^7.0.0",
     "semver-compare": "1.0.0"
   },
   "devDependencies": {
