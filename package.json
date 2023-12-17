@@ -39,6 +39,7 @@
     "format:check": "bun eslint && bun prettier \"**/*.{ts,tsx}\"",
     "format": "bun eslint --fix && bun prettier --write \"**/*.{ts,tsx}\"",
     "prepare": "husky install",
+    "prepublish": "bun run build",
     "pre-commit": ""
   },
   "lint-staged": {
