@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 import path from 'path';
 import chalk from 'chalk';
 import { Argument, Command } from 'commander';

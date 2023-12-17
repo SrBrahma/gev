@@ -1,7 +1,7 @@
 {
   "name": "gev",
   "type": "module",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "Sets up templates",
   "keywords": [
     "generator",
@@ -27,7 +27,8 @@
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    ".bun-create"
   ],
   "scripts": {
     "build": "rimraf dist && tsc",
