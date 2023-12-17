@@ -29,7 +29,7 @@ program
   .option('--config', 'Prompt for configs even after they were already set.')
   // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
   .addArgument(new Argument('<template>', `The project template.`).choices(getAvailableFlavors())) // Will also print in the usage the possible options
-  .argument('<projectName>', 'The name of the new project..')
+  .argument('[projectName]', 'The name of the new project.')
   .action(async () => {
     // Commander transforms --no-install into install, with default value of true to install.
     // https://github.com/tj/commander.js#other-option-types-negatable-boolean-and-booleanvalue
