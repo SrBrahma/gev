@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - run: bun install --frozen-lockfile
+      - run: bun install
       - run: bun test
       - run: bun run build
       - uses: JS-DevTools/npm-publish@v3

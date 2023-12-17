@@ -2,7 +2,7 @@ import { readdirSync } from 'fs';
 import path from 'path';
 import { execaCommand, execaSync } from 'execa';
 
-export { version } from '../package.json';
+export const { version } = require('../package.json') as { version: string };
 
 export const pathFromRoot = (...p: Array<string>) => path.resolve(import.meta.dir, '..', ...p);
 // const require = createRequire(import.meta.url);
