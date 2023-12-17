@@ -5,7 +5,6 @@
     "lib": ["ESNext"],
     "module": "esnext",
     "target": "esnext",
-    "declaration": true,
     "moduleResolution": "node",
     "strict": true,
     "downlevelIteration": true,

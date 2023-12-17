@@ -1,7 +1,7 @@
 {
   "name": "gev",
   "type": "module",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "Sets up templates",
   "keywords": [
     "generator",
@@ -37,7 +37,6 @@
     "format:check": "bun eslint && bun prettier \"**/*.{ts,tsx}\"",
     "format": "bun eslint --fix && bun prettier --write \"**/*.{ts,tsx}\"",
     "prepare": "husky install",
-    "prepublishOnly": "bun run build",
     "pre-commit": ""
   },
   "lint-staged": {
