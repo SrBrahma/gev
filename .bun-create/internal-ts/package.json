@@ -1,0 +1,34 @@
+{
+  "name": "$PROJECT_NAME",
+  "version": "0.1.0",
+  "description": "",
+  "module": "src/index.ts",
+  "type": "module",
+  "bin": "dist/bin.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "bun --watch run src/index.ts",
+    "build": "bun run build.mjs",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "bun-plugin-dts": "^0.2.1",
+    "bun-types": "latest",
+    "lint-staged": "^15.2.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "bun-create": {
+    "start": "bun run dev",
+    "preinstall": [
+      "bunx husky-init",
+      "npx husky add .husky/pre-commit \"npm pre-commit\""
+    ]
+  }
+}

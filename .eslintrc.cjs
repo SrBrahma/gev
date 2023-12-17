@@ -1,7 +1,6 @@
 // This is a workaround for https://github.com/eslint/eslint/issues/3458
 require('@rushstack/eslint-patch/modern-module-resolution');
 
-
 module.exports = {
   root: true,
   env: {
@@ -12,7 +11,8 @@ module.exports = {
     'eslint-config-gev/js', // https://github.com/SrBrahma/eslint-config-gev
   ],
   parser: '@typescript-eslint/parser',
-  overrides: [ //* 2
+  overrides: [
+    //* 2
     {
       files: ['*.ts', '*.tsx'],
       extends: [
@@ -21,15 +21,14 @@ module.exports = {
       ],
       parserOptions: {
         tsconfigRootDir: __dirname, // *1
-        project: ['./tsconfig.lint.json'], // *1
+        project: ['./tsconfig.json'], // *1
         ecmaVersion: 12,
         sourceType: 'module',
       },
     },
   ],
   ignorePatterns: ['**/lib/**/*', '**/dist/**/*', '**/node_modules/**/*', 'semitemplates/**/*'],
-  rules: {
-  },
+  rules: {},
 };
 
 // [*1] - https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md#getting-started---linting-with-type-information

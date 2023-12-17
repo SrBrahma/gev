@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0
+
+- Totally reworked this package; removed must stuff and it got much simpler. It now uses **Bun** everywhere and works on top of `bun create` as it's very similar to the previus internal working of this project.
+- Removed expo, expo-pkg, rn, and ts-cjs templates. I don't use them anymore and I won't keep maintaining them anymore.
+- Removed `./vscode/extensions' from all templates.
+- We now use `templates` instead of `flavors`.
+
 ## 2.24.1~2
 
 - Fixed `ts` flavor not working due to duplicated eslintrc.
