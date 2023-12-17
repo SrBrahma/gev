@@ -1,6 +1,6 @@
 {
   "name": "gev",
-  "version": "3.0.1",
+  "version": "3.0.4",
   "description": "Sets up templates",
   "keywords": [
     "generator",
@@ -30,7 +30,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun clean && tsc",
+    "build": "bun run build.cjs",
     "clean": "rimraf dist",
     "start": "bun ./src/main/index.ts",
     "gev": "bun start",
@@ -39,7 +39,7 @@
     "format:check": "bun eslint && bun prettier \"**/*.{ts,tsx}\"",
     "format": "bun eslint --fix && bun prettier --write \"**/*.{ts,tsx}\"",
     "prepare": "husky install",
-    "prepublish": "bun run build",
+    "prepublishOnly": "bun run build",
     "pre-commit": ""
   },
   "lint-staged": {

@@ -18,5 +18,5 @@
     "jsx": "react-jsx",
     "resolveJsonModule": true
   },
-  "exclude": ["build.cjs"]
+  "exclude": ["build.mjs"]
 }
