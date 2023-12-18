@@ -1,7 +1,7 @@
 {
   "name": "gev",
   "type": "module",
-  "version": "3.0.13",
+  "version": "3.0.14",
   "description": "Sets up templates",
   "keywords": [
     "generator",
@@ -49,17 +49,12 @@
   "dependencies": {
     "chalk": "5.3.0",
     "commander": "11.1.0",
-    "execa": "8.0.1",
-    "globby": "14.0.0",
     "inquirer": "9.1.4",
-    "latest-version": "^7.0.0",
     "semver-compare": "1.0.0"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.2",
-    "@types/latest-version": "^4.0.1",
     "@types/semver-compare": "^1.0.3",
-    "bun-plugin-dts": "^0.2.1",
     "bun-types": "latest",
     "eslint-config-gev": "^3.8.1",
     "husky": "^8.0.1",

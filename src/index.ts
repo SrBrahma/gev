@@ -2,9 +2,7 @@
 import path from 'path';
 import chalk from 'chalk';
 import { Argument, Command } from 'commander';
-import { execa } from 'execa';
 import inquirer from 'inquirer';
-import latestVersion from 'latest-version';
 import compareSemver from 'semver-compare';
 import {
   configData,
@@ -26,7 +24,7 @@ program
   .helpOption('-h, --help', 'Display help for command.') // Just capitalize the first letter of description.
   .showHelpAfterError()
   .option('-c, --no-check-latest', "Won't check if is using the latest version of gev.")
-  .option('--config', 'Prompt for configs even after they were already set.')
+  .option('--config', 'Prompt for configs even if they were already set.')
   // https://github.com/tj/commander.js/issues/518#issuecomment-872769249
   .addArgument(new Argument('<template>', `The project template.`).choices(getAvailableFlavors())) // Will also print in the usage the possible options
   .argument('[projectName]', 'The name of the new project.')
@@ -44,7 +42,8 @@ program
 
     if (opts.checkLatest) {
       console.log('Ensuring latest version');
-      const latestVer = await latestVersion('gev');
+      // Can't use latest-version pkg as bun doesn't support its internal `got` packaget yet. Using CLI instead.
+      const latestVer = Bun.spawnSync(['bunx', 'latest-version-cli', 'gev']).stdout.toString();
 
       if (compareSemver(version, latestVer) === -1) {
         console.log(
@@ -55,42 +54,37 @@ program
           )}]. Recalling gev with @latest.\n`,
         );
 
-        await execa('bunx', [`gev@${latestVer}`, '--no-check-latest', ...process.argv.slice(2)], {
-          stdio: 'inherit',
-        }).catch(null); // ignore throw here. It will already be treated in the @latest.
+        Bun.spawn(['bunx', `gev@${latestVer}`, '--no-check-latest', ...process.argv.slice(2)], {
+          stdio: ['inherit', 'inherit', 'inherit'],
+          cwd: pathFromRoot(),
+        });
 
         return;
       }
     }
 
-    await loadConfigs();
+    // These are no longer being used atm. TODO use it.
+    loadConfigs();
 
     const areConfigsSet = !!configData.githubAuthor;
-    const getUserConfigs = opts.config || !areConfigsSet;
 
-    if (getUserConfigs) {
-      const canReadStdin = process.stdin.isTTY;
+    if ((opts.config || !areConfigsSet) && process.stdin.isTTY) {
+      const input = await inquirer.prompt<{ githubAuthor: string }>([
+        {
+          name: 'githubAuthor',
+          type: 'input',
+          default: configData.githubAuthor,
+          message: 'Who is the GitHub Author of this project?',
+        },
+      ]);
 
-      if (canReadStdin) {
-        const input = await inquirer.prompt<{ githubAuthor: string }>([
-          {
-            name: 'githubAuthor',
-            type: 'input',
-            default: configData.githubAuthor,
-            message: 'Who is the GitHub Author of this project?',
-          },
-        ]);
-
-        setConfigs(input);
-      }
+      setConfigs(input);
     }
 
-    await execa('bun', ['create', '--no-check-latest', ...process.argv.slice(2)], {
-      stdio: 'inherit',
-    }).catch(null); // ignore throw here. It will already be treated in the @latest.
+    console.log('Setting up template');
 
-    await execa('bun', ['create', template, projectPath], {
-      stdio: 'inherit',
+    Bun.spawnSync(['bun', 'create', template, projectPath], {
+      stdio: ['ignore', 'inherit', 'inherit'],
       cwd: pathFromRoot(),
     });
   });

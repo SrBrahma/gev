@@ -1,7 +1,6 @@
 import { readdirSync, readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { execaCommand, execaSync } from 'execa';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,8 +18,8 @@ type Config = {
 
 export let configData: Config = {};
 
-export const loadConfigs = async (): Promise<void> => {
-  let loadedData: string = (await execaCommand('npm get gev')).stdout;
+export const loadConfigs = (): void => {
+  let loadedData: string = Bun.spawnSync(['npm', 'get', 'gev']).stdout.toString();
 
   if (loadedData === 'undefined') loadedData = '{}';
   configData = JSON.parse(loadedData) as Config;
@@ -28,5 +27,5 @@ export const loadConfigs = async (): Promise<void> => {
 
 export const setConfigs = (props: Partial<Config>): void => {
   configData = { ...configData, ...props };
-  execaSync('npm', ['set', 'gev', JSON.stringify(configData)]);
+  Bun.spawnSync(['npm', 'set', 'gev', JSON.stringify(configData)]);
 };

@@ -10,7 +10,9 @@
   "scripts": {
     "start": "bun --watch run src/index.ts",
     "build": "rimraf dist && tsc -p ./tsconfig.build.json",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "pre-commit": "bun test",
+    "prepare": "husky install"
   },
   "keywords": [],
   "license": "MIT",
@@ -22,13 +24,11 @@
     "bun-types": "latest",
     "lint-staged": "^15.2.0",
     "rimraf": "^5.0.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "husky": "^8.0.1"
   },
   "bun-create": {
     "start": "bun run dev",
-    "preinstall": [
-      "bunx husky-init",
-      "npx husky add .husky/pre-commit \"npm pre-commit\""
-    ]
+    "preinstall": []
   }
 }
