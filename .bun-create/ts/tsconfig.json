@@ -17,6 +17,5 @@
     "types": ["bun-types"],
     "jsx": "react-jsx",
     "resolveJsonModule": true
-  },
-  "exclude": ["./build.mjs"]
+  }
 }

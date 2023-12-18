@@ -31,14 +31,14 @@
     ".bun-create"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
     "start": "bun ./src/index.ts",
     "typecheck": "tsc --noEmit",
     "tsw": "tsc --noEmit --watch",
     "format:check": "bun eslint && bun prettier \"**/*.{ts,tsx}\"",
     "format": "bun eslint --fix && bun prettier --write \"**/*.{ts,tsx}\"",
     "prepare": "husky install",
-    "pre-commit": ""
+    "pre-commit": "bun test"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
